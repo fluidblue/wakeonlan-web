@@ -1,5 +1,16 @@
 #!/usr/bin/env node
 
+/*!
+ * ==================================================================
+ * 
+ * wakeonlan-web
+ * 
+ * Created by Max Geissler
+ * License: See LICENSE.md in the root directory of this repository.
+ * 
+ * ==================================================================
+ */
+
 import dgram from "dgram";
 
 const MAC_ADDR_LENGTH: number = 6;

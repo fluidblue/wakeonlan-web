@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "fluidblue",
-  "license": "GPL-2.0-only",
+  "license": "GPL-3.0-or-later",
   "dependencies": {
     "typescript": "^4.3.5"
   },
