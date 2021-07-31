@@ -39,18 +39,18 @@ function wake(port: number, address?: string, protocol?: Protocol) {
 		type: protocol,
 	});
 
-	socket.connect(port, address, () => {
+	socket.once("listening", () => {
 		// Set SO_BROADCAST socket option to allow sending to a broadcast address
 		socket.setBroadcast(true);
+	});
 
-		socket.send(magicPacket, 0, magicPacket.length, (err) => {
-			if (err) {
-				console.log(err);
-			} else {
-				console.log("Message has been sent.")
-			}
-			socket.close();
-		});
+	socket.send(magicPacket, 0, magicPacket.length, port, address, (err) => {
+		if (err) {
+			console.log(err);
+		} else {
+			console.log("Message has been sent.")
+		}
+		socket.close();
 	});
 }
 
