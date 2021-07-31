@@ -12,17 +12,17 @@
  */
 
 import dgram from "dgram";
+import net from "net";
 
 const MAC_ADDR_LENGTH: number = 6;
+
+const WAKE_ON_LAN_DEFAULT_PORT: number = 9;
 
 const MAGIC_PACKET_OFFSET: number = 6;
 const MAGIC_PACKET_MAC_REPETITIONS: number = 16;
 const MAGIC_PACKET_LENGTH: number = MAGIC_PACKET_OFFSET + MAGIC_PACKET_MAC_REPETITIONS * MAC_ADDR_LENGTH;
 
-const destinationMacAddress: Uint8Array = Buffer.alloc(MAC_ADDR_LENGTH, "001FD0DB55A2", "hex");
-const destinationPort: number = 9;
-
-const broadcastAddress: string = "255.255.255.255"; // TODO: When powered on, may use 192.168.188.22 for testing
+const BROADCAST_ADDRESS_IP4: string = "255.255.255.255";
 
 type Protocol = "udp4" | "udp6";
 
@@ -36,15 +36,26 @@ function createMagicPacket(macAddress: Uint8Array): Uint8Array {
 	return magicPacket;
 }
 
-function wake(port: number, address?: string, protocol?: Protocol) {
-	if (!protocol) {
-		protocol = "udp4"; // TODO: Infer default protocol from socket creation, if possible
+/**
+ * Wakes up a host using Wake-on-LAN.
+ * 
+ * Details on Wake-on-LAN:
+ * https://www.amd.com/system/files/TechDocs/20213.pdf
+ */
+function wake(macAddress: Uint8Array, port: number = WAKE_ON_LAN_DEFAULT_PORT, address: string = BROADCAST_ADDRESS_IP4, protocol?: Protocol) {
+	let checkIP = net.isIP(address);
+	if (!checkIP) {
+		throw new Error("IP address not valid");
 	}
-	if (!address) {
-		address = broadcastAddress; // TODO: Adapt to IPv6
+	if (!protocol) {
+		if (checkIP == 6) {
+			protocol = "udp6";
+		} else {
+			protocol = "udp4";
+		}
 	}
 
-	const magicPacket: Uint8Array = createMagicPacket(destinationMacAddress);
+	const magicPacket: Uint8Array = createMagicPacket(macAddress);
 
 	const socket = dgram.createSocket({
 		type: protocol,
@@ -66,7 +77,15 @@ function wake(port: number, address?: string, protocol?: Protocol) {
 }
 
 function main() {
-	wake(destinationPort);
+	const destinationMacAddress: Uint8Array = Buffer.alloc(MAC_ADDR_LENGTH, "001FD0DB55A2", "hex");
+	const destinationPort: number = WAKE_ON_LAN_DEFAULT_PORT;
+
+	//wake(destinationMacAddress, destinationPort, "192.168.0.x");
+	//wake(destinationMacAddress, destinationPort, "_");
+
+	wake(destinationMacAddress);
+	wake(destinationMacAddress, 7);
+	wake(destinationMacAddress, 9, "192.168.188.22");
 }
 
 main();
