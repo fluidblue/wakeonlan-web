@@ -80,9 +80,6 @@ function main() {
 	const destinationMacAddress: Uint8Array = Buffer.alloc(MAC_ADDR_LENGTH, "001FD0DB55A2", "hex");
 	const destinationPort: number = WAKE_ON_LAN_DEFAULT_PORT;
 
-	//wake(destinationMacAddress, destinationPort, "192.168.0.x");
-	//wake(destinationMacAddress, destinationPort, "_");
-
 	wake(destinationMacAddress);
 	wake(destinationMacAddress, 7);
 	wake(destinationMacAddress, 9, "192.168.188.22");
