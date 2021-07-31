@@ -1,7 +1,7 @@
 const WAKE_ON_LAN_PORT: number = 9;
 const IP_BROADCAST_ADDRESS: string = "255.255.255.255";
 
-type WakeOnLanOptions = {
+interface WakeOnLanOptions {
 	port?: number;
 	address?: string;
 };
