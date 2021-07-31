@@ -1,9 +1,9 @@
-interface IPNetwork {
+export interface IPNetwork {
 	ip: string,
 	subnet: number
 }
 
-interface HostDiscovery {
+export interface HostDiscovery {
 	discover(
 		ipSubnet: IPNetwork,
 		callbackProgress: (done: number, total: number) => void,
