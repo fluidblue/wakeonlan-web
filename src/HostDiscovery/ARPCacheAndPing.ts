@@ -33,10 +33,12 @@ class ARPCacheAndPing implements HostDiscovery {
 		callbackDone(true);
 	}
 
-	ping(ip: string, callback: (error: Error | null) => void): void {
+	ping(ip: string, callback?: (error: Error | null) => void): void {
 		// Check for valid input, as input is used in string literal
 		if (!net.isIP(ip)) {
-			callback(new Error("Invalid input."));
+			if (callback) {
+				callback(new Error("Invalid input."));
+			}
 			return;
 		}
 
@@ -60,20 +62,24 @@ class ARPCacheAndPing implements HostDiscovery {
 				break;
 
 			default:
-				callback(new Error("OS not supported."));
+				if (callback) {
+					callback(new Error("OS not supported."));
+				}
 				return;
 		}
 
 		exec(cmd, (error, stdout, stderr) => {
-			if (error) {
-				callback(error);
-				return;
+			if (callback) {
+				if (error) {
+					callback(error);
+					return;
+				}
+				if (stderr && stderr.length > 0) {
+					callback(Error(stderr));
+					return;
+				}
+				callback(null);
 			}
-			if (stderr && stderr.length > 0) {
-				callback(Error(stderr));
-				return;
-			}
-			callback(null);
 		});
 	}
 
