@@ -67,7 +67,7 @@ class ARPCacheAndPing implements HostDiscovery {
 		});
 	}
 
-	function getBytesFromIP(ip: string): Uint8Array {
+	getBytesFromIP(ip: string): Uint8Array {
 		// Assume IPv4 address
 		const parts: string[] = ip.split(".");
 		const buffer: Uint8Array = Buffer.alloc(4);
@@ -77,7 +77,7 @@ class ARPCacheAndPing implements HostDiscovery {
 		return buffer;
 	}
 
-	function getNumberFromIP(ip: string): number {
+	getNumberFromIP(ip: string): number {
 		// Assume IPv4 address
 		const parts: string[] = ip.split(".");
 		let result: number = 0;
@@ -87,7 +87,7 @@ class ARPCacheAndPing implements HostDiscovery {
 		return result;
 	}
 
-	function getIPFromNumber(ip: number): string {
+	getIPFromNumber(ip: number): string {
 		const result: number[] = [0, 0, 0, 0];
 		for (let i = 0; i < 4; i++) {
 			const shift = ((3 - i) * 8);
@@ -96,7 +96,7 @@ class ARPCacheAndPing implements HostDiscovery {
 		return result.join(".");
 	}
 
-	function getSubnetMask(subnet: number): number {
+	getSubnetMask(subnet: number): number {
 		const subnetMask = (0xFFFFFFFF << (32 - subnet)) >>> 0;
 
 		console.log("\nsubnetMask:");
@@ -106,11 +106,11 @@ class ARPCacheAndPing implements HostDiscovery {
 		return subnetMask;
 	}
 
-	function getCleanNetworkAddress(ip: number, subnetMask: number): number {
+	getCleanNetworkAddress(ip: number, subnetMask: number): number {
 		return (ip & subnetMask) >>> 0;
 	}
 
-	function getFirstAddress(ipNetwork: number, subnet: number): number {
+	getFirstAddress(ipNetwork: number, subnet: number): number {
 		const subnetMask = this.getSubnetMask(subnet);
 		ipNetwork = this.getCleanNetworkAddress(ipNetwork, subnetMask);
 
@@ -125,7 +125,7 @@ class ARPCacheAndPing implements HostDiscovery {
 		return ipFirst;
 	}
 
-	function getLastAddress(ipNetwork: number, subnet: number): number {
+	getLastAddress(ipNetwork: number, subnet: number): number {
 		const subnetMask = this.getSubnetMask(subnet);
 		ipNetwork = this.getCleanNetworkAddress(ipNetwork, subnetMask);
 
