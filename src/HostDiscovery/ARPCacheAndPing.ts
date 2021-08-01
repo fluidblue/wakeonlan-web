@@ -12,23 +12,9 @@ class ARPCacheAndPing implements HostDiscovery {
 			throw new RangeError("ipSubnet.prefix must be between 1 and 32.");
 		}
 
-		console.log("\nipSubnet:")
-		console.log(ipSubnet.prefix);
-
 		const ipNetwork: number = this.getNumberFromIP(ipSubnet.ip);
-		console.log("\nipNetwork:")
-		console.log(ipNetwork);
-		console.log(this.getIPFromNumber(ipNetwork));
-
 		const ipFirst: number = this.getFirstAddress(ipNetwork, ipSubnet.prefix);
-		console.log("\nipStart:")
-		console.log(ipFirst);
-		console.log(this.getIPFromNumber(ipFirst));
-
 		const ipLast: number = this.getLastAddress(ipNetwork, ipSubnet.prefix);
-		console.log("\nipEnd:")
-		console.log(ipLast);
-		console.log(this.getIPFromNumber(ipLast));
 
 		const totalIPs = ipLast - ipFirst + 1;
 
@@ -97,13 +83,7 @@ class ARPCacheAndPing implements HostDiscovery {
 	}
 
 	getSubnetMask(subnet: number): number {
-		const subnetMask = (0xFFFFFFFF << (32 - subnet)) >>> 0;
-
-		console.log("\nsubnetMask:");
-		console.log(subnetMask);
-		console.log(this.getIPFromNumber(subnetMask));
-
-		return subnetMask;
+		return (0xFFFFFFFF << (32 - subnet)) >>> 0;
 	}
 
 	getCleanNetworkAddress(ip: number, subnetMask: number): number {
