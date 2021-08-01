@@ -144,31 +144,4 @@ class ARPCacheAndPing implements HostDiscovery {
 	}
 }
 
-let arpCacheAndPing = new ARPCacheAndPing();
-let ipSubnet: IPNetwork = {
-	ip: "192.168.188.0",
-	prefix: 24
-};
-
-arpCacheAndPing.isAvailable((res) => {
-	console.log("Available: " + res);
-	if (!res) {
-		return;
-	}
-
-	arpCacheAndPing.discover(
-		ipSubnet,
-		(done, total) => {
-			const percentage: number = (done * 100.0) / total;
-			console.log("Progress: " + done + "/" + total + " (" + percentage + " %)")
-		},
-		(ipAddress, macAddress) => {
-			console.log("Host found: " + macAddress + " " + ipAddress);
-		},
-		(result) => {
-			console.log("Finished. Result: " + result);
-		}
-	);
-});
-
 export default ARPCacheAndPing;
