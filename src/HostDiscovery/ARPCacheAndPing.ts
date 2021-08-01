@@ -124,6 +124,10 @@ export default class ARPCacheAndPing implements HostDiscovery {
 				cmd = "arp -a -n";
 				break;
 
+			case "win32":
+				cmd = "arp -a";
+				break;
+
 			default:
 				if (callback) {
 					callback(new Error("OS not supported."));
@@ -131,7 +135,7 @@ export default class ARPCacheAndPing implements HostDiscovery {
 				return;
 		}
 
-		exec("arp -a -n", (error, stdout, stderr) => {
+		exec(cmd, (error, stdout, stderr) => {
 			if (error) {
 				callback(error);
 				return;
