@@ -8,8 +8,11 @@ export default class ARPCacheAndPing implements HostDiscovery {
 	private readonly PING_TIMEOUT: number = 1; // in seconds
 	private readonly PING_WAIT: number = 100; // in milliseconds
 
-	// Modified RE from https://stackoverflow.com/a/4260512/2013757
-	private readonly RE_MAC_ADDRESS: RegExp = /^([0-9A-Fa-f]{1,2}[:-]){5}([0-9A-Fa-f]{1,2})$/;
+	// Matches IP address and MAC address in an ARP cache entry.
+	//
+	// Note on IP address part: This part of the regular expression is created for extraction, not for validation of IP addresses.
+	// Note on MAC address part: Modified from https://stackoverflow.com/a/4260512/2013757
+	private readonly RE_ARP_CACHE_ENTRY: RegExp = /^.*?((?:[0-9]{1,3}\.){3}(?:[0-9]{1,3})){1}.*?((?:[0-9A-Fa-f]{1,2}[:-]){5}(?:[0-9A-Fa-f]{1,2})).*$/gm;
 
 	async discover(
 		ipSubnet: IPNetwork,
@@ -142,16 +145,24 @@ export default class ARPCacheAndPing implements HostDiscovery {
 	}
 
 	getARPCache(callback: (error: Error | null, result?: ARPCacheEntry[]) => void): void {
-		this.getRawARPCache((error, result) => {
+		this.getRawARPCache((error, rawARPCache) => {
 			if (error) {
 				callback(error);
 				return;
 			}
+			if (!rawARPCache) {
+				callback(new Error("Result missing."));
+				return;
+			}
 
 			let arpCache: ARPCacheEntry[] = [];
-
-			// TODO: Parse result
-			console.log(result);
+			let rawEntry;
+			while ((rawEntry = this.RE_ARP_CACHE_ENTRY.exec(rawARPCache)) !== null) {
+				arpCache.push({
+					ip: rawEntry[1],
+					mac: rawEntry[2]
+				});
+			}
 
 			callback(null, arpCache);
 		});
