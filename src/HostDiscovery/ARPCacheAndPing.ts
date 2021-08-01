@@ -53,16 +53,6 @@ class ARPCacheAndPing implements HostDiscovery {
 		});
 	}
 
-	getBytesFromIP(ip: string): Uint8Array {
-		// Assume IPv4 address
-		const parts: string[] = ip.split(".");
-		const buffer: Uint8Array = Buffer.alloc(4);
-		for (let i = 0; i < 4; i++) {
-			buffer[i] = parseInt(parts[i]);
-		}
-		return buffer;
-	}
-
 	getNumberFromIP(ip: string): number {
 		// Assume IPv4 address
 		const parts: string[] = ip.split(".");
