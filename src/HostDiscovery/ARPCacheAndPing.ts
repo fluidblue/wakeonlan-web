@@ -7,12 +7,11 @@ class ARPCacheAndPing implements HostDiscovery {
 	private readonly PING_TIMEOUT: number = 1; // in seconds
 	private readonly PING_WAIT: number = 100; // in milliseconds
 
-	discover(
+	async discover(
 		ipSubnet: IPNetwork,
 		callbackProgress: (done: number, total: number) => void,
-		callbackHostFound: (ipAddress: string, macAddress: Uint8Array) => void,
-		callbackDone: (success: boolean) => void
-	): void {
+		callbackHostFound: (ipAddress: string, macAddress: Uint8Array) => void
+	): Promise<void> {
 		if (ipSubnet.prefix < 1 || ipSubnet.prefix > 32) {
 			throw new RangeError("ipSubnet.prefix must be between 1 and 32.");
 		}
@@ -27,13 +26,20 @@ class ARPCacheAndPing implements HostDiscovery {
 		for (let ip = ipFirst; ip <= ipLast; ip++) {
 			let ipString: string = this.getIPFromNumber(ip);
 			console.log(this.getIPFromNumber(ip)); // TODO: Remove
+
 			this.ping(ipString);
-			// TODO: Implement wait (using PING_WAIT)
 
 			i++;
 			callbackProgress(i, totalIPs);
+
+			await this.delay(this.PING_WAIT);
 		}
-		callbackDone(true);
+	}
+
+	async delay(milliseconds: number): Promise<void> {
+		return new Promise<void>((resolve) => {
+			setTimeout(resolve, milliseconds);
+		});
 	}
 
 	ping(ip: string, callback?: (error: Error | null) => void): void {

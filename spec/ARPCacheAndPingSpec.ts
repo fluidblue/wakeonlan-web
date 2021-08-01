@@ -155,12 +155,11 @@ describe("ARPCacheAndPing", () => {
 				},
 				(ipAddress, macAddress) => {
 					console.log("Host found: " + macAddress + " " + ipAddress);
-				},
-				(result) => {
-					console.log("Finished. Result: " + result);
-					done();
 				}
-			);
+			).then(() => {
+				console.log("Finished");
+				done();
+			});
 		});
 	});
 });
