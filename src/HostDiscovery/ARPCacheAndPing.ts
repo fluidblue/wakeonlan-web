@@ -1,4 +1,5 @@
 import { HostDiscovery, IPNetwork } from "./HostDiscovery"
+import ARPCacheEntry from "./ARPCacheEntry"
 import { exec } from "child_process";
 import os from "os";
 import net from "net";
@@ -6,6 +7,9 @@ import net from "net";
 export default class ARPCacheAndPing implements HostDiscovery {
 	private readonly PING_TIMEOUT: number = 1; // in seconds
 	private readonly PING_WAIT: number = 100; // in milliseconds
+
+	// Modified RE from https://stackoverflow.com/a/4260512/2013757
+	private readonly RE_MAC_ADDRESS: RegExp = /^([0-9A-Fa-f]{1,2}[:-]){5}([0-9A-Fa-f]{1,2})$/;
 
 	async discover(
 		ipSubnet: IPNetwork,
@@ -134,6 +138,22 @@ export default class ARPCacheAndPing implements HostDiscovery {
 				return;
 			}
 			callback(null, stdout);
+		});
+	}
+
+	getARPCache(callback: (error: Error | null, result?: ARPCacheEntry[]) => void): void {
+		this.getRawARPCache((error, result) => {
+			if (error) {
+				callback(error);
+				return;
+			}
+
+			let arpCache: ARPCacheEntry[] = [];
+
+			// TODO: Parse result
+			console.log(result);
+
+			callback(null, arpCache);
 		});
 	}
 

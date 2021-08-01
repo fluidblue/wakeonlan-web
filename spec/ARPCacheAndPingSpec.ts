@@ -127,6 +127,16 @@ describe("ARPCacheAndPing", () => {
 		});
 	});
 
+	it("should retrieve the ARP cache", (done) => {
+		arpCacheAndPing.getARPCache((error, result) => {
+			if (error) {
+				fail();
+				return;
+			}
+			done();
+		});
+	});
+
 	it("should check if the method is available", (done) => {
 		arpCacheAndPing.isAvailable((res) => {
 			expect(res).toBeDefined();
