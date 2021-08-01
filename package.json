@@ -4,15 +4,16 @@
   "description": "wakeonlan-web",
   "main": "build/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ts-node node_modules/jasmine/bin/jasmine"
   },
   "author": "fluidblue",
   "license": "GPL-3.0-or-later",
-  "dependencies": {
-    "typescript": "^4.3.5"
-  },
   "devDependencies": {
     "@tsconfig/node14": "^1.0.1",
-    "@types/node": "^16.4.7"
+    "@types/jasmine": "^3.8.2",
+    "@types/node": "^16.4.7",
+    "jasmine": "^3.8.0",
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5"
   }
 }
