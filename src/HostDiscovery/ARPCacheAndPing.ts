@@ -170,3 +170,5 @@ arpCacheAndPing.isAvailable((res) => {
 		}
 	);
 });
+
+export default ARPCacheAndPing;
