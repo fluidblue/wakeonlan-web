@@ -1,7 +1,11 @@
 import { HostDiscovery, IPNetwork } from "./HostDiscovery"
 import { exec } from "child_process";
+import os from "os";
+import net from "net";
 
 class ARPCacheAndPing implements HostDiscovery {
+	private readonly PING_TIMEOUT: number = 1; // in seconds
+
 	discover(
 		ipSubnet: IPNetwork,
 		callbackProgress: (done: number, total: number) => void,
@@ -29,9 +33,60 @@ class ARPCacheAndPing implements HostDiscovery {
 		callbackDone(true);
 	}
 
+	ping(ip: string, callback: (error: Error | null) => void): void {
+		// Check for valid input, as input is used in string literal
+		if (!net.isIP(ip)) {
+			callback(new Error("Invalid input."));
+			return;
+		}
+
+		let cmd = "";
+		switch (os.platform()) {
+			case "darwin":
+				cmd = `ping -c 1 -n -q -t ${this.PING_TIMEOUT} ${ip}`;
+				break;
+
+			case "win32":
+				const timeout = this.PING_TIMEOUT * 1000;
+				cmd = "ping -n 1 -w ${timeout} ${ip}";
+				break;
+
+			case "android":
+				cmd = "/system/bin/ping -q -n -w ${this.PING_TIMEOUT} -c 1 ${ip}";
+				break;
+
+			case "linux":
+				cmd = "ping -c 1 -n -q -w ${this.PING_TIMEOUT} ${ip}";
+				break;
+
+			default:
+				callback(new Error("OS not supported."));
+				return;
+		}
+
+		exec(cmd, (error, stdout, stderr) => {
+			if (error) {
+				callback(error);
+				return;
+			}
+			if (stderr && stderr.length > 0) {
+				callback(Error(stderr));
+				return;
+			}
+			callback(null);
+		});
+	}
+
 	isAvailable(callback: (res: boolean) => void): void {
 		this.getRawARPCache((error, result) => {
 			if (error || !result || result.length === 0) {
+				callback(false);
+				return;
+			}
+			callback(true);
+		});
+		this.ping("127.0.0.1", (error) => {
+			if (error) {
 				callback(false);
 				return;
 			}

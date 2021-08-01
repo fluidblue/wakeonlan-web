@@ -117,6 +117,16 @@ describe("ARPCacheAndPing", () => {
 		});
 	}
 
+	it("should ping 127.0.0.1", (done) => {
+		arpCacheAndPing.ping("127.0.0.1", (error) => {
+			if (error) {
+				fail();
+				return;
+			}
+			done();
+		});
+	});
+
 	it("should check if the method is available", (done) => {
 		arpCacheAndPing.isAvailable((res) => {
 			expect(res).toBeDefined();
