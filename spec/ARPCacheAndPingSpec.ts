@@ -138,7 +138,7 @@ describe("ARPCacheAndPing", () => {
 	it("should discover hosts", (done) => {
 		let ipSubnet: IPNetwork = {
 			ip: "192.168.189.0",
-			prefix: 26
+			prefix: 28
 		}
 
 		arpCacheAndPing.isAvailable((res) => {
