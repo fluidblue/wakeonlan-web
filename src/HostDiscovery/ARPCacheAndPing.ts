@@ -5,6 +5,7 @@ import net from "net";
 
 class ARPCacheAndPing implements HostDiscovery {
 	private readonly PING_TIMEOUT: number = 1; // in seconds
+	private readonly PING_WAIT: number = 100; // in milliseconds
 
 	discover(
 		ipSubnet: IPNetwork,
@@ -24,8 +25,10 @@ class ARPCacheAndPing implements HostDiscovery {
 
 		let i = 0;
 		for (let ip = ipFirst; ip <= ipLast; ip++) {
-			// TODO
-			console.log(this.getIPFromNumber(ip));
+			let ipString: string = this.getIPFromNumber(ip);
+			console.log(this.getIPFromNumber(ip)); // TODO: Remove
+			this.ping(ipString);
+			// TODO: Implement wait (using PING_WAIT)
 
 			i++;
 			callbackProgress(i, totalIPs);
