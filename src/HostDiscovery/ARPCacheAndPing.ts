@@ -51,7 +51,7 @@ export default class ARPCacheAndPing implements HostDiscovery {
 			return;
 		}
 
-		let cmd = "";
+		let cmd: string = "";
 		switch (os.platform()) {
 			case "darwin":
 				cmd = `ping -c 1 -n -q -t ${this.PING_TIMEOUT} ${ip}`;
@@ -110,6 +110,20 @@ export default class ARPCacheAndPing implements HostDiscovery {
 	}
 
 	getRawARPCache(callback: (error: Error | null, result?: string) => void): void {
+		let cmd: string = "";
+		switch (os.platform()) {
+			case "darwin":
+			case "linux":
+				cmd = "arp -a -n";
+				break;
+
+			default:
+				if (callback) {
+					callback(new Error("OS not supported."));
+				}
+				return;
+		}
+
 		exec("arp -a -n", (error, stdout, stderr) => {
 			if (error) {
 				callback(error);
