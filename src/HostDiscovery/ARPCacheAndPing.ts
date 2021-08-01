@@ -83,14 +83,14 @@ class ARPCacheAndPing implements HostDiscovery {
 				callback(false);
 				return;
 			}
-			callback(true);
-		});
-		this.ping("127.0.0.1", (error) => {
-			if (error) {
-				callback(false);
-				return;
-			}
-			callback(true);
+
+			this.ping("127.0.0.1", (error) => {
+				if (error) {
+					callback(false);
+					return;
+				}
+				callback(true);
+			});
 		});
 	}
 
