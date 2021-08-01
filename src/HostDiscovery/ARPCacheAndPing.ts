@@ -3,7 +3,7 @@ import { exec } from "child_process";
 import os from "os";
 import net from "net";
 
-class ARPCacheAndPing implements HostDiscovery {
+export default class ARPCacheAndPing implements HostDiscovery {
 	private readonly PING_TIMEOUT: number = 1; // in seconds
 	private readonly PING_WAIT: number = 100; // in milliseconds
 
@@ -183,5 +183,3 @@ class ARPCacheAndPing implements HostDiscovery {
 		return ipLast;
 	}
 }
-
-export default ARPCacheAndPing;
