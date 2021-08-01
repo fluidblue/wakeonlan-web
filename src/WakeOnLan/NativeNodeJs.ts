@@ -61,18 +61,22 @@ function wake(macAddress: Uint8Array, port: number = WAKE_ON_LAN_DEFAULT_PORT, a
 		type: protocol,
 	});
 
-	socket.once("listening", () => {
-		// Set SO_BROADCAST socket option to allow sending to a broadcast address
-		socket.setBroadcast(true);
+	socket.on("error", (err) => {
+		console.log(err);
 	});
 
-	socket.send(magicPacket, 0, magicPacket.length, port, address, (err) => {
-		if (err) {
-			console.log(err);
-		} else {
-			console.log("Message has been sent.")
-		}
-		socket.close();
+	socket.connect(port, address, () => {
+		// Set SO_BROADCAST socket option to allow sending to a broadcast address
+		socket.setBroadcast(true);
+
+		socket.send(magicPacket, 0, magicPacket.length, (err) => {
+			if (err) {
+				console.log(err);
+			} else {
+				console.log("Message has been sent.")
+			}
+			socket.close();
+		});
 	});
 }
 
