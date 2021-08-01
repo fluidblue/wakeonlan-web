@@ -1,6 +1,6 @@
 export interface IPNetwork {
 	ip: string,
-	subnet: number
+	prefix: number
 }
 
 export interface HostDiscovery {
@@ -8,7 +8,7 @@ export interface HostDiscovery {
 		ipSubnet: IPNetwork,
 		callbackProgress: (done: number, total: number) => void,
 		callbackHostFound: (ipAddress: string, macAddress: Uint8Array) => void,
-		callbackDone: (err: Error | null) => void
+		callbackDone: (success: boolean) => void
 	): void;
 
 	isAvailable(callback: (res: boolean) => void): void;
