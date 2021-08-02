@@ -1,7 +1,8 @@
-import { HostDiscovery, IPNetwork } from "./HostDiscovery"
+import { HostDiscovery } from "./HostDiscovery"
 import ARPCacheEntry from "./ARPCacheEntry"
 import { MAC_ADDR_LENGTH } from "../constants"
 import { exec } from "child_process";
+import { IPFunctions, IPNetwork } from "./IPFunctions";
 import os from "os";
 import net from "net";
 
@@ -24,17 +25,16 @@ export default class ARPCacheAndPing implements HostDiscovery {
 			throw new RangeError("ipSubnet.prefix must be between 1 and 32.");
 		}
 
-		const ipNetwork: number = this.getNumberFromIP(ipSubnet.ip);
-		const ipFirst: number = this.getFirstAddress(ipNetwork, ipSubnet.prefix);
-		const ipLast: number = this.getLastAddress(ipNetwork, ipSubnet.prefix);
+		const ipFirst: number = IPFunctions.getFirstAddress(ipSubnet);
+		const ipLast: number = IPFunctions.getLastAddress(ipSubnet);
 
 		const totalIPs = ipLast - ipFirst + 1;
 		let hosts: ARPCacheEntry[] = [];
 
 		let i = 0;
 		for (let ip = ipFirst; ip <= ipLast; ip++) {
-			let ipString: string = this.getIPFromNumber(ip);
-			console.log(this.getIPFromNumber(ip)); // TODO: Remove
+			let ipString: string = IPFunctions.getStringIP(ip);
+			console.log(ipString); // TODO: Remove
 
 			this.ping(ipString, (error) => {
 				if (error) {
@@ -49,7 +49,7 @@ export default class ARPCacheAndPing implements HostDiscovery {
 					for (let entry of result) {
 						console.log(entry); // TODO: Remove
 
-						const numericIP = this.getNumberFromIP(entry.ip);
+						const numericIP = IPFunctions.getNumericalIP(entry.ip);
 						if (numericIP < ipFirst || numericIP > ipLast) {
 							continue;
 						}
@@ -218,65 +218,5 @@ export default class ARPCacheAndPing implements HostDiscovery {
 
 			callback(null, arpCache);
 		});
-	}
-
-	getNumberFromIP(ip: string): number {
-		// Assume IPv4 address
-		const parts: string[] = ip.split(".");
-		let result: number = 0;
-		for (let i = 0; i < 4; i++) {
-			result = (result | (parseInt(parts[i]) << ((3 - i) * 8))) >>> 0;
-		}
-		return result;
-	}
-
-	getIPFromNumber(ip: number): string {
-		const result: number[] = [0, 0, 0, 0];
-		for (let i = 0; i < 4; i++) {
-			const shift = ((3 - i) * 8);
-			result[i] = (ip & (0xFF << shift)) >>> shift;
-		}
-		return result.join(".");
-	}
-
-	getSubnetMask(prefix: number): number {
-		return (0xFFFFFFFF << (32 - prefix)) >>> 0;
-	}
-
-	getCleanNetworkAddress(ip: number, subnetMask: number): number {
-		return (ip & subnetMask) >>> 0;
-	}
-
-	getFirstAddress(ipNetwork: number, subnet: number): number {
-		const subnetMask = this.getSubnetMask(subnet);
-		ipNetwork = this.getCleanNetworkAddress(ipNetwork, subnetMask);
-
-		// If subnet == 32, the only host address is the net address.
-		// If subnet == 31, the first host address is the net address.
-		// If subnet <= 30, the first host address is the IP address after the net address.
-		let ipFirst = ipNetwork;
-		if (subnet <= 30) {
-			ipFirst++;
-		}
-
-		return ipFirst;
-	}
-
-	getLastAddress(ipNetwork: number, subnet: number): number {
-		const subnetMask = this.getSubnetMask(subnet);
-		ipNetwork = this.getCleanNetworkAddress(ipNetwork, subnetMask);
-
-		const subnetMaskInverted = (~subnetMask) >>> 0;
-
-		// If subnet == 32, the only host address is the net address.
-		// If subnet == 31, the last host address is the last address in the address space.
-		// If subnet <= 30, the last host address is the IP address before the last address
-		// in the address space (which is the broadcast address).
-		let ipLast = (ipNetwork | subnetMaskInverted) >>> 0;
-		if (subnet <= 30) {
-			ipLast--;
-		}
-
-		return ipLast;
 	}
 }

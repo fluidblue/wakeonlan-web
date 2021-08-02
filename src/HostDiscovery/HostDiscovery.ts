@@ -1,7 +1,4 @@
-export interface IPNetwork {
-	ip: string,
-	prefix: number
-}
+import { IPNetwork } from "./IPFunctions";
 
 export interface HostDiscovery {
 	discover(

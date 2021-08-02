@@ -1,7 +1,7 @@
 import "jasmine";
 
 import ARPCacheAndPing from "../src/HostDiscovery/ARPCacheAndPing"
-import { IPNetwork } from "../src/HostDiscovery/HostDiscovery"
+import { IPFunctions, IPNetwork } from "../src/HostDiscovery/IPFunctions"
 
 describe("ARPCacheAndPing", () => {
 	let arpCacheAndPing: ARPCacheAndPing = new ARPCacheAndPing();
@@ -103,16 +103,16 @@ describe("ARPCacheAndPing", () => {
 		let numericalIPAddress = tests[i].out.numericalIPAddress;
 
 		it("should calculate the subnet mask", () => {
-			expect(arpCacheAndPing.getSubnetMask(ipSubnet.prefix)).toEqual(subnetMaskResult);
+			expect(IPFunctions.getSubnetMask(ipSubnet.prefix)).toEqual(subnetMaskResult);
 		});
 
 		it("should convert IP addresses to numbers", () => {
-			let ip: number = arpCacheAndPing.getNumberFromIP(ipSubnet.ip);
+			let ip: number = IPFunctions.getNumericalIP(ipSubnet.ip);
 			expect(ip).toEqual(numericalIPAddress);
 		});
 
 		it("should convert numbers to IP addresses", () => {
-			let ip: string = arpCacheAndPing.getIPFromNumber(numericalIPAddress);
+			let ip: string = IPFunctions.getStringIP(numericalIPAddress);
 			expect(ip).toEqual(ipSubnet.ip);
 		});
 	}
