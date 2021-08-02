@@ -133,14 +133,8 @@ describe("ARPCacheAndPing", () => {
 		});
 	}
 
-	it("should ping 127.0.0.1", (done) => {
-		Ping.ping("127.0.0.1", (error) => {
-			if (error) {
-				fail();
-				return;
-			}
-			done();
-		});
+	it("should ping 127.0.0.1", async () => {
+		await Ping.ping("127.0.0.1");
 	});
 
 	it("should retrieve the ARP cache", (done) => {
@@ -182,12 +176,7 @@ describe("ARPCacheAndPing", () => {
 				(ipAddress, macAddress) => {
 					console.log("Host found: " + macAddress + " " + ipAddress);
 				}
-			).then(async () => {
-				// TODO: This should not be needed:
-				await new Promise((resolve, reject) => {
-					setTimeout(resolve, 3500);
-				});
-
+			).then(() => {
 				console.log("Finished");
 				done();
 			});

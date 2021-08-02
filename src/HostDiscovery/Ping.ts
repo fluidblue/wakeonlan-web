@@ -7,12 +7,10 @@ export class Ping {
 
 	private constructor() {}
 
-	static ping(ip: string, callback?: (error: Error | null) => void): void {
+	static async ping(ip: string): Promise<void> {
 		// Check for valid input, as input is used in string literal
 		if (!net.isIP(ip)) {
-			if (callback) {
-				callback(new Error("Invalid input."));
-			}
+			throw new Error("Invalid input.");
 			return;
 		}
 
@@ -36,29 +34,26 @@ export class Ping {
 				break;
 
 			default:
-				if (callback) {
-					callback(new Error("OS not supported."));
-				}
-				return;
+				throw new Error("OS not supported.");
 		}
 
-		exec(cmd, (error, stdout, stderr) => {
-			if (callback) {
+		const promise = new Promise<void>((resolve, reject) => {
+			exec(cmd, (error, stdout, stderr) => {
 				if (error && error.code && (error.code === 1 || error.code === 2)) {
 					// Ignore exit codes of 1 and 2. Those signal that the host is down.
 					// (The exit codes vary among operating systems).
 					error = null;
 				}
 				if (error) {
-					callback(error);
-					return;
+					throw error;
 				}
 				if (stderr && stderr.length > 0) {
-					callback(new Error(stderr));
-					return;
+					throw new Error(stderr);
 				}
-				callback(null);
-			}
+				resolve();
+			});
 		});
+
+		await promise;
 	}
 }

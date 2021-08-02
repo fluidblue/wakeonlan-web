@@ -27,38 +27,35 @@ export default class ARPCacheAndPing implements HostDiscovery {
 			let ipString: string = IPFunctions.getStringIP(ip);
 			console.log(ipString); // TODO: Remove
 
-			Ping.ping(ipString, (error) => {
-				if (error) {
+			await Ping.ping(ipString);
+
+			ARPCache.getARPCache((error, result) => {
+				if (error || !result) {
 					return;
 				}
-				ARPCache.getARPCache((error, result) => {
-					if (error || !result) {
-						return;
+
+				let newHosts: ARPCacheEntry[] = [];
+				for (let entry of result) {
+					console.log(entry); // TODO: Remove
+
+					const numericIP = IPFunctions.getNumericalIP(entry.ip);
+					if (numericIP < ipFirst || numericIP > ipLast) {
+						continue;
 					}
 
-					let newHosts: ARPCacheEntry[] = [];
-					for (let entry of result) {
-						console.log(entry); // TODO: Remove
-
-						const numericIP = IPFunctions.getNumericalIP(entry.ip);
-						if (numericIP < ipFirst || numericIP > ipLast) {
-							continue;
+					hosts.forEach((host) => {
+						// Skip already processed entries
+						if (host.ip === entry.ip && host.mac === entry.mac) {
+							return;
 						}
+						newHosts.push(host);
+					});
+				}
 
-						hosts.forEach((host) => {
-							// Skip already processed entries
-							if (host.ip === entry.ip && host.mac === entry.mac) {
-								return;
-							}
-							newHosts.push(host);
-						});
-					}
-
-					for (let host of newHosts) {
-						hosts.push(host);
-						callbackHostFound(host.ip, MACFunctions.getByteArrayFromMacAddress(host.mac));
-					}
-				});
+				for (let host of newHosts) {
+					hosts.push(host);
+					callbackHostFound(host.ip, MACFunctions.getByteArrayFromMacAddress(host.mac));
+				}
 			});
 
 			i++;
@@ -81,12 +78,10 @@ export default class ARPCacheAndPing implements HostDiscovery {
 				return;
 			}
 
-			Ping.ping("127.0.0.1", (error) => {
-				if (error) {
-					callback(false);
-					return;
-				}
+			Ping.ping("127.0.0.1").then(() => {
 				callback(true);
+			}, () => {
+				callback(false);
 			});
 		});
 	}
