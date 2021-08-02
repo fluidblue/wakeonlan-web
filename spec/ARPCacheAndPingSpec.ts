@@ -108,13 +108,13 @@ describe("ARPCacheAndPing", () => {
 			expect(IPFunctions.getSubnetMask(ipSubnet.prefix)).toEqual(subnetMaskResult);
 		});
 
-		it("should convert IP addresses to numbers", () => {
-			let ip: number = IPFunctions.getNumericalIP(ipSubnet.ip);
+		it("should convert IP address strings to numbers", () => {
+			let ip = IPFunctions.getNumericalIP(ipSubnet.ip);
 			expect(ip).toEqual(numericalIPAddress);
 		});
 
-		it("should convert numbers to IP addresses", () => {
-			let ip: string = IPFunctions.getStringIP(numericalIPAddress);
+		it("should convert numbers to IP address strings", () => {
+			let ip = IPFunctions.getStringIP(numericalIPAddress);
 			expect(ip).toEqual(ipSubnet.ip);
 		});
 
