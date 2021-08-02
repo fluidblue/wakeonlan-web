@@ -55,7 +55,6 @@ export class Ping {
 				resolve();
 			});
 		});
-
 		await promise;
 	}
 }
