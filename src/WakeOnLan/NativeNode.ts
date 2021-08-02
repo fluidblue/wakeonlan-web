@@ -41,11 +41,11 @@ async function wake(macAddress: Uint8Array, port: number = WAKE_ON_LAN_DEFAULT_P
 
 	const magicPacket: Uint8Array = createMagicPacket(macAddress);
 
-	const socket = dgram.createSocket({
-		type: protocol
-	});
-
 	const promise = new Promise<void>((resolve, reject) => {
+		const socket = dgram.createSocket({
+			type: protocol!
+		});
+
 		socket.on("error", (err) => {
 			reject(err);
 		});
