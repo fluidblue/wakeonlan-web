@@ -129,12 +129,17 @@ export default class ARPCacheAndPing implements HostDiscovery {
 
 		exec(cmd, (error, stdout, stderr) => {
 			if (callback) {
+				if (error && error.code && (error.code === 1 || error.code === 2)) {
+					// Ignore exit codes of 1 and 2. Those signal that the host is down.
+					// (The exit codes vary among operating systems).
+					error = null;
+				}
 				if (error) {
 					callback(error);
 					return;
 				}
 				if (stderr && stderr.length > 0) {
-					callback(Error(stderr));
+					callback(new Error(stderr));
 					return;
 				}
 				callback(null);
