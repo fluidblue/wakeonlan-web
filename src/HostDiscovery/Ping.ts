@@ -45,10 +45,10 @@ export class Ping {
 					error = null;
 				}
 				if (error) {
-					throw error;
+					reject(error);
 				}
 				if (stderr && stderr.length > 0) {
-					throw new Error(stderr);
+					reject(new Error(stderr));
 				}
 				resolve();
 			});
