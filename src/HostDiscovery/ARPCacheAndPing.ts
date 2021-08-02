@@ -58,12 +58,6 @@ export default class ARPCacheAndPing implements HostDiscovery {
 		}
 	}
 
-	async delay(milliseconds: number): Promise<void> {
-		return new Promise<void>((resolve) => {
-			setTimeout(resolve, milliseconds);
-		});
-	}
-
 	async isAvailable(): Promise<boolean> {
 		try {
 			await Ping.ping("127.0.0.1");
