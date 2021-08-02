@@ -101,6 +101,8 @@ describe("ARPCacheAndPing", () => {
 		let ipSubnet = tests[i].in.ipSubnet;
 		let subnetMaskResult = tests[i].out.subnetMask;
 		let numericalIPAddress = tests[i].out.numericalIPAddress;
+		let firstAddress = tests[i].out.firstIPAddress;
+		let lastAddress = tests[i].out.lastIPAddress;
 
 		it("should calculate the subnet mask", () => {
 			expect(IPFunctions.getSubnetMask(ipSubnet.prefix)).toEqual(subnetMaskResult);
@@ -114,6 +116,18 @@ describe("ARPCacheAndPing", () => {
 		it("should convert numbers to IP addresses", () => {
 			let ip: string = IPFunctions.getStringIP(numericalIPAddress);
 			expect(ip).toEqual(ipSubnet.ip);
+		});
+
+		it("should get the first address of an IP network", () => {
+			let ipNumerical = IPFunctions.getFirstAddress(ipSubnet);
+			let ipString = IPFunctions.getStringIP(ipNumerical);
+			expect(ipString).toEqual(firstAddress);
+		});
+
+		it("should get the last address of an IP network", () => {
+			let ipNumerical = IPFunctions.getLastAddress(ipSubnet);
+			let ipString = IPFunctions.getStringIP(ipNumerical);
+			expect(ipString).toEqual(lastAddress);
 		});
 	}
 
