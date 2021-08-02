@@ -13,7 +13,7 @@ export default class ARPCacheAndPing implements HostDiscovery {
 		callbackHostFound: (ipAddress: string, macAddress: Uint8Array) => void
 	): Promise<void> {
 		if (ipSubnet.prefix < 1 || ipSubnet.prefix > 32) {
-			throw new RangeError("ipSubnet.prefix must be between 1 and 32.");
+			throw new RangeError("IP prefix must be between 1 and 32.");
 		}
 
 		const ipFirst: number = IPFunctions.getFirstAddress(ipSubnet);
