@@ -3,6 +3,8 @@ import { exec } from "child_process";
 import ARPCacheEntry from "./ARPCacheEntry"
 
 export class ARPCache {
+	private constructor() {}
+
 	// Matches IP address and MAC address in an ARP cache entry.
 	//
 	// Note on IP address part: This part of the regular expression is created for extraction, not for validation of IP addresses.

@@ -10,7 +10,6 @@ export interface IPNetwork {
  * IPv4 helper functions class.
  */
 export class IPFunctions {
-	// TODO: Test
 	private constructor() {}
 
 	static getNumericalIP(ip: IPAddress): IPAddressNumerical {

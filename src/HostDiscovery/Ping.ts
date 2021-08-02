@@ -5,6 +5,8 @@ import { exec } from "child_process";
 export class Ping {
 	private static readonly PING_TIMEOUT: number = 1; // in seconds
 
+	private constructor() {}
+
 	static ping(ip: string, callback?: (error: Error | null) => void): void {
 		// Check for valid input, as input is used in string literal
 		if (!net.isIP(ip)) {
