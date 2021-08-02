@@ -2,6 +2,7 @@ import "jasmine";
 
 import ARPCacheAndPing from "../src/HostDiscovery/ARPCacheAndPing"
 import { IPFunctions, IPNetwork } from "../src/HostDiscovery/IPFunctions"
+import { Ping } from "../src/HostDiscovery/Ping";
 
 describe("ARPCacheAndPing", () => {
 	let arpCacheAndPing: ARPCacheAndPing = new ARPCacheAndPing();
@@ -132,7 +133,7 @@ describe("ARPCacheAndPing", () => {
 	}
 
 	it("should ping 127.0.0.1", (done) => {
-		arpCacheAndPing.ping("127.0.0.1", (error) => {
+		Ping.ping("127.0.0.1", (error) => {
 			if (error) {
 				fail();
 				return;

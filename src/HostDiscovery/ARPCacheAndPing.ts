@@ -3,11 +3,10 @@ import ARPCacheEntry from "./ARPCacheEntry"
 import { MAC_ADDR_LENGTH } from "../constants"
 import { exec } from "child_process";
 import { IPFunctions, IPNetwork } from "./IPFunctions";
+import { Ping } from "./Ping";
 import os from "os";
-import net from "net";
 
 export default class ARPCacheAndPing implements HostDiscovery {
-	private readonly PING_TIMEOUT: number = 1; // in seconds
 	private readonly PING_WAIT: number = 10; // in milliseconds
 
 	// Matches IP address and MAC address in an ARP cache entry.
@@ -36,7 +35,7 @@ export default class ARPCacheAndPing implements HostDiscovery {
 			let ipString: string = IPFunctions.getStringIP(ip);
 			console.log(ipString); // TODO: Remove
 
-			this.ping(ipString, (error) => {
+			Ping.ping(ipString, (error) => {
 				if (error) {
 					return;
 				}
@@ -92,61 +91,6 @@ export default class ARPCacheAndPing implements HostDiscovery {
 		return result;
 	}
 
-	ping(ip: string, callback?: (error: Error | null) => void): void {
-		// Check for valid input, as input is used in string literal
-		if (!net.isIP(ip)) {
-			if (callback) {
-				callback(new Error("Invalid input."));
-			}
-			return;
-		}
-
-		let cmd: string = "";
-		switch (os.platform()) {
-			case "darwin":
-				cmd = `ping -c 1 -n -q -t ${this.PING_TIMEOUT} ${ip}`;
-				break;
-
-			case "win32":
-				const timeout = this.PING_TIMEOUT * 1000;
-				cmd = "ping -n 1 -w ${timeout} ${ip}";
-				break;
-
-			case "android":
-				cmd = "/system/bin/ping -q -n -w ${this.PING_TIMEOUT} -c 1 ${ip}";
-				break;
-
-			case "linux":
-				cmd = "ping -c 1 -n -q -w ${this.PING_TIMEOUT} ${ip}";
-				break;
-
-			default:
-				if (callback) {
-					callback(new Error("OS not supported."));
-				}
-				return;
-		}
-
-		exec(cmd, (error, stdout, stderr) => {
-			if (callback) {
-				if (error && error.code && (error.code === 1 || error.code === 2)) {
-					// Ignore exit codes of 1 and 2. Those signal that the host is down.
-					// (The exit codes vary among operating systems).
-					error = null;
-				}
-				if (error) {
-					callback(error);
-					return;
-				}
-				if (stderr && stderr.length > 0) {
-					callback(new Error(stderr));
-					return;
-				}
-				callback(null);
-			}
-		});
-	}
-
 	isAvailable(callback: (res: boolean) => void): void {
 		this.getRawARPCache((error, result) => {
 			if (error || !result || result.length === 0) {
@@ -154,7 +98,7 @@ export default class ARPCacheAndPing implements HostDiscovery {
 				return;
 			}
 
-			this.ping("127.0.0.1", (error) => {
+			Ping.ping("127.0.0.1", (error) => {
 				if (error) {
 					callback(false);
 					return;
