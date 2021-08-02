@@ -14,13 +14,13 @@
 import dgram from "dgram";
 import net from "net";
 
-import { MAC_ADDR_LENGTH } from "../constants"
+import { MACFunctions } from "../HostDiscovery/MACFunctions"
 
 const WAKE_ON_LAN_DEFAULT_PORT: number = 9;
 
 const MAGIC_PACKET_OFFSET: number = 6;
 const MAGIC_PACKET_MAC_REPETITIONS: number = 16;
-const MAGIC_PACKET_LENGTH: number = MAGIC_PACKET_OFFSET + MAGIC_PACKET_MAC_REPETITIONS * MAC_ADDR_LENGTH;
+const MAGIC_PACKET_LENGTH: number = MAGIC_PACKET_OFFSET + MAGIC_PACKET_MAC_REPETITIONS * MACFunctions.MAC_ADDR_LENGTH;
 
 const BROADCAST_ADDRESS_IP4: string = "255.255.255.255";
 
@@ -29,8 +29,8 @@ type Protocol = "udp4" | "udp6";
 function createMagicPacket(macAddress: Uint8Array): Uint8Array {
 	let magicPacket: Uint8Array = Buffer.alloc(MAGIC_PACKET_LENGTH, "FF", "hex");
 	for (let i = 0; i < MAGIC_PACKET_MAC_REPETITIONS; i++) {
-		for (let j = 0; j < MAC_ADDR_LENGTH; j++) {
-			magicPacket[MAGIC_PACKET_OFFSET + i * MAC_ADDR_LENGTH + j] = macAddress[j]
+		for (let j = 0; j < MACFunctions.MAC_ADDR_LENGTH; j++) {
+			magicPacket[MAGIC_PACKET_OFFSET + i * MACFunctions.MAC_ADDR_LENGTH + j] = macAddress[j]
 		}
 	}
 	return magicPacket;
@@ -81,7 +81,7 @@ function wake(macAddress: Uint8Array, port: number = WAKE_ON_LAN_DEFAULT_PORT, a
 }
 
 function main() {
-	const destinationMacAddress: Uint8Array = Buffer.alloc(MAC_ADDR_LENGTH, "001FD0DB55A2", "hex");
+	const destinationMacAddress: Uint8Array = Buffer.alloc(MACFunctions.MAC_ADDR_LENGTH, "001FD0DB55A2", "hex");
 	const destinationPort: number = WAKE_ON_LAN_DEFAULT_PORT;
 
 	wake(destinationMacAddress);
