@@ -1,6 +1,10 @@
 import os from "os";
 import { exec } from "child_process";
-import ARPCacheEntry from "./ARPCacheEntry"
+
+export interface ARPCacheEntry {
+	ip: string,
+	mac: string
+}
 
 export class ARPCache {
 	private constructor() {}

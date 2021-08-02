@@ -1,9 +1,8 @@
 import { HostDiscovery } from "./HostDiscovery"
-import ARPCacheEntry from "./ARPCacheEntry"
 import { MAC_ADDR_LENGTH } from "../constants"
 import { IPFunctions, IPNetwork } from "./IPFunctions";
 import { Ping } from "./Ping";
-import { ARPCache } from "./ARPCache";
+import { ARPCache, ARPCacheEntry } from "./ARPCache";
 
 export default class ARPCacheAndPing implements HostDiscovery {
 	private readonly PING_WAIT: number = 10; // in milliseconds
