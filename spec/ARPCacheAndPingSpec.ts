@@ -3,6 +3,7 @@ import "jasmine";
 import ARPCacheAndPing from "../src/HostDiscovery/ARPCacheAndPing"
 import { IPFunctions, IPNetwork } from "../src/HostDiscovery/IPFunctions"
 import { Ping } from "../src/HostDiscovery/Ping";
+import { ARPCache } from "../src/HostDiscovery/ARPCache";
 
 describe("ARPCacheAndPing", () => {
 	let arpCacheAndPing: ARPCacheAndPing = new ARPCacheAndPing();
@@ -143,7 +144,7 @@ describe("ARPCacheAndPing", () => {
 	});
 
 	it("should retrieve the ARP cache", (done) => {
-		arpCacheAndPing.getARPCache((error, result) => {
+		ARPCache.getARPCache((error, result) => {
 			if (error) {
 				fail();
 				return;

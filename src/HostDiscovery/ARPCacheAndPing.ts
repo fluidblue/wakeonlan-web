@@ -1,19 +1,12 @@
 import { HostDiscovery } from "./HostDiscovery"
 import ARPCacheEntry from "./ARPCacheEntry"
 import { MAC_ADDR_LENGTH } from "../constants"
-import { exec } from "child_process";
 import { IPFunctions, IPNetwork } from "./IPFunctions";
 import { Ping } from "./Ping";
-import os from "os";
+import { ARPCache } from "./ARPCache";
 
 export default class ARPCacheAndPing implements HostDiscovery {
 	private readonly PING_WAIT: number = 10; // in milliseconds
-
-	// Matches IP address and MAC address in an ARP cache entry.
-	//
-	// Note on IP address part: This part of the regular expression is created for extraction, not for validation of IP addresses.
-	// Note on MAC address part: Modified from https://stackoverflow.com/a/4260512/2013757
-	private readonly RE_ARP_CACHE_ENTRY: RegExp = /^.*?((?:[0-9]{1,3}\.){3}(?:[0-9]{1,3})){1}.*?((?:[0-9A-Fa-f]{1,2}[:-]){5}(?:[0-9A-Fa-f]{1,2})).*$/gm;
 
 	async discover(
 		ipSubnet: IPNetwork,
@@ -39,7 +32,7 @@ export default class ARPCacheAndPing implements HostDiscovery {
 				if (error) {
 					return;
 				}
-				this.getARPCache((error, result) => {
+				ARPCache.getARPCache((error, result) => {
 					if (error || !result) {
 						return;
 					}
@@ -92,7 +85,7 @@ export default class ARPCacheAndPing implements HostDiscovery {
 	}
 
 	isAvailable(callback: (res: boolean) => void): void {
-		this.getRawARPCache((error, result) => {
+		ARPCache.getRawARPCache((error, result) => {
 			if (error || !result || result.length === 0) {
 				callback(false);
 				return;
@@ -105,62 +98,6 @@ export default class ARPCacheAndPing implements HostDiscovery {
 				}
 				callback(true);
 			});
-		});
-	}
-
-	getRawARPCache(callback: (error: Error | null, result?: string) => void): void {
-		let cmd: string = "";
-		switch (os.platform()) {
-			case "darwin":
-			case "linux":
-				cmd = "arp -a -n";
-				break;
-
-			case "win32":
-				cmd = "arp -a";
-				break;
-
-			default:
-				if (callback) {
-					callback(new Error("OS not supported."));
-				}
-				return;
-		}
-
-		exec(cmd, (error, stdout, stderr) => {
-			if (error) {
-				callback(error);
-				return;
-			}
-			if (stderr && stderr.length > 0) {
-				callback(Error(stderr));
-				return;
-			}
-			callback(null, stdout);
-		});
-	}
-
-	getARPCache(callback: (error: Error | null, result?: ARPCacheEntry[]) => void): void {
-		this.getRawARPCache((error, rawARPCache) => {
-			if (error) {
-				callback(error);
-				return;
-			}
-			if (!rawARPCache) {
-				callback(new Error("Result missing."));
-				return;
-			}
-
-			let arpCache: ARPCacheEntry[] = [];
-			let rawEntry;
-			while ((rawEntry = this.RE_ARP_CACHE_ENTRY.exec(rawARPCache)) !== null) {
-				arpCache.push({
-					ip: rawEntry[1],
-					mac: rawEntry[2]
-				});
-			}
-
-			callback(null, arpCache);
 		});
 	}
 }
