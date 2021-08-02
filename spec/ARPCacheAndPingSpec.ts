@@ -182,7 +182,12 @@ describe("ARPCacheAndPing", () => {
 				(ipAddress, macAddress) => {
 					console.log("Host found: " + macAddress + " " + ipAddress);
 				}
-			).then(() => {
+			).then(async () => {
+				// TODO: This should not be needed:
+				await new Promise((resolve, reject) => {
+					setTimeout(resolve, 3500);
+				});
+
 				console.log("Finished");
 				done();
 			});
