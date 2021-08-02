@@ -239,8 +239,8 @@ export default class ARPCacheAndPing implements HostDiscovery {
 		return result.join(".");
 	}
 
-	getSubnetMask(subnet: number): number {
-		return (0xFFFFFFFF << (32 - subnet)) >>> 0;
+	getSubnetMask(prefix: number): number {
+		return (0xFFFFFFFF << (32 - prefix)) >>> 0;
 	}
 
 	getCleanNetworkAddress(ip: number, subnetMask: number): number {
