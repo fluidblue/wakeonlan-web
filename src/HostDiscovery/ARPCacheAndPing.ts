@@ -1,5 +1,5 @@
 import { HostDiscovery } from "./HostDiscovery"
-import { MAC_ADDR_LENGTH } from "../constants"
+import { MACFunctions } from "./MACFunctions"
 import { IPFunctions, IPNetwork } from "./IPFunctions";
 import { Ping } from "./Ping";
 import { ARPCache, ARPCacheEntry } from "./ARPCache";
@@ -56,7 +56,7 @@ export default class ARPCacheAndPing implements HostDiscovery {
 
 					for (let host of newHosts) {
 						hosts.push(host);
-						callbackHostFound(host.ip, this.getByteArrayFromMacAddress(host.mac));
+						callbackHostFound(host.ip, MACFunctions.getByteArrayFromMacAddress(host.mac));
 					}
 				});
 			});
@@ -72,15 +72,6 @@ export default class ARPCacheAndPing implements HostDiscovery {
 		return new Promise<void>((resolve) => {
 			setTimeout(resolve, milliseconds);
 		});
-	}
-
-	getByteArrayFromMacAddress(mac: string): Uint8Array {
-		const result: Uint8Array = Buffer.alloc(MAC_ADDR_LENGTH);
-		const macParts = mac.split(/\:|\-/);
-		for (let i = 0; i < macParts.length; i++) {
-			result[i] = parseInt(macParts[i], 16);
-		}
-		return result;
 	}
 
 	isAvailable(callback: (res: boolean) => void): void {
