@@ -14,7 +14,7 @@
 import dgram from "dgram";
 import net from "net";
 
-const MAC_ADDR_LENGTH: number = 6;
+import { MAC_ADDR_LENGTH } from "../constants"
 
 const WAKE_ON_LAN_DEFAULT_PORT: number = 9;
 

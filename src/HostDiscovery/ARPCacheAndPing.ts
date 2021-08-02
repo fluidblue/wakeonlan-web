@@ -1,5 +1,6 @@
 import { HostDiscovery, IPNetwork } from "./HostDiscovery"
 import ARPCacheEntry from "./ARPCacheEntry"
+import { MAC_ADDR_LENGTH } from "../constants"
 import { exec } from "child_process";
 import os from "os";
 import net from "net";
@@ -28,13 +29,46 @@ export default class ARPCacheAndPing implements HostDiscovery {
 		const ipLast: number = this.getLastAddress(ipNetwork, ipSubnet.prefix);
 
 		const totalIPs = ipLast - ipFirst + 1;
+		let hosts: ARPCacheEntry[] = [];
 
 		let i = 0;
 		for (let ip = ipFirst; ip <= ipLast; ip++) {
 			let ipString: string = this.getIPFromNumber(ip);
 			console.log(this.getIPFromNumber(ip)); // TODO: Remove
 
-			this.ping(ipString);
+			this.ping(ipString, (error) => {
+				if (error) {
+					return;
+				}
+				this.getARPCache((error, result) => {
+					if (error || !result) {
+						return;
+					}
+
+					let newHosts: ARPCacheEntry[] = [];
+					for (let entry of result) {
+						console.log(entry); // TODO: Remove
+
+						const numericIP = this.getNumberFromIP(entry.ip);
+						if (numericIP < ipFirst || numericIP > ipLast) {
+							continue;
+						}
+
+						hosts.forEach((host) => {
+							// Skip already processed entries
+							if (host.ip === entry.ip && host.mac === entry.mac) {
+								return;
+							}
+							newHosts.push(host);
+						});
+					}
+
+					for (let host of newHosts) {
+						hosts.push(host);
+						callbackHostFound(host.ip, this.getByteArrayFromMacAddress(host.mac));
+					}
+				});
+			});
 
 			i++;
 			callbackProgress(i, totalIPs);
@@ -47,6 +81,15 @@ export default class ARPCacheAndPing implements HostDiscovery {
 		return new Promise<void>((resolve) => {
 			setTimeout(resolve, milliseconds);
 		});
+	}
+
+	getByteArrayFromMacAddress(mac: string): Uint8Array {
+		const result: Uint8Array = Buffer.alloc(MAC_ADDR_LENGTH);
+		const macParts = mac.split(/\:|\-/);
+		for (let i = 0; i < macParts.length; i++) {
+			result[i] = parseInt(macParts[i], 16);
+		}
+		return result;
 	}
 
 	ping(ip: string, callback?: (error: Error | null) => void): void {
