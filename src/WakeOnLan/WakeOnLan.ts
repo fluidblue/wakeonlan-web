@@ -12,13 +12,11 @@ const wakeOnLanOptionsDefault: WakeOnLanOptions = {
 };
 
 interface WakeOnLan {
-	wake(options?: WakeOnLanOptions, callback?: (error: Error | null) => void): void;
+	wake(options: WakeOnLanOptions, callback?: (error: Error | null) => void): void;
 }
 
-class NativeNodeJs implements WakeOnLan {
-	wake(options?: WakeOnLanOptions, callback?: (error: Error | null) => void): void {
+class NativeNode implements WakeOnLan {
+	wake(options: WakeOnLanOptions, callback?: (error: Error | null) => void): void {
 		console.log(options);
 	}
 }
-
-let nativeNodeJs: NativeNodeJs = new NativeNodeJs();
