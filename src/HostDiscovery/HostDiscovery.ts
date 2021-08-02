@@ -7,5 +7,5 @@ export interface HostDiscovery {
 		callbackHostFound: (ipAddress: string, macAddress: Uint8Array) => void
 	): Promise<void>;
 
-	isAvailable(callback: (res: boolean) => void): void;
+	isAvailable(): Promise<boolean>;
 }

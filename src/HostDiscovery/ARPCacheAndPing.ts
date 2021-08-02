@@ -71,17 +71,19 @@ export default class ARPCacheAndPing implements HostDiscovery {
 		});
 	}
 
-	isAvailable(callback: (res: boolean) => void): void {
-		ARPCache.getRawARPCache((error, result) => {
-			if (error || !result || result.length === 0) {
-				callback(false);
-				return;
-			}
+	isAvailable(): Promise<boolean> {
+		return new Promise((resolve, reject) => {
+			ARPCache.getRawARPCache((error, result) => {
+				if (error || !result || result.length === 0) {
+					resolve(false);
+					return;
+				}
 
-			Ping.ping("127.0.0.1").then(() => {
-				callback(true);
-			}, () => {
-				callback(false);
+				Ping.ping("127.0.0.1").then(() => {
+					resolve(true);
+				}, () => {
+					resolve(false);
+				});
 			});
 		});
 	}

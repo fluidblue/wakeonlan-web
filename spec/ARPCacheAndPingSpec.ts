@@ -147,12 +147,9 @@ describe("ARPCacheAndPing", () => {
 		});
 	});
 
-	it("should check if the method is available", (done) => {
-		arpCacheAndPing.isAvailable((res) => {
-			expect(res).toBeDefined();
-			expect(res).toEqual(!null);
-			done();
-		});
+	it("should check if the method is available", async () => {
+		const result = await arpCacheAndPing.isAvailable();
+		expect(result).toBeDefined();
 	});
 
 	it("should discover hosts", (done) => {
@@ -161,8 +158,8 @@ describe("ARPCacheAndPing", () => {
 			prefix: 28
 		}
 
-		arpCacheAndPing.isAvailable((res) => {
-			if (!res) {
+		arpCacheAndPing.isAvailable().then((methodIsAvailable) => {
+			if (!methodIsAvailable) {
 				done();
 				return;
 			}
