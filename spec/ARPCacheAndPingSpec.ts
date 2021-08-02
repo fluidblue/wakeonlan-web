@@ -149,7 +149,6 @@ describe("ARPCacheAndPing", () => {
 
 	it("should check if the method is available", async () => {
 		const result = await arpCacheAndPing.isAvailable();
-		expect(result).toBeDefined();
 	});
 
 	it("should discover hosts", (done) => {
