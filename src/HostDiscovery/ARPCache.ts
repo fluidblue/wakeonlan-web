@@ -15,7 +15,7 @@ export class ARPCache {
 	// Note on MAC address part: Modified from https://stackoverflow.com/a/4260512/2013757
 	private static readonly RE_ARP_CACHE_ENTRY: RegExp = /^.*?((?:[0-9]{1,3}\.){3}(?:[0-9]{1,3})){1}.*?((?:[0-9A-Fa-f]{1,2}[:-]){5}(?:[0-9A-Fa-f]{1,2})).*$/gm;
 
-	static getRawARPCache(callback: (error: Error | null, result?: string) => void): void {
+	static async getRawARPCache(): Promise<string> {
 		let cmd: string = "";
 		switch (os.platform()) {
 			case "darwin":
@@ -28,46 +28,37 @@ export class ARPCache {
 				break;
 
 			default:
-				if (callback) {
-					callback(new Error("OS not supported."));
-				}
-				return;
+				throw new Error("OS not supported.");
 		}
 
-		exec(cmd, (error, stdout, stderr) => {
-			if (error) {
-				callback(error);
-				return;
-			}
-			if (stderr && stderr.length > 0) {
-				callback(Error(stderr));
-				return;
-			}
-			callback(null, stdout);
+		const promise = new Promise<string>((resolve, reject) => {
+			exec(cmd, (error, stdout, stderr) => {
+				if (error) {
+					reject(error);
+					return;
+				}
+				if (stderr && stderr.length > 0) {
+					reject(new Error(stderr));
+					return;
+				}
+				resolve(stdout);
+			});
 		});
+		return await promise;
 	}
 
-	static getARPCache(callback: (error: Error | null, result?: ARPCacheEntry[]) => void): void {
-		this.getRawARPCache((error, rawARPCache) => {
-			if (error) {
-				callback(error);
-				return;
-			}
-			if (!rawARPCache) {
-				callback(new Error("Result missing."));
-				return;
-			}
+	static async getARPCache(): Promise<ARPCacheEntry[]> {
+		const rawARPCache = await this.getRawARPCache();
 
-			let arpCache: ARPCacheEntry[] = [];
-			let rawEntry;
-			while ((rawEntry = this.RE_ARP_CACHE_ENTRY.exec(rawARPCache)) !== null) {
-				arpCache.push({
-					ip: rawEntry[1],
-					mac: rawEntry[2]
-				});
-			}
+		let arpCache: ARPCacheEntry[] = [];
+		let rawEntry;
+		while ((rawEntry = this.RE_ARP_CACHE_ENTRY.exec(rawARPCache)) !== null) {
+			arpCache.push({
+				ip: rawEntry[1],
+				mac: rawEntry[2]
+			});
+		}
 
-			callback(null, arpCache);
-		});
+		return arpCache;
 	}
 }

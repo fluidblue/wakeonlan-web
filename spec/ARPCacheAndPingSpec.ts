@@ -137,14 +137,8 @@ describe("ARPCacheAndPing", () => {
 		await Ping.ping("127.0.0.1");
 	});
 
-	it("should retrieve the ARP cache", (done) => {
-		ARPCache.getARPCache((error, result) => {
-			if (error) {
-				fail();
-				return;
-			}
-			done();
-		});
+	it("should retrieve the ARP cache", async () => {
+		const arpCache = await ARPCache.getARPCache();
 	});
 
 	it("should check if the method is available", async () => {
