@@ -7,7 +7,7 @@ import net from "net";
 
 export default class ARPCacheAndPing implements HostDiscovery {
 	private readonly PING_TIMEOUT: number = 1; // in seconds
-	private readonly PING_WAIT: number = 100; // in milliseconds
+	private readonly PING_WAIT: number = 10; // in milliseconds
 
 	// Matches IP address and MAC address in an ARP cache entry.
 	//
