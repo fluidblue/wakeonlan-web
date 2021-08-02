@@ -1,6 +1,5 @@
 import dgram from "dgram";
 import net from "net";
-
 import { MACFunctions } from "../HostDiscovery/MACFunctions"
 
 const WAKE_ON_LAN_DEFAULT_PORT: number = 9;
@@ -10,8 +9,6 @@ const MAGIC_PACKET_MAC_REPETITIONS: number = 16;
 const MAGIC_PACKET_LENGTH: number = MAGIC_PACKET_OFFSET + MAGIC_PACKET_MAC_REPETITIONS * MACFunctions.MAC_ADDR_LENGTH;
 
 const BROADCAST_ADDRESS_IP4: string = "255.255.255.255";
-
-type Protocol = "udp4" | "udp6";
 
 function createMagicPacket(macAddress: Uint8Array): Uint8Array {
 	let magicPacket: Uint8Array = Buffer.alloc(MAGIC_PACKET_LENGTH, "FF", "hex");
@@ -29,26 +26,26 @@ function createMagicPacket(macAddress: Uint8Array): Uint8Array {
  * Details on Wake-on-LAN:
  * https://www.amd.com/system/files/TechDocs/20213.pdf
  */
-function wake(macAddress: Uint8Array, port: number = WAKE_ON_LAN_DEFAULT_PORT, address: string = BROADCAST_ADDRESS_IP4, protocol?: Protocol): Promise<void> {
-	return new Promise((resolve, reject) => {
-		let checkIP = net.isIP(address);
-		if (!checkIP) {
-			throw new Error("IP address not valid");
+async function wake(macAddress: Uint8Array, port: number = WAKE_ON_LAN_DEFAULT_PORT, address: string = BROADCAST_ADDRESS_IP4, protocol?: dgram.SocketType): Promise<void> {
+	let checkIP = net.isIP(address);
+	if (!checkIP) {
+		throw new Error("IP address not valid");
+	}
+	if (!protocol) {
+		if (checkIP == 6) {
+			protocol = "udp6";
+		} else {
+			protocol = "udp4";
 		}
-		if (!protocol) {
-			if (checkIP == 6) {
-				protocol = "udp6";
-			} else {
-				protocol = "udp4";
-			}
-		}
+	}
 
-		const magicPacket: Uint8Array = createMagicPacket(macAddress);
+	const magicPacket: Uint8Array = createMagicPacket(macAddress);
 
-		const socket = dgram.createSocket({
-			type: protocol,
-		});
+	const socket = dgram.createSocket({
+		type: protocol
+	});
 
+	const promise = new Promise<void>((resolve, reject) => {
 		socket.on("error", (err) => {
 			reject(err);
 		});
@@ -68,6 +65,7 @@ function wake(macAddress: Uint8Array, port: number = WAKE_ON_LAN_DEFAULT_PORT, a
 			});
 		});
 	});
+	await promise;
 }
 
 async function main() {
