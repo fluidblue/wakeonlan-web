@@ -22,12 +22,10 @@ export default class ARPCacheAndPing implements HostDiscovery {
 		}
 
 		this.callbackHostFound = callbackHostFound;
+		this.hosts = [];
 
 		const ipFirst: number = IPFunctions.getFirstAddress(ipSubnet);
 		const ipLast: number = IPFunctions.getLastAddress(ipSubnet);
-
-		const totalIPs = ipLast - ipFirst + 1;
-		this.hosts = [];
 
 		let lastRun = this.getTimeInMilliseconds();
 		for (let ip = ipFirst; ip <= ipLast; ip++) {
@@ -49,7 +47,7 @@ export default class ARPCacheAndPing implements HostDiscovery {
 		// Wait for all instances to finish.
 		for (let i = 0; i < this.runningPromises.length; i++) {
 			await this.runningPromises[i];
-			callbackProgress(i, totalIPs);
+			callbackProgress(i + 1, this.runningPromises.length);
 		}
 
 		this.callbackHostFound = null;
