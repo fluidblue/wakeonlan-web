@@ -5,10 +5,12 @@ import { Ping } from "./Ping";
 import { ARPCache, ARPCacheEntry } from "./ARPCache";
 
 export default class ARPCacheAndPing implements HostDiscovery {
-	private readonly PING_WAIT: number = 10; // in milliseconds // TODO: Use it
+	private static readonly PING_WAIT: number = 10; // in milliseconds
 
 	private hosts: ARPCacheEntry[] = [];
 	private callbackHostFound: ((ipAddress: string, macAddress: MacAddressBytes) => void) | null = null;
+
+	private runningInstances: Promise<void>[] = [];
 
 	async discover(
 		ipSubnet: IPNetwork,
@@ -28,11 +30,29 @@ export default class ARPCacheAndPing implements HostDiscovery {
 		this.hosts = [];
 
 		let i = 0;
+		let lastRun = this.getTimeInMilliseconds();
 		for (let ip = ipFirst; ip <= ipLast; ip++) {
-			await this.discoverHost(ip);
+			// Start discovering host
+			const promise = this.discoverHost(ip);
+			this.runningInstances.push(promise);
+
+			// Calculate duration
+			const currentTime = this.getTimeInMilliseconds();
+			const duration = currentTime - lastRun;
+			lastRun = currentTime;
+
+			// Delay ping requests to avoid packet loss
+			if (duration < ARPCacheAndPing.PING_WAIT) {
+				await this.delay(ARPCacheAndPing.PING_WAIT - duration);
+			}
 
 			i++;
 			callbackProgress(i, totalIPs);
+		}
+
+		// Wait for all instances to finish.
+		for (let instance of this.runningInstances) {
+			await instance;
 		}
 
 		this.callbackHostFound = null;
@@ -53,6 +73,16 @@ export default class ARPCacheAndPing implements HostDiscovery {
 				}
 			}
 		}
+	}
+
+	delay(timeout: number): Promise<void> {
+		return new Promise((resolve, reject) => {
+			setTimeout(resolve, timeout);
+		});
+	}
+
+	getTimeInMilliseconds(): number {
+		return new Date().getTime();
 	}
 
 	async isAvailable(): Promise<boolean> {
