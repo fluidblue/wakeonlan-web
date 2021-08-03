@@ -15,32 +15,28 @@ describe("ARPCacheAndPing", () => {
 		const result = await arpCacheAndPing.isAvailable();
 	});
 
-	it("should discover hosts", (done) => {
+	it("should discover hosts", async () => {
 		let ipSubnet: IPNetwork = {
 			ip: "192.168.188.0",
 			prefix: 28
 		}
 
-		arpCacheAndPing.isAvailable().then((methodIsAvailable) => {
-			if (!methodIsAvailable) {
-				done();
-				return;
-			}
+		const methodIsAvailable = await arpCacheAndPing.isAvailable();
+		if (!methodIsAvailable) {
+			return;
+		}
 
-			arpCacheAndPing.discover(
-				ipSubnet,
-				(done, total) => {
-					const percentage: number = (done * 100.0) / total;
-					console.log("Progress: " + done + "/" + total + " (" + percentage + " %)")
-				},
-				(ipAddress, macAddress) => {
-					const macAddressString = MACFunctions.getMacAddressFromByteArray(macAddress);
-					console.log("Host found: " + macAddressString + " " + ipAddress);
-				}
-			).then(() => {
-				console.log("Finished");
-				done();
-			});
-		});
+		await arpCacheAndPing.discover(
+			ipSubnet,
+			(done, total) => {
+				const percentage: number = (done * 100.0) / total;
+				console.log("Progress: " + done + "/" + total + " (" + percentage + " %)")
+			},
+			(ipAddress, macAddress) => {
+				const macAddressString = MACFunctions.getMacAddressFromByteArray(macAddress);
+				console.log("Host found: " + macAddressString + " " + ipAddress);
+			}
+		);
+		console.log("Finished");
 	});
 });
