@@ -8,7 +8,6 @@ export default class ARPCacheAndPing implements HostDiscovery {
 	private static readonly PING_WAIT: number = 10; // in milliseconds
 
 	private hosts: ARPCacheEntry[] = [];
-	private runningPromises: Promise<void>[] = [];
 
 	async discover(
 		ipSubnet: IPNetwork,
@@ -20,6 +19,8 @@ export default class ARPCacheAndPing implements HostDiscovery {
 		}
 
 		this.hosts = [];
+		const runningPromises: Promise<void>[] = [];
+
 		const ipFirst: number = IPFunctions.getFirstAddress(ipSubnet);
 		const ipLast: number = IPFunctions.getLastAddress(ipSubnet);
 
@@ -27,7 +28,7 @@ export default class ARPCacheAndPing implements HostDiscovery {
 		for (let ip = ipFirst; ip <= ipLast; ip++) {
 			// Start discovering host
 			const promise = this.discoverHost(ip, callbackHostFound);
-			this.runningPromises.push(promise);
+			runningPromises.push(promise);
 
 			// Calculate duration
 			const currentTime = this.getTimeInMilliseconds();
@@ -41,9 +42,9 @@ export default class ARPCacheAndPing implements HostDiscovery {
 		}
 
 		// Wait for all instances to finish.
-		for (let i = 0; i < this.runningPromises.length; i++) {
-			await this.runningPromises[i];
-			callbackProgress(i + 1, this.runningPromises.length);
+		for (let i = 0; i < runningPromises.length; i++) {
+			await runningPromises[i];
+			callbackProgress(i + 1, runningPromises.length);
 		}
 	}
 
