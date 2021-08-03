@@ -2,6 +2,7 @@ import "jasmine";
 
 import ARPCacheAndPing from "../src/HostDiscovery/ARPCacheAndPing"
 import { IPNetwork } from "../src/HostDiscovery/IPFunctions"
+import { MACFunctions } from "../src/HostDiscovery/MACFunctions"
 
 describe("ARPCacheAndPing", () => {
 	let arpCacheAndPing: ARPCacheAndPing = new ARPCacheAndPing();
@@ -33,7 +34,8 @@ describe("ARPCacheAndPing", () => {
 					console.log("Progress: " + done + "/" + total + " (" + percentage + " %)")
 				},
 				(ipAddress, macAddress) => {
-					console.log("Host found: " + macAddress + " " + ipAddress);
+					const macAddressString = MACFunctions.getMacAddressFromByteArray(macAddress);
+					console.log("Host found: " + macAddressString + " " + ipAddress);
 				}
 			).then(() => {
 				console.log("Finished");

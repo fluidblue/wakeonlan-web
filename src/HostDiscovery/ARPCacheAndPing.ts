@@ -1,5 +1,5 @@
 import { HostDiscovery } from "./HostDiscovery"
-import { MACFunctions } from "./MACFunctions"
+import { MACFunctions, MacAddressBytes } from "./MACFunctions"
 import { IPFunctions, IPNetwork } from "./IPFunctions";
 import { Ping } from "./Ping";
 import { ARPCache, ARPCacheEntry } from "./ARPCache";
@@ -10,7 +10,7 @@ export default class ARPCacheAndPing implements HostDiscovery {
 	async discover(
 		ipSubnet: IPNetwork,
 		callbackProgress: (done: number, total: number) => void,
-		callbackHostFound: (ipAddress: string, macAddress: Uint8Array) => void
+		callbackHostFound: (ipAddress: string, macAddress: MacAddressBytes) => void
 	): Promise<void> {
 		if (ipSubnet.prefix < 1 || ipSubnet.prefix > 32) {
 			throw new RangeError("IP prefix must be between 1 and 32.");
@@ -25,32 +25,16 @@ export default class ARPCacheAndPing implements HostDiscovery {
 		let i = 0;
 		for (let ip = ipFirst; ip <= ipLast; ip++) {
 			let ipString: string = IPFunctions.getStringIP(ip);
-			console.log(ipString); // TODO: Remove
 
 			await Ping.ping(ipString);
 			const arpCache = await ARPCache.getARPCache();
 
-			let newHosts: ARPCacheEntry[] = [];
 			for (let entry of arpCache) {
-				console.log(entry); // TODO: Remove
-
-				const numericIP = IPFunctions.getNumericalIP(entry.ip);
-				if (numericIP < ipFirst || numericIP > ipLast) {
-					continue;
+				const numericEntryIP = IPFunctions.getNumericalIP(entry.ip);
+				if (ip === numericEntryIP) {
+					hosts.push(entry);
+					callbackHostFound(entry.ip, MACFunctions.getByteArrayFromMacAddress(entry.mac));
 				}
-
-				hosts.forEach((host) => {
-					// Skip already processed entries
-					if (host.ip === entry.ip && host.mac === entry.mac) {
-						return;
-					}
-					newHosts.push(host);
-				});
-			}
-
-			for (let host of newHosts) {
-				hosts.push(host);
-				callbackHostFound(host.ip, MACFunctions.getByteArrayFromMacAddress(host.mac));
 			}
 
 			i++;

@@ -14,4 +14,19 @@ export class MACFunctions {
 		}
 		return result;
 	}
+
+	static getMacAddressFromByteArray(byteArray: MacAddressBytes): MacAddress {
+		if (byteArray.length !== MACFunctions.MAC_ADDR_LENGTH) {
+			throw new RangeError();
+		}
+
+		let result = "";
+		for (let i = 0; i < byteArray.length; i++) {
+			if (i !== 0) {
+				result += ":";
+			}
+			result += byteArray[i].toString(16); // TODO: Print in format "00"
+		}
+		return result;
+	}
 }
