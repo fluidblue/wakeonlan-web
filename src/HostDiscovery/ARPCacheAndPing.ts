@@ -8,8 +8,6 @@ export default class ARPCacheAndPing implements HostDiscovery {
 	private static readonly PING_WAIT: number = 10; // in milliseconds
 
 	private hosts: ARPCacheEntry[] = [];
-	private callbackHostFound: ((ipAddress: string, macAddress: MacAddressBytes) => void) | null = null;
-
 	private runningPromises: Promise<void>[] = [];
 
 	async discover(
@@ -21,16 +19,14 @@ export default class ARPCacheAndPing implements HostDiscovery {
 			throw new RangeError("IP prefix must be between 1 and 32.");
 		}
 
-		this.callbackHostFound = callbackHostFound;
 		this.hosts = [];
-
 		const ipFirst: number = IPFunctions.getFirstAddress(ipSubnet);
 		const ipLast: number = IPFunctions.getLastAddress(ipSubnet);
 
 		let lastRun = this.getTimeInMilliseconds();
 		for (let ip = ipFirst; ip <= ipLast; ip++) {
 			// Start discovering host
-			const promise = this.discoverHost(ip);
+			const promise = this.discoverHost(ip, callbackHostFound);
 			this.runningPromises.push(promise);
 
 			// Calculate duration
@@ -49,11 +45,9 @@ export default class ARPCacheAndPing implements HostDiscovery {
 			await this.runningPromises[i];
 			callbackProgress(i + 1, this.runningPromises.length);
 		}
-
-		this.callbackHostFound = null;
 	}
 
-	async discoverHost(ip: IPAddressNumerical): Promise<void> {
+	async discoverHost(ip: IPAddressNumerical, callbackHostFound: (ipAddress: string, macAddress: MacAddressBytes) => void): Promise<void> {
 		let ipString: string = IPFunctions.getStringIP(ip);
 
 		await Ping.ping(ipString);
@@ -63,9 +57,7 @@ export default class ARPCacheAndPing implements HostDiscovery {
 			const numericEntryIP = IPFunctions.getNumericalIP(entry.ip);
 			if (ip === numericEntryIP) {
 				this.hosts.push(entry);
-				if (this.callbackHostFound) {
-					this.callbackHostFound(entry.ip, MACFunctions.getByteArrayFromMacAddress(entry.mac));
-				}
+				callbackHostFound(entry.ip, MACFunctions.getByteArrayFromMacAddress(entry.mac));
 			}
 		}
 	}
