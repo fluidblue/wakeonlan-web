@@ -3,16 +3,16 @@ import { WakeOnLan, WakeOnLanOptions } from "./WakeOnLan";
 import dgram from "dgram";
 import net from "net";
 
-export class NativeNode extends WakeOnLan {
+export class WolNativeNode extends WakeOnLan {
 	static readonly MAGIC_PACKET_OFFSET: number = 6;
 	static readonly MAGIC_PACKET_MAC_REPETITIONS: number = 16;
-	static readonly MAGIC_PACKET_LENGTH: number = NativeNode.MAGIC_PACKET_OFFSET + NativeNode.MAGIC_PACKET_MAC_REPETITIONS * MACFunctions.MAC_ADDR_LENGTH;
+	static readonly MAGIC_PACKET_LENGTH: number = WolNativeNode.MAGIC_PACKET_OFFSET + WolNativeNode.MAGIC_PACKET_MAC_REPETITIONS * MACFunctions.MAC_ADDR_LENGTH;
 
 	static createMagicPacket(macAddress: MacAddressBytes): Uint8Array {
-		let magicPacket: Uint8Array = Buffer.alloc(NativeNode.MAGIC_PACKET_LENGTH, "FF", "hex");
-		for (let i = 0; i < NativeNode.MAGIC_PACKET_MAC_REPETITIONS; i++) {
+		let magicPacket: Uint8Array = Buffer.alloc(WolNativeNode.MAGIC_PACKET_LENGTH, "FF", "hex");
+		for (let i = 0; i < WolNativeNode.MAGIC_PACKET_MAC_REPETITIONS; i++) {
 			for (let j = 0; j < MACFunctions.MAC_ADDR_LENGTH; j++) {
-				magicPacket[NativeNode.MAGIC_PACKET_OFFSET + i * MACFunctions.MAC_ADDR_LENGTH + j] = macAddress[j]
+				magicPacket[WolNativeNode.MAGIC_PACKET_OFFSET + i * MACFunctions.MAC_ADDR_LENGTH + j] = macAddress[j]
 			}
 		}
 		return magicPacket;
@@ -40,7 +40,7 @@ export class NativeNode extends WakeOnLan {
 			}
 		}
 
-		const magicPacket: Uint8Array = NativeNode.createMagicPacket(macAddress);
+		const magicPacket: Uint8Array = WolNativeNode.createMagicPacket(macAddress);
 
 		const promise = new Promise<void>((resolve, reject) => {
 			const socket = dgram.createSocket({
@@ -72,7 +72,7 @@ export class NativeNode extends WakeOnLan {
 
 async function main() {
 	const destinationMacAddress: MacAddressBytes = Buffer.alloc(MACFunctions.MAC_ADDR_LENGTH, "001FD0DB55A2", "hex");
-	const wakeOnLan = new NativeNode();
+	const wakeOnLan = new WolNativeNode();
 
 	await wakeOnLan.wake(destinationMacAddress);
 
