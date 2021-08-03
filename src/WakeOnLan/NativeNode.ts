@@ -1,80 +1,89 @@
+import { MACFunctions, MacAddressBytes } from "../HostDiscovery/MACFunctions"
+import { WakeOnLan, WakeOnLanOptions } from "./WakeOnLan";
 import dgram from "dgram";
 import net from "net";
-import { MACFunctions } from "../HostDiscovery/MACFunctions"
 
-const WAKE_ON_LAN_DEFAULT_PORT: number = 9;
+export class NativeNode extends WakeOnLan {
+	static readonly MAGIC_PACKET_OFFSET: number = 6;
+	static readonly MAGIC_PACKET_MAC_REPETITIONS: number = 16;
+	static readonly MAGIC_PACKET_LENGTH: number = NativeNode.MAGIC_PACKET_OFFSET + NativeNode.MAGIC_PACKET_MAC_REPETITIONS * MACFunctions.MAC_ADDR_LENGTH;
 
-const MAGIC_PACKET_OFFSET: number = 6;
-const MAGIC_PACKET_MAC_REPETITIONS: number = 16;
-const MAGIC_PACKET_LENGTH: number = MAGIC_PACKET_OFFSET + MAGIC_PACKET_MAC_REPETITIONS * MACFunctions.MAC_ADDR_LENGTH;
-
-const BROADCAST_ADDRESS_IP4: string = "255.255.255.255";
-
-function createMagicPacket(macAddress: Uint8Array): Uint8Array {
-	let magicPacket: Uint8Array = Buffer.alloc(MAGIC_PACKET_LENGTH, "FF", "hex");
-	for (let i = 0; i < MAGIC_PACKET_MAC_REPETITIONS; i++) {
-		for (let j = 0; j < MACFunctions.MAC_ADDR_LENGTH; j++) {
-			magicPacket[MAGIC_PACKET_OFFSET + i * MACFunctions.MAC_ADDR_LENGTH + j] = macAddress[j]
+	static createMagicPacket(macAddress: MacAddressBytes): Uint8Array {
+		let magicPacket: Uint8Array = Buffer.alloc(NativeNode.MAGIC_PACKET_LENGTH, "FF", "hex");
+		for (let i = 0; i < NativeNode.MAGIC_PACKET_MAC_REPETITIONS; i++) {
+			for (let j = 0; j < MACFunctions.MAC_ADDR_LENGTH; j++) {
+				magicPacket[NativeNode.MAGIC_PACKET_OFFSET + i * MACFunctions.MAC_ADDR_LENGTH + j] = macAddress[j]
+			}
 		}
+		return magicPacket;
 	}
-	return magicPacket;
-}
 
-/**
- * Wakes up a host using Wake-on-LAN.
- * 
- * Details on Wake-on-LAN:
- * https://www.amd.com/system/files/TechDocs/20213.pdf
- */
-async function wake(macAddress: Uint8Array, port: number = WAKE_ON_LAN_DEFAULT_PORT, address: string = BROADCAST_ADDRESS_IP4, protocol?: dgram.SocketType): Promise<void> {
-	let checkIP = net.isIP(address);
-	if (!checkIP) {
-		throw new Error("IP address not valid");
-	}
-	if (!protocol) {
-		if (checkIP == 6) {
-			protocol = "udp6";
-		} else {
-			protocol = "udp4";
+	/**
+	 * Wakes up a host using Wake-on-LAN.
+	 * 
+	 * Details on Wake-on-LAN:
+	 * https://www.amd.com/system/files/TechDocs/20213.pdf
+	 */
+	async wake(macAddress: MacAddressBytes, options?: WakeOnLanOptions, protocol?: dgram.SocketType): Promise<void> {
+		// Merge options and defaultOptions
+		options = {...WakeOnLan.optionsDefault, ...options};
+
+		let checkIP = net.isIP(options.address!);
+		if (!checkIP) {
+			throw new Error("IP address not valid");
 		}
-	}
+		if (!protocol) {
+			if (checkIP == 6) {
+				protocol = "udp6";
+			} else {
+				protocol = "udp4";
+			}
+		}
 
-	const magicPacket: Uint8Array = createMagicPacket(macAddress);
+		const magicPacket: Uint8Array = NativeNode.createMagicPacket(macAddress);
 
-	const promise = new Promise<void>((resolve, reject) => {
-		const socket = dgram.createSocket({
-			type: protocol!
-		});
+		const promise = new Promise<void>((resolve, reject) => {
+			const socket = dgram.createSocket({
+				type: protocol!
+			});
 
-		socket.on("error", (err) => {
-			reject(err);
-		});
+			socket.on("error", (err) => {
+				reject(err);
+			});
 
-		socket.connect(port, address, () => {
-			// Set SO_BROADCAST socket option to allow sending to a broadcast address
-			socket.setBroadcast(true);
+			socket.connect(options!.port!, options!.address, () => {
+				// Set SO_BROADCAST socket option to allow sending to a broadcast address
+				socket.setBroadcast(true);
 
-			socket.send(magicPacket, 0, magicPacket.length, (err) => {
-				socket.close();
-				if (err) {
-					reject(err);
-					return;
-				}
-				console.log("Message has been sent.");
-				resolve();
+				socket.send(magicPacket, 0, magicPacket.length, (err) => {
+					socket.close();
+					if (err) {
+						reject(err);
+						return;
+					}
+					console.log("Message has been sent.");
+					resolve();
+				});
 			});
 		});
-	});
-	await promise;
+		await promise;
+	}
 }
 
 async function main() {
-	const destinationMacAddress: Uint8Array = Buffer.alloc(MACFunctions.MAC_ADDR_LENGTH, "001FD0DB55A2", "hex");
-	const destinationPort: number = WAKE_ON_LAN_DEFAULT_PORT;
+	const destinationMacAddress: MacAddressBytes = Buffer.alloc(MACFunctions.MAC_ADDR_LENGTH, "001FD0DB55A2", "hex");
+	const wakeOnLan = new NativeNode();
 
-	await wake(destinationMacAddress);
-	await wake(destinationMacAddress, 7);
-	await wake(destinationMacAddress, 9, "192.168.188.22");
+	await wakeOnLan.wake(destinationMacAddress);
+
+	await wakeOnLan.wake(destinationMacAddress, {
+		port: 7
+	});
+
+	await wakeOnLan.wake(destinationMacAddress, {
+		port: 9,
+		address: "192.168.188.22"
+	});
 }
 
 main();
