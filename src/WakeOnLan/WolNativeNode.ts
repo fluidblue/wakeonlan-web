@@ -3,7 +3,7 @@ import { WakeOnLan, WakeOnLanOptions } from "./WakeOnLan";
 import dgram from "dgram";
 import net from "net";
 
-export class WolNativeNode extends WakeOnLan {
+export default class WolNativeNode extends WakeOnLan {
 	static readonly MAGIC_PACKET_OFFSET: number = 6;
 	static readonly MAGIC_PACKET_MAC_REPETITIONS: number = 16;
 	static readonly MAGIC_PACKET_LENGTH: number = WolNativeNode.MAGIC_PACKET_OFFSET + WolNativeNode.MAGIC_PACKET_MAC_REPETITIONS * MACFunctions.MAC_ADDR_LENGTH;
@@ -69,21 +69,3 @@ export class WolNativeNode extends WakeOnLan {
 		await promise;
 	}
 }
-
-async function main() {
-	const destinationMacAddress: MacAddressBytes = Buffer.alloc(MACFunctions.MAC_ADDR_LENGTH, "001122334455", "hex");
-	const wakeOnLan = new WolNativeNode();
-
-	await wakeOnLan.wake(destinationMacAddress);
-
-	await wakeOnLan.wake(destinationMacAddress, {
-		port: 7
-	});
-
-	await wakeOnLan.wake(destinationMacAddress, {
-		port: 9,
-		address: "192.168.188.22"
-	});
-}
-
-main();
