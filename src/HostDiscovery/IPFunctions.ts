@@ -1,5 +1,5 @@
-type IPAddress = string;
-type IPAddressNumerical = number;
+export type IPAddress = string;
+export type IPAddressNumerical = number;
 
 export interface IPNetwork {
 	ip: IPAddress,
