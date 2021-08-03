@@ -71,7 +71,7 @@ export class WolNativeNode extends WakeOnLan {
 }
 
 async function main() {
-	const destinationMacAddress: MacAddressBytes = Buffer.alloc(MACFunctions.MAC_ADDR_LENGTH, "001FD0DB55A2", "hex");
+	const destinationMacAddress: MacAddressBytes = Buffer.alloc(MACFunctions.MAC_ADDR_LENGTH, "001122334455", "hex");
 	const wakeOnLan = new WolNativeNode();
 
 	await wakeOnLan.wake(destinationMacAddress);
