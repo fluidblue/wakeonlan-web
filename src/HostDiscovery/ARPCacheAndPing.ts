@@ -10,7 +10,7 @@ export default class ARPCacheAndPing implements HostDiscovery {
 	private hosts: ARPCacheEntry[] = [];
 	private callbackHostFound: ((ipAddress: string, macAddress: MacAddressBytes) => void) | null = null;
 
-	private runningInstances: Promise<void>[] = [];
+	private runningPromises: Promise<void>[] = [];
 
 	async discover(
 		ipSubnet: IPNetwork,
@@ -34,7 +34,7 @@ export default class ARPCacheAndPing implements HostDiscovery {
 		for (let ip = ipFirst; ip <= ipLast; ip++) {
 			// Start discovering host
 			const promise = this.discoverHost(ip);
-			this.runningInstances.push(promise);
+			this.runningPromises.push(promise);
 
 			// Calculate duration
 			const currentTime = this.getTimeInMilliseconds();
@@ -51,7 +51,7 @@ export default class ARPCacheAndPing implements HostDiscovery {
 		}
 
 		// Wait for all instances to finish.
-		for (let instance of this.runningInstances) {
+		for (let instance of this.runningPromises) {
 			await instance;
 		}
 
