@@ -9,7 +9,7 @@ describe("WolNativeNode", () => {
 	const defaultPort = 9; // WOL port number
 	const alternativePort: number = 7; // Echo protocol port number (also used for WOL sometimes)
 
-	const nonBroadcastAddress: string = "192.168.188.22";
+	const nonBroadcastAddress: string = "127.0.0.1";
 
 	let wolNativeNode: WolNativeNode = new WolNativeNode();
 
