@@ -48,10 +48,6 @@ export class Ping {
 					reject(error);
 					return;
 				}
-				if (stderr && stderr.length > 0) {
-					reject(new Error(stderr));
-					return;
-				}
 				resolve();
 			});
 		});
