@@ -5,9 +5,13 @@ import { IPNetwork } from "../src/HostDiscovery/IPFunctions"
 import { MACFunctions } from "../src/HostDiscovery/MACFunctions"
 
 describe("ARPCacheAndPing", () => {
+	let originalTimeout: number;
 	let arpCacheAndPing: ARPCacheAndPing = new ARPCacheAndPing();
 
 	beforeEach(() => {
+		originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+		jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+
 		arpCacheAndPing = new ARPCacheAndPing();
 	});
 
@@ -38,5 +42,9 @@ describe("ARPCacheAndPing", () => {
 			}
 		);
 		console.log("Finished");
+	});
+
+	afterEach(() => {
+		jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
 	});
 });
