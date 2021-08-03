@@ -30,7 +30,7 @@ describe("ARPCacheAndPing", () => {
 			return;
 		}
 
-		await arpCacheAndPing.discover(
+		const hosts = await arpCacheAndPing.discover(
 			ipSubnet,
 			(done, total) => {
 				const percentage: number = (done * 100.0) / total;
@@ -42,6 +42,8 @@ describe("ARPCacheAndPing", () => {
 			}
 		);
 		console.log("Finished");
+		console.log("Hosts:");
+		console.log(hosts);
 	});
 
 	afterEach(() => {

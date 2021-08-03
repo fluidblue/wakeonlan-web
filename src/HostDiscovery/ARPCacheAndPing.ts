@@ -7,19 +7,17 @@ import { ARPCache, ARPCacheEntry } from "./ARPCache";
 export default class ARPCacheAndPing implements HostDiscovery {
 	private static readonly PING_WAIT: number = 10; // in milliseconds
 
-	private hosts: ARPCacheEntry[] = [];
-
 	async discover(
 		ipSubnet: IPNetwork,
 		callbackProgress: (done: number, total: number) => void,
 		callbackHostFound: (ipAddress: string, macAddress: MacAddressBytes) => void
-	): Promise<void> {
+	): Promise<ARPCacheEntry[]> {
 		if (ipSubnet.prefix < 1 || ipSubnet.prefix > 32) {
 			throw new RangeError("IP prefix must be between 1 and 32.");
 		}
 
-		this.hosts = [];
-		const runningPromises: Promise<void>[] = [];
+		const hosts: ARPCacheEntry[] = [];
+		const runningPromises: Promise<ARPCacheEntry | null>[] = [];
 
 		const ipFirst: number = IPFunctions.getFirstAddress(ipSubnet);
 		const ipLast: number = IPFunctions.getLastAddress(ipSubnet);
@@ -27,7 +25,7 @@ export default class ARPCacheAndPing implements HostDiscovery {
 		let lastRun = this.getTimeInMilliseconds();
 		for (let ip = ipFirst; ip <= ipLast; ip++) {
 			// Start discovering host
-			const promise = this.discoverHost(ip, callbackHostFound);
+			const promise = this.discoverHost(ip);
 			runningPromises.push(promise);
 
 			// Calculate duration
@@ -41,14 +39,20 @@ export default class ARPCacheAndPing implements HostDiscovery {
 			}
 		}
 
-		// Wait for all instances to finish.
+		// Wait for all promises to finish
 		for (let i = 0; i < runningPromises.length; i++) {
-			await runningPromises[i];
+			const host: ARPCacheEntry | null = await runningPromises[i];
+			if (host) {
+				hosts.push(host);
+				callbackHostFound(host.ip, MACFunctions.getByteArrayFromMacAddress(host.mac));
+			}
 			callbackProgress(i + 1, runningPromises.length);
 		}
+
+		return hosts;
 	}
 
-	async discoverHost(ip: IPAddressNumerical, callbackHostFound: (ipAddress: string, macAddress: MacAddressBytes) => void): Promise<void> {
+	async discoverHost(ip: IPAddressNumerical): Promise<ARPCacheEntry | null> {
 		let ipString: string = IPFunctions.getStringIP(ip);
 
 		await Ping.ping(ipString);
@@ -57,10 +61,10 @@ export default class ARPCacheAndPing implements HostDiscovery {
 		for (let entry of arpCache) {
 			const numericEntryIP = IPFunctions.getNumericalIP(entry.ip);
 			if (ip === numericEntryIP) {
-				this.hosts.push(entry);
-				callbackHostFound(entry.ip, MACFunctions.getByteArrayFromMacAddress(entry.mac));
+				return entry;
 			}
 		}
+		return null;
 	}
 
 	delay(timeout: number): Promise<void> {
