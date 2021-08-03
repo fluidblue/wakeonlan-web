@@ -61,7 +61,6 @@ export default class WolNativeNode extends WakeOnLan {
 						reject(err);
 						return;
 					}
-					console.log("Message has been sent.");
 					resolve();
 				});
 			});
