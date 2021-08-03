@@ -22,7 +22,7 @@ describe("ARPCacheAndPing", () => {
 	it("should discover hosts", async () => {
 		let ipSubnet: IPNetwork = {
 			ip: "192.168.188.0",
-			prefix: 26
+			prefix: 24
 		}
 
 		const methodIsAvailable = await arpCacheAndPing.isAvailable();
