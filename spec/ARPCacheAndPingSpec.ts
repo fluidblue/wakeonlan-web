@@ -10,7 +10,7 @@ describe("ARPCacheAndPing", () => {
 
 	beforeEach(() => {
 		originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-		jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+		jasmine.DEFAULT_TIMEOUT_INTERVAL = 120000;
 
 		arpCacheAndPing = new ARPCacheAndPing();
 	});
