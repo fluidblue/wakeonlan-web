@@ -29,7 +29,6 @@ export default class ARPCacheAndPing implements HostDiscovery {
 		const totalIPs = ipLast - ipFirst + 1;
 		this.hosts = [];
 
-		let i = 0;
 		let lastRun = this.getTimeInMilliseconds();
 		for (let ip = ipFirst; ip <= ipLast; ip++) {
 			// Start discovering host
@@ -45,14 +44,12 @@ export default class ARPCacheAndPing implements HostDiscovery {
 			if (duration < ARPCacheAndPing.PING_WAIT) {
 				await this.delay(ARPCacheAndPing.PING_WAIT - duration);
 			}
-
-			i++;
-			callbackProgress(i, totalIPs);
 		}
 
 		// Wait for all instances to finish.
-		for (let instance of this.runningPromises) {
-			await instance;
+		for (let i = 0; i < this.runningPromises.length; i++) {
+			await this.runningPromises[i];
+			callbackProgress(i, totalIPs);
 		}
 
 		this.callbackHostFound = null;
