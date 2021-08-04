@@ -2,7 +2,7 @@ import { HostDiscovery } from "./HostDiscovery"
 import { IPFunctions, IPNetwork } from "./IPFunctions";
 import { MACFunctions, MacAddressBytes } from "./MACFunctions";
 import { ARPCacheEntry } from "./ARPCache";
-import { spawn } from "child_process";
+import { spawn, exec } from "child_process";
 import net from "net";
 
 const delimeter: string = "\n";
@@ -98,7 +98,18 @@ export default class ARPScan implements HostDiscovery {
 	}
 
 	async isAvailable(): Promise<boolean> {
-		// TODO
-		return true;
+		return new Promise<boolean>((resolve, reject) => {
+			exec("arp-scan 127.0.0.1/32", (error, stdout, stderr) => {
+				if (error) {
+					resolve(false);
+					return;
+				}
+				if (stderr && stderr.length > 0) {
+					resolve(false);
+					return;
+				}
+				resolve(true);
+			});
+		});
 	}
 }
