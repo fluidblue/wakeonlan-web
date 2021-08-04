@@ -15,6 +15,33 @@ export default class ARPScan implements HostDiscovery {
 	): Promise<ARPCacheEntry[]> {
 		const hosts: ARPCacheEntry[] = [];
 
+		// Check for valid input, as input is used in string literal
+		if (!net.isIP(ipSubnet.ip)) {
+			throw new Error("Invalid input.");
+		}
+
+		const promise = new Promise<void>((resolve, reject) => {
+			const childProcess = spawn("arp-scan", ["-q", `${ipSubnet.ip}/${ipSubnet.prefix}`]);
+
+			childProcess.on("error", (err) => {
+				console.error("Failed to start subprocess.");
+			});
+
+			childProcess.stdout.on("data", this.createChunkAssembler((line) => {
+				console.log("stdout (line): " + line);
+			}));
+
+			childProcess.stderr.on("data", this.createChunkAssembler((line) => {
+				console.log("stderr (line): " + line);
+			}));
+
+			childProcess.on("close", (code) => {
+				console.log(`child process exited with code ${code}`);
+				resolve();
+			});
+		});
+		await promise;
+
 		// TODO
 		return hosts;
 	}
