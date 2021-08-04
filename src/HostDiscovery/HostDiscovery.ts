@@ -5,8 +5,7 @@ import { ARPCacheEntry } from "./ARPCache";
 export interface HostDiscovery {
 	discover(
 		ipSubnet: IPNetwork,
-		callbackProgress: (done: number, total: number) => void,
-		callbackHostFound: (ipAddress: string, macAddress: MacAddressBytes) => void
+		callbackProgress: (done: number, total: number) => void
 	): Promise<ARPCacheEntry[]>;
 
 	isAvailable(): Promise<boolean>;
