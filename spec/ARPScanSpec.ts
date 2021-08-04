@@ -25,7 +25,7 @@ describe("ARPScan", () => {
 	it("should discover hosts", async () => {
 		let ipSubnet: IPNetwork = {
 			ip: "192.168.188.0",
-			prefix: 20
+			prefix: 24
 		}
 
 		const methodIsAvailable = await arpScan.isAvailable();
