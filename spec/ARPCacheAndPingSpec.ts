@@ -4,13 +4,16 @@ import ARPCacheAndPing from "../src/HostDiscovery/ARPCacheAndPing"
 import { IPNetwork } from "../src/HostDiscovery/IPFunctions"
 import { MACFunctions } from "../src/HostDiscovery/MACFunctions"
 
+const verbose: boolean = false;
+const timeout: number = 120; // in seconds
+
 describe("ARPCacheAndPing", () => {
 	let originalTimeout: number;
 	let arpCacheAndPing: ARPCacheAndPing = new ARPCacheAndPing();
 
 	beforeEach(() => {
 		originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-		jasmine.DEFAULT_TIMEOUT_INTERVAL = 120000;
+		jasmine.DEFAULT_TIMEOUT_INTERVAL = timeout * 1000;
 
 		arpCacheAndPing = new ARPCacheAndPing();
 	});
@@ -19,7 +22,6 @@ describe("ARPCacheAndPing", () => {
 		const result = await arpCacheAndPing.isAvailable();
 	});
 
-	// TODO: Remove commented out code
 	it("should discover hosts", async () => {
 		let ipSubnet: IPNetwork = {
 			ip: "192.168.188.0",
@@ -31,20 +33,30 @@ describe("ARPCacheAndPing", () => {
 			return;
 		}
 
+		if (verbose) {
+			console.log(""); // Add newline
+		}
+
 		const hosts = await arpCacheAndPing.discover(
 			ipSubnet,
 			(done, total) => {
-				const percentage: number = (done * 100.0) / total;
-				//console.log("Progress: " + done + "/" + total + " (" + percentage + " %)")
+				if (verbose) {
+					const percentage: number = (done * 100.0) / total;
+					console.log("Progress: " + done + "/" + total + " (" + percentage + " %)")
+				}
 			},
 			(ipAddress, macAddress) => {
-				const macAddressString = MACFunctions.getMacAddressFromByteArray(macAddress);
-				//console.log("Host found: " + macAddressString + " " + ipAddress);
+				if (verbose) {
+					const macAddressString = MACFunctions.getMacAddressFromByteArray(macAddress);
+					console.log("Host found: " + macAddressString + " " + ipAddress);
+				}
 			}
 		);
-		//console.log("Finished");
-		//console.log("Hosts:");
-		//console.log(hosts);
+		if (verbose) {
+			console.log("Finished.");
+			console.log("Hosts:");
+			console.log(hosts);
+		}
 	});
 
 	afterEach(() => {
