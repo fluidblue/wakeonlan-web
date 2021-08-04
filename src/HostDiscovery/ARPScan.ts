@@ -1,6 +1,6 @@
 import { HostDiscovery } from "./HostDiscovery"
-import { IPNetwork } from "./IPFunctions";
-import { MacAddressBytes } from "./MACFunctions";
+import { IPFunctions, IPNetwork } from "./IPFunctions";
+import { MACFunctions, MacAddressBytes } from "./MACFunctions";
 import { ARPCacheEntry } from "./ARPCache";
 import { spawn } from "child_process";
 import net from "net";
@@ -8,41 +8,78 @@ import net from "net";
 const delimeter: string = "\n";
 
 export default class ARPScan implements HostDiscovery {
+	// Matches IP address and MAC address in a result line of the arp-scan command.
+	//
+	// Note on IP address part: This part of the regular expression is created for extraction, not for validation of IP addresses.
+	// Note on MAC address part: Modified from https://stackoverflow.com/a/4260512/2013757
+	private static readonly RE_ARP_SCAN_RESULT: RegExp = /^((?:[0-9]{1,3}\.){3}(?:[0-9]{1,3})){1}.*?((?:[0-9A-Fa-f]{1,2}[:-]){5}(?:[0-9A-Fa-f]{1,2}))$/;
+
 	async discover(
 		ipSubnet: IPNetwork,
 		callbackProgress: (done: number, total: number) => void,
 		callbackHostFound: (ipAddress: string, macAddress: MacAddressBytes) => void
 	): Promise<ARPCacheEntry[]> {
-		const hosts: ARPCacheEntry[] = [];
-
-		// Check for valid input, as input is used in string literal
+		// Check for valid input
 		if (!net.isIP(ipSubnet.ip)) {
 			throw new Error("Invalid input.");
 		}
 
+		// Normalize IP network address
+		let numericalIP = IPFunctions.getNumericalIP(ipSubnet.ip);
+		numericalIP = IPFunctions.getCleanNetworkAddress(numericalIP, IPFunctions.getSubnetMask(ipSubnet.prefix));
+		const ip = IPFunctions.getStringIP(numericalIP);
+
+		const hosts: ARPCacheEntry[] = [];
+		let failed: boolean = false;
+
 		const promise = new Promise<void>((resolve, reject) => {
-			const childProcess = spawn("arp-scan", ["-q", `${ipSubnet.ip}/${ipSubnet.prefix}`]);
+			const childProcess = spawn("arp-scan", ["-q", "-x", "-g", `${ip}/${ipSubnet.prefix}`]);
 
 			childProcess.on("error", (err) => {
-				console.error("Failed to start subprocess.");
+				failed = true;
+				reject(new Error("Failed to start subprocess. Caused by: " + err.toString()));
 			});
 
 			childProcess.stdout.on("data", this.createChunkAssembler((line) => {
-				console.log("stdout (line): " + line);
+				const result = line.match(ARPScan.RE_ARP_SCAN_RESULT);
+				if (!result) {
+					failed = true;
+					childProcess.kill();
+					reject(new Error("Unexpected output format. Output format should be: \"123.123.123.123\\t00:11:22:33:44:55\""));
+				}
+				const ip = result![1];
+				const mac = result![2];
+				hosts.push({
+					ip: ip,
+					mac: mac
+				});
+				callbackHostFound(ip, MACFunctions.getByteArrayFromMacAddress(mac));
 			}));
 
 			childProcess.stderr.on("data", this.createChunkAssembler((line) => {
-				console.log("stderr (line): " + line);
+				failed = true;
+				childProcess.kill();
+				reject(new Error(line));
 			}));
 
 			childProcess.on("close", (code) => {
-				console.log(`child process exited with code ${code}`);
+				if (failed) {
+					// Error has already been handled.
+					return;
+				}
+				if (code !== 0) {
+					reject(new Error("Child process exited with code " + code + "."));
+					return;
+				}
 				resolve();
 			});
 		});
 		await promise;
 
-		// TODO
+		// TODO: Use callbackProgress during arp-scan running
+		const totalIPs = IPFunctions.getLastAddress(ipSubnet) - IPFunctions.getFirstAddress(ipSubnet) + 1;
+		callbackProgress(totalIPs, totalIPs);
+
 		return hosts;
 	}
 
