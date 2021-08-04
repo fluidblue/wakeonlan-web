@@ -19,6 +19,7 @@ describe("ARPCacheAndPing", () => {
 		const result = await arpCacheAndPing.isAvailable();
 	});
 
+	// TODO: Remove commented out code
 	it("should discover hosts", async () => {
 		let ipSubnet: IPNetwork = {
 			ip: "192.168.188.0",
@@ -34,16 +35,16 @@ describe("ARPCacheAndPing", () => {
 			ipSubnet,
 			(done, total) => {
 				const percentage: number = (done * 100.0) / total;
-				console.log("Progress: " + done + "/" + total + " (" + percentage + " %)")
+				//console.log("Progress: " + done + "/" + total + " (" + percentage + " %)")
 			},
 			(ipAddress, macAddress) => {
 				const macAddressString = MACFunctions.getMacAddressFromByteArray(macAddress);
-				console.log("Host found: " + macAddressString + " " + ipAddress);
+				//console.log("Host found: " + macAddressString + " " + ipAddress);
 			}
 		);
-		console.log("Finished");
-		console.log("Hosts:");
-		console.log(hosts);
+		//console.log("Finished");
+		//console.log("Hosts:");
+		//console.log(hosts);
 	});
 
 	afterEach(() => {
