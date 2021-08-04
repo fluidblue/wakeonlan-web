@@ -4,13 +4,16 @@ import ARPScan from "../src/HostDiscovery/ARPScan"
 import { IPNetwork } from "../src/HostDiscovery/IPFunctions"
 import { MACFunctions } from "../src/HostDiscovery/MACFunctions"
 
+const verbose: boolean = false;
+const timeout: number = 120; // in seconds
+
 describe("ARPScan", () => {
 	let originalTimeout: number;
 	let arpScan: ARPScan = new ARPScan();
 
 	beforeEach(() => {
 		originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-		jasmine.DEFAULT_TIMEOUT_INTERVAL = 120000;
+		jasmine.DEFAULT_TIMEOUT_INTERVAL = timeout * 1000;
 
 		arpScan = new ARPScan();
 	});
@@ -30,20 +33,30 @@ describe("ARPScan", () => {
 			return;
 		}
 
+		if (verbose) {
+			console.log(""); // Add newline
+		}
+
 		const hosts = await arpScan.discover(
 			ipSubnet,
 			(done, total) => {
-				const percentage: number = (done * 100.0) / total;
-				console.log("Progress: " + done + "/" + total + " (" + percentage + " %)")
+				if (verbose) {
+					const percentage: number = (done * 100.0) / total;
+					console.log("Progress: " + done + "/" + total + " (" + percentage + " %)")
+				}
 			},
 			(ipAddress, macAddress) => {
-				const macAddressString = MACFunctions.getMacAddressFromByteArray(macAddress);
-				console.log("Host found: " + macAddressString + " " + ipAddress);
+				if (verbose) {
+					const macAddressString = MACFunctions.getMacAddressFromByteArray(macAddress);
+					console.log("Host found: " + macAddressString + " " + ipAddress);
+				}
 			}
 		);
-		console.log("Finished");
-		console.log("Hosts:");
-		console.log(hosts);
+		if (verbose) {
+			console.log("Finished.");
+			console.log("Hosts:");
+			console.log(hosts);
+		}
 	});
 
 	afterEach(() => {
