@@ -11,7 +11,6 @@ export class Ping {
 		// Check for valid input, as input is used in string literal
 		if (!net.isIP(ip)) {
 			throw new Error("Invalid input.");
-			return;
 		}
 
 		let cmd: string = "";
