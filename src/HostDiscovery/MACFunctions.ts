@@ -25,7 +25,13 @@ export class MACFunctions {
 			if (i !== 0) {
 				result += ":";
 			}
-			result += byteArray[i].toString(16); // TODO: Print in format "00"
+
+			let hex = byteArray[i].toString(16);
+			if (hex.length == 1) {
+				hex = "0" + hex;
+			}
+
+			result += hex;
 		}
 		return result;
 	}
