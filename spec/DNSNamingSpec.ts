@@ -13,7 +13,6 @@ describe("DNSNaming", () => {
 
 	it("should resolve " + ip, async () => {
 		const result = await dnsNaming.getHostNameByIP(ip);
-		console.log(result); // TODO: Remove
 		expect(result).toEqual(null);
 	});
 });

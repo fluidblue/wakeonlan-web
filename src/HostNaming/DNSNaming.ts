@@ -5,7 +5,6 @@ import network from "network";
 export class DNSNaming implements HostNaming {
 	async getHostNameByIP(ip: string): Promise<string | null> {
 		let fqdnHost = await this.getFQDNByIP(ip);
-		console.log("DEBUG: fqdnHost: " + fqdnHost); // TODO: Remove
 		if (!fqdnHost) {
 			return null;
 		}
@@ -13,10 +12,8 @@ export class DNSNaming implements HostNaming {
 		let fqdnGateway = null;
 		try {
 			const ipGateway = await this.getGatewayIP();
-			console.log("DEBUG: ipGateway: " + ipGateway); // TODO: Remove
 			if (ipGateway && ipGateway !== ip) {
 				fqdnGateway = await this.getFQDNByIP(ipGateway);
-				console.log("DEBUG: fqdnGateway: " + fqdnGateway); // TODO: Remove
 			}
 		}
 		catch (error) {
