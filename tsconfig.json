@@ -9,10 +9,12 @@
 		"preserveConstEnums": true,
 		"sourceMap": true,
 
-		"outDir": "build"
+		"outDir": "build",
+
+		"typeRoots": ["./types", "./node_modules/@types"]
 	},
 
 	"include": ["src/**/*"],
-	"exclude": ["node_modules", "**/*.spec.ts"],
+	"exclude": ["node_modules", "types", "**/*.spec.ts"],
 	"compileOnSave": true
 }
