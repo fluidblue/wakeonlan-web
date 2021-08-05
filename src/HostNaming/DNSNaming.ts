@@ -1,9 +1,42 @@
 import { HostNaming } from "./HostNaming";
 import dns from "dns";
-//import network from "network"; // TODO
+import network from "network";
 
 export class DNSNaming implements HostNaming {
 	async getHostNameByIP(ip: string): Promise<string | null> {
+		let fqdnHost = await this.getFQDNByIP(ip);
+		console.log("DEBUG: fqdnHost: " + fqdnHost); // TODO: Remove
+		if (!fqdnHost) {
+			return null;
+		}
+
+		let fqdnGateway = null;
+		try {
+			const ipGateway = await this.getGatewayIP();
+			console.log("DEBUG: ipGateway: " + ipGateway); // TODO: Remove
+			if (ipGateway && ipGateway !== ip) {
+				fqdnGateway = await this.getFQDNByIP(ipGateway);
+				console.log("DEBUG: fqdnGateway: " + fqdnGateway); // TODO: Remove
+			}
+		}
+		catch (error) {
+			// Return FQDN as host name
+			return fqdnHost;
+		}
+
+		if (!fqdnGateway) {
+			return fqdnHost;
+		}
+		if (fqdnHost.endsWith(fqdnGateway)) {
+			fqdnHost = fqdnHost.substr(0, fqdnHost.length - fqdnGateway.length);
+			if (fqdnHost.endsWith(".") && fqdnHost.length > 1) {
+				fqdnHost = fqdnHost.substr(0, fqdnHost.length - 1);
+			}
+		}
+		return fqdnHost;
+	}
+
+	async getFQDNByIP(ip: string): Promise<string | null> {
 		return new Promise<string | null>((resolve, reject) => {
 			dns.reverse(ip, function(err, hostnames) {
 				if (err) {
@@ -16,6 +49,22 @@ export class DNSNaming implements HostNaming {
 				}
 				// Return first hostname
 				resolve(hostnames[0]);
+			});
+		});
+	}
+
+	async getGatewayIP(): Promise<string | null> {
+		return new Promise((resolve, reject) => {
+			network.get_gateway_ip((err, ip) => {
+				if (err) {
+					reject(new Error(err.toString()));
+					return;
+				}
+				if (!ip || ip.length === 0) {
+					resolve(null);
+					return;
+				}
+				resolve(ip);
 			});
 		});
 	}
