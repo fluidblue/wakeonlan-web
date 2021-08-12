@@ -1,44 +1,44 @@
 body {
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
+	min-height: 100vh;
+	min-height: -webkit-fill-available;
 }
 
 html {
-  height: -webkit-fill-available;
+	height: -webkit-fill-available;
 }
 
 main {
-  display: flex;
-  flex-wrap: nowrap;
-  height: 100vh;
-  height: -webkit-fill-available;
-  max-height: 100vh;
-  overflow-x: auto;
-  overflow-y: hidden;
+	display: flex;
+	flex-wrap: nowrap;
+	height: 100vh;
+	height: -webkit-fill-available;
+	max-height: 100vh;
+	overflow-x: auto;
+	overflow-y: hidden;
 }
 
 .b-example-divider {
-  flex-shrink: 0;
-  width: 1.5rem;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, .1);
-  border: solid rgba(0, 0, 0, .15);
-  border-width: 1px 0;
-  box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+	flex-shrink: 0;
+	width: 1.5rem;
+	height: 100vh;
+	background-color: rgba(0, 0, 0, .1);
+	border: solid rgba(0, 0, 0, .15);
+	border-width: 1px 0;
+	box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
 }
 
 /* Additional styles for correction of template: */
 
 main a i {
-  margin-right: 0.5em;
+	margin-right: 0.5em;
 }
 
 .main-icon {
-  font-size: 2rem;
+	font-size: 2rem;
 
-  margin-left: 0.25rem;
-  margin-right: 0.75rem;
+	margin-left: 0.25rem;
+	margin-right: 0.75rem;
 
-  margin-top: -0.5rem;
-  margin-bottom: -0.5rem;
+	margin-top: -0.5rem;
+	margin-bottom: -0.5rem;
 }
