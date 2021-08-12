@@ -8,6 +8,29 @@
 		<!-- Bootstrap CSS -->
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 
+		<meta name="theme-color" content="#7952b3">
+		<style>
+			.bd-placeholder-img {
+				font-size: 1.125rem;
+				text-anchor: middle;
+				-webkit-user-select: none;
+				-moz-user-select: none;
+				user-select: none;
+			}
+
+			@media (min-width: 768px) {
+				.bd-placeholder-img-lg {
+					font-size: 3.5rem;
+				}
+			}
+		</style>
+
+		<link rel="stylesheet" href="./node_modules/bootstrap-icons/font/bootstrap-icons.css">
+		<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"> -->
+
+		<!-- Custom styles for this template -->
+		<link href="sidebars.css" rel="stylesheet">
+
 		<!-- Optional JavaScript; choose one of the two! -->
 
 		<!-- Option 1: Bootstrap Bundle with Popper -->
@@ -22,6 +45,53 @@
 		<title>Hello, world!</title>
 	</head>
 	<body>
-		<h1>Hello, world!</h1>
+		<main>
+			<div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;">
+				<a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+					<!-- <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg> -->
+					<i class="bi bi-bootstrap-fill main-icon"></i>
+					<span class="fs-4">Sidebar</span>
+				</a>
+				<hr>
+				<ul class="nav nav-pills flex-column mb-auto">
+					<li class="nav-item">
+						<a href="#" class="nav-link active" aria-current="page">
+							<!-- <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg> -->
+							<i class="bi bi-house-door"></i>
+							Home
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link link-dark">
+							<!-- <svg class="bi me-2" width="16" height="16"><use xlink:href="#speedometer2"></use></svg> -->
+							<i class="bi bi-speedometer2"></i>
+							Dashboard
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link link-dark">
+							<!-- <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"></use></svg> -->
+							<i class="bi bi-table"></i>
+							Orders
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link link-dark">
+							<!-- <svg class="bi me-2" width="16" height="16"><use xlink:href="#grid"></use></svg> -->
+							<i class="bi bi-grid"></i>
+							Products
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link link-dark">
+							<!-- <svg class="bi me-2" width="16" height="16"><use xlink:href="#people-circle"></use></svg> -->
+							<i class="bi bi-person-circle"></i>
+							Customers
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="b-example-divider"></div>
+		</main>
 	</body>
 </html>
