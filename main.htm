@@ -30,22 +30,24 @@
 
 			.host-item {
 				cursor: pointer;
+
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
 			}
 
 			.host-item .host-name {
 				font-weight: bold;
-			}
-
-			.host-item a {
-				/* float: right; */
 			}
 		</style>
 	</head>
 	<body>
 		<ul class="list-group">
 			<li href="#" class="list-group-item list-group-item-action host-item">
-				<div class="host-name">Hostname 1</div>
-				<div class="opacity-75">00:11:22:33:44:55</div>
+				<div>
+					<div class="host-name">Hostname 1</div>
+					<div class="opacity-75">00:11:22:33:44:55</div>
+				</div>
 				<a href="#" class="link-dark edit">
 					<i class="bi bi-pencil"></i>
 				</a>
