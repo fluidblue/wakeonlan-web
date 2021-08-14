@@ -53,6 +53,10 @@
 				width: 2.75rem;
 				height: 2.75rem;
 			}
+
+			.add button::after {
+				display: none !important;
+			}
 		</style>
 	</head>
 	<body>
@@ -100,10 +104,15 @@
 				</div>
 			</li>
 		</ul>
-		<div class="add">
-			<button type="button" class="btn btn-primary rounded-circle">
+		<div class="btn-group dropup add">
+			<button type="button" class="btn btn-primary rounded-circle dropdown-toggle" data-bs-toggle="dropdown" data-bs-offset="0,5" aria-expanded="false">
 				<i class="bi bi-plus-lg"></i>
 			</button>
+			<ul class="dropdown-menu">
+				<li><a class="dropdown-item" href="#">Manual</a></li>
+				<li><hr class="dropdown-divider"></li>
+				<li><a class="dropdown-item" href="#">Automatic</a></li>
+			</ul>
 		</div>
 	</body>
 </html>
