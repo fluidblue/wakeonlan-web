@@ -33,11 +33,16 @@
 
 				display: flex;
 				justify-content: space-between;
-				align-items: center;
+				align-items: stretch;
 			}
 
 			.host-item .host-name {
 				font-weight: bold;
+			}
+
+			.host-item > div:nth-child(2) {
+				display: flex;
+				align-items: stretch;
 			}
 
 			.host-item > *:nth-child(2) > *:last-child {
@@ -45,8 +50,14 @@
 			}
 
 			.host-item a {
-				padding: 0.5rem;
-				margin-right: -0.5rem;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+
+				padding-left: 1rem;
+				padding-right: 1rem;
+
+				margin-right: -1rem;
 			}
 
 			.add {
