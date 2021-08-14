@@ -76,12 +76,11 @@
 		</style>
 		<script>
 			function main() {
-				var toastTrigger = document.getElementById('testBtn');
 				var toastElement = document.getElementById('toastWolPacketSent');
-
-				if (toastTrigger) {
-					toastTrigger.addEventListener('click', function () {
-						var toast = new bootstrap.Toast(toastElement);
+				var toastTriggers = document.getElementsByClassName('host-item');
+				for (let toastTrigger of toastTriggers) {
+					toastTrigger.addEventListener('click', () => {
+						const toast = new bootstrap.Toast(toastElement);
 						toast.show();
 					});
 				}
