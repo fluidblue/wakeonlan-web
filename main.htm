@@ -85,6 +85,15 @@
 						toast.show();
 					});
 				}
+
+				const wakeTriggers = document.getElementsByClassName('wake-trigger');
+				for (let wakeTrigger of wakeTriggers) {
+					wakeTrigger.addEventListener('click', (event) => {
+						alert('edit');
+						event.stopPropagation();
+						event.preventDefault();
+					});
+				}
 			}
 			window.addEventListener('DOMContentLoaded', (event) => {
 				console.log('DOMContentLoaded');
@@ -100,10 +109,10 @@
 					<div class="opacity-75">00:11:22:33:44:55</div>
 				</div>
 				<div>
-					<a href="javascript:alert('edit');" class="link-secondary text-decoration-none">
+					<a href="#" class="link-secondary text-decoration-none wake-trigger">
 						<i class="bi bi-pencil"></i>
 					</a>
-					<!-- <a href="javascript:alert('wake');" class="link-secondary text-decoration-none">
+					<!-- <a href="#" class="link-secondary text-decoration-none">
 						<i class="bi bi-play-circle"></i>
 					</a> -->
 				</div>
@@ -114,10 +123,10 @@
 					<div class="opacity-75">00:11:22:33:44:55</div>
 				</div>
 				<div>
-					<a href="javascript:alert('edit');" class="link-secondary text-decoration-none">
+					<a href="#" class="link-secondary text-decoration-none wake-trigger">
 						<i class="bi bi-pencil"></i>
 					</a>
-					<!-- <a href="javascript:alert('wake');" class="link-secondary text-decoration-none">
+					<!-- <a href="#" class="link-secondary text-decoration-none">
 						<i class="bi bi-play-circle"></i>
 					</a> -->
 				</div>
@@ -128,10 +137,10 @@
 					<div class="opacity-75">00:11:22:33:44:55</div>
 				</div>
 				<div>
-					<a href="javascript:alert('edit');" class="link-secondary text-decoration-none">
+					<a href="#" class="link-secondary text-decoration-none wake-trigger">
 						<i class="bi bi-pencil"></i>
 					</a>
-					<!-- <a href="javascript:alert('wake');" class="link-secondary text-decoration-none">
+					<!-- <a href="#" class="link-secondary text-decoration-none">
 						<i class="bi bi-play-circle"></i>
 					</a> -->
 				</div>
