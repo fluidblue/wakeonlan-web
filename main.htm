@@ -58,10 +58,27 @@
 				display: none !important;
 			}
 		</style>
+		<script>
+			function main() {
+				var toastTrigger = document.getElementById('testBtn');
+				var toastLiveExample = document.getElementById('liveToast');
+
+				if (toastTrigger) {
+					toastTrigger.addEventListener('click', function () {
+						var toast = new bootstrap.Toast(toastLiveExample);
+						toast.show();
+					});
+				}
+			}
+			window.addEventListener('DOMContentLoaded', (event) => {
+				console.log('DOMContentLoaded');
+				main();
+			});
+		</script>
 	</head>
 	<body>
 		<ul class="list-group">
-			<li class="list-group-item list-group-item-action link-primary host-item">
+			<li id="testBtn" class="list-group-item list-group-item-action link-primary host-item">
 				<div>
 					<div class="host-name">Hostname 1</div>
 					<div class="opacity-75">00:11:22:33:44:55</div>
@@ -104,6 +121,7 @@
 				</div>
 			</li>
 		</ul>
+
 		<div class="btn-group dropup add">
 			<button type="button" class="btn btn-primary rounded-circle dropdown-toggle" data-bs-toggle="dropdown" data-bs-offset="0,5" aria-expanded="false">
 				<i class="bi bi-plus-lg"></i>
@@ -113,6 +131,18 @@
 				<li><hr class="dropdown-divider"></li>
 				<li><a class="dropdown-item" href="#">Automatic</a></li>
 			</ul>
+		</div>
+
+		<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+			<div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+				<div class="toast-header">
+					<strong class="me-auto">Info</strong>
+					<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+				</div>
+				<div class="toast-body">
+					Wake-on-LAN packet has been sent.
+				</div>
+			</div>
 		</div>
 	</body>
 </html>
