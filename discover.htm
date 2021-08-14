@@ -35,10 +35,6 @@
 				justify-content: space-between;
 				align-items: stretch;
 			}
-
-			.host-item .host-name {
-				font-weight: bold;
-			}
 		</style>
 		<script>
 			function main() {
@@ -59,26 +55,26 @@
 		<ul class="list-group">
 			<li class="list-group-item list-group-item-action link-primary host-item">
 				<div>
-					<div class="host-name">Hostname 1</div>
+					<div class="fw-bold">Hostname 1</div>
 					<div class="opacity-75">00:11:22:33:44:55</div>
 				</div>
 			</li>
 			<li class="list-group-item list-group-item-action link-primary host-item">
 				<div>
-					<div class="host-name">Hostname 2</div>
+					<div class="fw-bold">Hostname 2</div>
 					<div class="opacity-75">00:11:22:33:44:55</div>
 				</div>
 			</li>
 			<li class="list-group-item list-group-item-action link-primary host-item">
 				<div>
-					<div class="host-name">Hostname 3</div>
+					<div class="fw-bold">Hostname 3</div>
 					<div class="opacity-75">00:11:22:33:44:55</div>
 				</div>
 			</li>
 		</ul>
 
 		<div class="d-flex align-items-center mt-3 mx-3">
-			<strong>Scanning 192.168.188.0/24</strong>
+			<span class="fw-bold">Scanning 192.168.188.0/24</span>
 			<div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
 		</div>
 	</body>
