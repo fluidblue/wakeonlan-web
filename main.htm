@@ -77,9 +77,9 @@
 		<script>
 			function main() {
 				var toastElement = document.getElementById('toastWolPacketSent');
-				var toastTriggers = document.getElementsByClassName('host-item');
-				for (let toastTrigger of toastTriggers) {
-					toastTrigger.addEventListener('click', () => {
+				var wakeTriggers = document.getElementsByClassName('host-item');
+				for (let wakeTrigger of wakeTriggers) {
+					wakeTrigger.addEventListener('click', () => {
 						const toast = new bootstrap.Toast(toastElement);
 						toast.show();
 					});
