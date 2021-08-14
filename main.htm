@@ -77,11 +77,11 @@
 		<script>
 			function main() {
 				var toastTrigger = document.getElementById('testBtn');
-				var toastLiveExample = document.getElementById('toastWolPacketSent');
+				var toastElement = document.getElementById('toastWolPacketSent');
 
 				if (toastTrigger) {
 					toastTrigger.addEventListener('click', function () {
-						var toast = new bootstrap.Toast(toastLiveExample);
+						var toast = new bootstrap.Toast(toastElement);
 						toast.show();
 					});
 				}
