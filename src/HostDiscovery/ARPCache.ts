@@ -19,6 +19,9 @@ export class ARPCache {
 		let cmd: string = "";
 		switch (os.platform()) {
 			case "darwin":
+				cmd = "arp -a -n";
+				break;
+
 			case "linux":
 				cmd = "/usr/sbin/arp -a -n";
 				break;
