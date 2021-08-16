@@ -20,7 +20,7 @@ export class ARPCache {
 		switch (os.platform()) {
 			case "darwin":
 			case "linux":
-				cmd = "arp -a -n";
+				cmd = "/usr/sbin/arp -a -n";
 				break;
 
 			case "win32":
