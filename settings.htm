@@ -26,6 +26,16 @@
 		<style>
 			.settings {
 				padding: 2rem;
+				padding-top: 0;
+			}
+
+			.settings h6 {
+				margin-top: 2rem;
+			}
+
+			.settings hr {
+				margin-top: 2rem !important;
+				margin-bottom: 2rem !important;
 			}
 
 			.settings button {
@@ -64,13 +74,13 @@
 						<option value="arp-cache-and-ping">ARP cache and ping</option>
 					</select>
 				</div>
-				<hr class="my-4">
+				<!-- <hr class="my-4"> -->
 				<h6 class="mb-3 fw-bold">Wake on LAN</h6>
 				<div class="mb-3">
 					<label for="inputPort" class="form-label">Port</label>
 					<input type="text" class="form-control" id="inputPort" value="9" placeholder="Enter port number" required />
 				</div>
-				<hr class="my-4">
+				<hr class="my-5">
 				<div class="mb-3">
 					<button type="button" class="btn btn-secondary">Cancel</button>
 					<button type="submit" class="btn btn-primary">Save</button>
