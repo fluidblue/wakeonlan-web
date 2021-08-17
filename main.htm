@@ -69,14 +69,41 @@
 			.add button::after {
 				display: none !important;
 			}
+
+			#toastContainer {
+				z-index: 11; /* Value from Bootstrap documentation */
+			}
 		</style>
 		<script>
+			function setText(element, text) {
+				const textNode = document.createTextNode(text);
+				const children = element.childNodes;
+				for (let i = 0; i < children.length; i++) {
+					element.removeChild(children[i]);
+				}
+				element.appendChild(textNode);
+			}
+
 			function main() {
-				const toastElement = document.getElementById('toastWolPacketSent');
+				const toastContainer = document.getElementById('toastContainer');
+				const toastElementTemplate = document.getElementById('toastWolPacketSent');
 				const wakeTriggers = document.getElementsByClassName('host-item');
-				const toast = new bootstrap.Toast(toastElement);
 				for (let wakeTrigger of wakeTriggers) {
 					wakeTrigger.addEventListener('click', () => {
+						// Clone element
+						const toastElement = toastElementTemplate.cloneNode(true);
+						toastElement.removeAttribute('id');
+
+						// Set hostname
+						const hostname = wakeTrigger.querySelector('.hostname').innerHTML.trim();
+						const toastHostnameElement = toastElement.querySelector('.hostname');
+						setText(toastHostnameElement, hostname);
+
+						// Add toast to container
+						toastContainer.appendChild(toastElement);
+
+						// Show toast
+						const toast = new bootstrap.Toast(toastElement);
 						toast.show();
 					});
 				}
@@ -100,7 +127,7 @@
 		<ul class="list-group">
 			<li class="list-group-item list-group-item-action link-primary host-item">
 				<div>
-					<div class="fw-bold">Hostname 1</div>
+					<div class="fw-bold hostname">Hostname 1</div>
 					<div class="opacity-75">00:11:22:33:44:55</div>
 				</div>
 				<div>
@@ -114,7 +141,7 @@
 			</li>
 			<li class="list-group-item list-group-item-action link-primary host-item">
 				<div>
-					<div class="fw-bold">Hostname 2</div>
+					<div class="fw-bold hostname">Hostname 2</div>
 					<div class="opacity-75">00:11:22:33:44:55</div>
 				</div>
 				<div>
@@ -128,7 +155,7 @@
 			</li>
 			<li class="list-group-item list-group-item-action link-primary host-item">
 				<div>
-					<div class="fw-bold">Hostname 3</div>
+					<div class="fw-bold hostname">Hostname 3</div>
 					<div class="opacity-75">00:11:22:33:44:55</div>
 				</div>
 				<div>
@@ -153,11 +180,11 @@
 			</ul>
 		</div>
 
-		<div class="position-fixed bottom-0 start-50 translate-middle-x p-3" style="z-index: 11">
+		<div id="toastContainer" class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3">
 			<div id="toastWolPacketSent" class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
 				<div class="d-flex">
 					<div class="toast-body">
-						Wake-on-LAN packet sent!
+						Wake-on-LAN packet sent to &quot;<span class="hostname"></span>&quot;!
 					</div>
 					<button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 				</div>
