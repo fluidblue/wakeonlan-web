@@ -25,7 +25,14 @@
 		<title>Settings</title>
 		<style>
 			.settings {
-				padding: 2rem;
+				/* padding: 2rem; */
+				padding-top: 2rem;
+				padding-bottom: 2rem;
+			}
+
+			.settings .settings-group {
+				padding-left: 2rem;
+				padding-right: 2rem;
 			}
 
 			.settings button {
@@ -45,35 +52,41 @@
 	</head>
 	<body class="bg-light">
 		<div class="settings">
-			<h5 class="mb-3">Settings</h5>
+			<!-- <h5 class="mb-3">Settings</h5> -->
 			<form>
-				<hr class="my-4">
-				<h6 class="mb-3">Host discovery</h6>
-				<div class="mb-3">
-					<label for="inputNetwork" class="form-label">IP network</label>
-					<input type="text" class="form-control" id="inputNetwork" value="192.168.178.0/24" placeholder="Enter network, e.g. 192.168.178.0/24" required disabled />
-				</div>
-				<div class="mb-3">
-					<input class="form-check-input" type="checkbox" value="" id="checkboxAutoDetect" checked>
-					<label class="form-check-label checkbox-fix" for="checkboxAutoDetect">Automatically detect network</label>
-				</div>
-				<div class="mb-3">
-					<label for="selectMethod" class="form-label">Method</label>
-					<select class="form-select" id="selectMethod">
-						<option value="arp-scan" selected>arp-scan</option>
-						<option value="arp-cache-and-ping">ARP cache and ping</option>
-					</select>
-				</div>
-				<hr class="my-4">
-				<h6 class="mb-3">Wake on LAN</h6>
-				<div class="mb-3">
-					<label for="inputPort" class="form-label">Port</label>
-					<input type="text" class="form-control" id="inputPort" value="9" placeholder="Enter port number" required />
+				<!-- <hr class="my-4"> -->
+				<div class="settings-group">
+					<h6 class="mb-3 fw-bold">Host discovery</h6>
+					<div class="mb-3">
+						<label for="inputNetwork" class="form-label">IP network</label>
+						<input type="text" class="form-control" id="inputNetwork" value="192.168.178.0/24" placeholder="Enter network, e.g. 192.168.178.0/24" required disabled />
+					</div>
+					<div class="mb-3">
+						<input class="form-check-input" type="checkbox" value="" id="checkboxAutoDetect" checked>
+						<label class="form-check-label checkbox-fix" for="checkboxAutoDetect">Automatically detect network</label>
+					</div>
+					<div class="mb-3">
+						<label for="selectMethod" class="form-label">Method</label>
+						<select class="form-select" id="selectMethod">
+							<option value="arp-scan" selected>arp-scan</option>
+							<option value="arp-cache-and-ping">ARP cache and ping</option>
+						</select>
+					</div>
 				</div>
 				<hr class="my-4">
-				<div class="mb-3">
-					<button type="button" class="btn btn-secondary">Cancel</button>
-					<button type="submit" class="btn btn-primary">Save</button>
+				<div class="settings-group">
+					<h6 class="mb-3 fw-bold">Wake on LAN</h6>
+					<div class="mb-3">
+						<label for="inputPort" class="form-label">Port</label>
+						<input type="text" class="form-control" id="inputPort" value="9" placeholder="Enter port number" required />
+					</div>
+				</div>
+				<hr class="my-4">
+				<div class="settings-group">
+					<div class="mb-3">
+						<button type="button" class="btn btn-secondary">Cancel</button>
+						<button type="submit" class="btn btn-primary">Save</button>
+					</div>
 				</div>
 			  </form>
 		</div>
