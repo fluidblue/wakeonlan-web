@@ -49,11 +49,15 @@
 
 			.host-discovery-notice {
 				/* margin-top: auto; */
-				padding: 2rem;
+			}
 
-				background-color: black;
-				color: white;
-				opacity: 0.8;
+			.host-discovery-notice > div {
+				padding: 2rem;
+			}
+
+			.host-discovery-notice hr {
+				opacity: 0.125;
+				margin-bottom: 0;
 			}
 		</style>
 		<script>
@@ -126,7 +130,8 @@
 			</div>
 		</div>
 		<div class="host-discovery-notice">
-			Note: For host discovery, hosts must be powered on.
+			<hr />
+			<div class="text-muted">Note: For host discovery, hosts must be powered on.</div>
 		</div>
 	</body>
 </html>
