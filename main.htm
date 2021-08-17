@@ -72,11 +72,11 @@
 		</style>
 		<script>
 			function main() {
-				var toastElement = document.getElementById('toastWolPacketSent');
-				var wakeTriggers = document.getElementsByClassName('host-item');
+				const toastElement = document.getElementById('toastWolPacketSent');
+				const wakeTriggers = document.getElementsByClassName('host-item');
+				const toast = new bootstrap.Toast(toastElement);
 				for (let wakeTrigger of wakeTriggers) {
 					wakeTrigger.addEventListener('click', () => {
-						const toast = new bootstrap.Toast(toastElement);
 						toast.show();
 					});
 				}
