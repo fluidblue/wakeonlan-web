@@ -24,19 +24,14 @@
 
 		<title>Discover hosts</title>
 		<style>
-			html {
-				height: 100%;
-			}
-
-			body {
-				height: 100%;
-				display: flex;
-				flex-direction: column;
-				justify-content: space-between;
-			}
-
 			.host-discovery {
 				margin: 2rem;
+				margin-top: 1.5rem;
+			}
+
+			.host-discovery-notice {
+				margin-bottom: 1.5rem;
+				text-align: center;
 			}
 
 			.host-item {
@@ -45,19 +40,6 @@
 				display: flex;
 				justify-content: space-between;
 				align-items: stretch;
-			}
-
-			.host-discovery-notice {
-				/* margin-top: auto; */
-			}
-
-			.host-discovery-notice > div {
-				padding: 2rem;
-			}
-
-			.host-discovery-notice hr {
-				opacity: 0.125;
-				margin-bottom: 0;
 			}
 		</style>
 		<script>
@@ -87,6 +69,10 @@
 	</head>
 	<body class="bg-light">
 		<div class="host-discovery">
+			<div class="host-discovery-notice text-muted">
+				Note: For host discovery, hosts must be powered on.
+			</div>
+
 			<ul class="list-group">
 				<li class="list-group-item list-group-item-action link-primary host-item">
 					<div>
@@ -113,13 +99,13 @@
 				<div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
 			</div>
 	
-			<div class="d-flex flex-column align-items-center mx-2 scan-finished-notice d-none">
-				<div class="mt-3">
+			<div class="d-flex flex-column align-items-center mx-2 mt-4 scan-finished-notice d-none">
+				<div>
 					<div class="fw-bold text-center">Scan finished.</div>
 					<!-- <div class="text-center">Add hosts by clicking on them in the list above.</div> -->
 				</div>
 				<div class="mt-3">
-					<div class="text-center mb-1">Host not found?</div>
+					<div class="text-center mb-2">Host not found?</div>
 					<button type="button" class="btn btn-sm btn-secondary">Rescan</button>
 					<button type="button" class="btn btn-sm btn-secondary">Add manually</button>
 				</div>
@@ -128,10 +114,6 @@
 					<button type="button" class="btn btn-sm btn-secondary">Go to saved hosts</button>
 				</div> -->
 			</div>
-		</div>
-		<div class="host-discovery-notice">
-			<hr />
-			<div class="text-muted">Note: For host discovery, hosts must be powered on.</div>
 		</div>
 	</body>
 </html>
