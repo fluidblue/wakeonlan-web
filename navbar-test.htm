@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>Navbar Test</title>
+
+		<style>
+			nav {
+				display: flex;
+				justify-content: space-between;
+				flex-wrap: wrap;
+			}
+
+			nav .logo {
+				background-color: darkred;
+			}
+
+			nav .menu-button {
+				background-color: darkgreen;
+			}
+
+			nav .links {
+				background-color: darkblue;
+				/* width: 100%; */ /* Alternative to "flex-basis: 100%;" */
+				flex-basis: 100%;
+
+				display: flex;
+				flex-direction: column;
+			}
+
+			@media (min-width: 768px) {
+				nav .menu-button {
+					display: none;
+				}
+
+				nav .links {
+					flex-direction: row;
+					flex-basis: unset;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<nav>
+			<div class="logo">LOGO</div>
+			<button class="menu-button">...</button>
+			<div class="links">
+				<a href="#">Link 1</a>
+				<a href="#">Link 2</a>
+				<a href="#">Link 3</a>
+			</div>
+		</nav>
+	</body>
+</html>
