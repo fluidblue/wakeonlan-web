@@ -24,8 +24,8 @@
 
 		<title>Main</title>
 		<style>
-			body {
-				margin: 2rem;
+			main {
+				padding: 2rem;
 			}
 
 			.host-item {
@@ -72,6 +72,14 @@
 
 			#toastContainer {
 				z-index: 11; /* Value from Bootstrap documentation */
+			}
+
+			@media (min-width: 768px) {
+				main {
+					width: 768px;
+					margin-left: auto;
+					margin-right: auto;
+				}
 			}
 		</style>
 		<script>
@@ -124,61 +132,63 @@
 		</script>
 	</head>
 	<body class="bg-light">
-		<ul class="list-group">
-			<li class="list-group-item list-group-item-action link-primary host-item">
-				<div>
-					<div class="fw-bold hostname">Hostname 1</div>
-					<div class="opacity-75">00:11:22:33:44:55</div>
-				</div>
-				<div>
-					<a href="#" class="link-secondary text-decoration-none edit-trigger">
-						<i class="bi bi-pencil"></i>
-					</a>
-					<!-- <a href="#" class="link-secondary text-decoration-none">
-						<i class="bi bi-play-circle"></i>
-					</a> -->
-				</div>
-			</li>
-			<li class="list-group-item list-group-item-action link-primary host-item">
-				<div>
-					<div class="fw-bold hostname">Hostname 2</div>
-					<div class="opacity-75">00:11:22:33:44:55</div>
-				</div>
-				<div>
-					<a href="#" class="link-secondary text-decoration-none edit-trigger">
-						<i class="bi bi-pencil"></i>
-					</a>
-					<!-- <a href="#" class="link-secondary text-decoration-none">
-						<i class="bi bi-play-circle"></i>
-					</a> -->
-				</div>
-			</li>
-			<li class="list-group-item list-group-item-action link-primary host-item">
-				<div>
-					<div class="fw-bold hostname">Hostname 3</div>
-					<div class="opacity-75">00:11:22:33:44:55</div>
-				</div>
-				<div>
-					<a href="#" class="link-secondary text-decoration-none edit-trigger">
-						<i class="bi bi-pencil"></i>
-					</a>
-					<!-- <a href="#" class="link-secondary text-decoration-none">
-						<i class="bi bi-play-circle"></i>
-					</a> -->
-				</div>
-			</li>
-		</ul>
-
-		<div class="btn-group dropup add">
-			<button type="button" class="btn btn-primary rounded-circle dropdown-toggle" data-bs-toggle="dropdown" data-bs-offset="0,5" aria-expanded="false">
-				<i class="bi bi-plus-lg"></i>
-			</button>
-			<ul class="dropdown-menu">
-				<li><a class="dropdown-item" href="#">Manual</a></li>
-				<li><hr class="dropdown-divider"></li>
-				<li><a class="dropdown-item" href="#">Automatic</a></li>
+		<main>
+			<ul class="list-group">
+				<li class="list-group-item list-group-item-action link-primary host-item">
+					<div>
+						<div class="fw-bold hostname">Hostname 1</div>
+						<div class="opacity-75">00:11:22:33:44:55</div>
+					</div>
+					<div>
+						<a href="#" class="link-secondary text-decoration-none edit-trigger">
+							<i class="bi bi-pencil"></i>
+						</a>
+						<!-- <a href="#" class="link-secondary text-decoration-none">
+							<i class="bi bi-play-circle"></i>
+						</a> -->
+					</div>
+				</li>
+				<li class="list-group-item list-group-item-action link-primary host-item">
+					<div>
+						<div class="fw-bold hostname">Hostname 2</div>
+						<div class="opacity-75">00:11:22:33:44:55</div>
+					</div>
+					<div>
+						<a href="#" class="link-secondary text-decoration-none edit-trigger">
+							<i class="bi bi-pencil"></i>
+						</a>
+						<!-- <a href="#" class="link-secondary text-decoration-none">
+							<i class="bi bi-play-circle"></i>
+						</a> -->
+					</div>
+				</li>
+				<li class="list-group-item list-group-item-action link-primary host-item">
+					<div>
+						<div class="fw-bold hostname">Hostname 3</div>
+						<div class="opacity-75">00:11:22:33:44:55</div>
+					</div>
+					<div>
+						<a href="#" class="link-secondary text-decoration-none edit-trigger">
+							<i class="bi bi-pencil"></i>
+						</a>
+						<!-- <a href="#" class="link-secondary text-decoration-none">
+							<i class="bi bi-play-circle"></i>
+						</a> -->
+					</div>
+				</li>
 			</ul>
-		</div>
+
+			<div class="btn-group dropup add">
+				<button type="button" class="btn btn-primary rounded-circle dropdown-toggle" data-bs-toggle="dropdown" data-bs-offset="0,5" aria-expanded="false">
+					<i class="bi bi-plus-lg"></i>
+				</button>
+				<ul class="dropdown-menu">
+					<li><a class="dropdown-item" href="#">Manual</a></li>
+					<li><hr class="dropdown-divider"></li>
+					<li><a class="dropdown-item" href="#">Automatic</a></li>
+				</ul>
+			</div>
+		</main>
 
 		<div id="toastContainer" class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3">
 			<div id="toastWolPacketSent" class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
