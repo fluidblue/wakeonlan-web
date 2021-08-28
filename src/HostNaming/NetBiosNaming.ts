@@ -55,11 +55,11 @@ export class NetBiosNaming implements HostNaming {
 			// to the system's language and therefore hard to parse.
 			// It has not been investigated further.
 			/*case "win32":
-				cmd = "nbtstat -A ${ip}";
+				cmd = `nbtstat -A ${ip}`;
 				break;*/
 
 			case "linux":
-				cmd = "nmblookup -A ${ip}";
+				cmd = `nmblookup -A ${ip}`;
 				parser = this.parseOnLinux;
 				break;
 
