@@ -51,7 +51,7 @@ app.post("/api/device-name/vendor-name", async (req, res, next) => {
 
 app.post("/api/host-discovery/arp-scan", async (req, res, next) => {
 	// Prepare for streaming
-	res.set("Content-Type", "text/plain");
+	res.set("Content-Type", "text/plain; charset=utf-8");
 	res.set("Transfer-Encoding", "chunked");
 
 	try {
