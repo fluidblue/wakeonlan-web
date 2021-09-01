@@ -37,12 +37,28 @@ app.post("/api/device-name/vendor-name", (req, res) => {
 
 app.post("/api/host-discovery/arp-scan", (req, res) => {
 	const cidrIpNetwork = req.body["ip-network"];
-	res.send("Not yet implemented.");
+
+	// Prepare for streaming
+	res.set("Content-Type", "text/plain");
+	res.set("Transfer-Encoding", "chunked");
+
+	res.write("Not yet implemented.\n");
+
+	// Finish streaming
+	res.end();
 });
 
 app.post("/api/host-discovery/arp-cache-and-ping", (req, res) => {
 	const cidrIpNetwork = req.body["ip-network"];
-	res.send("Not yet implemented.");
+
+	// Prepare for streaming
+	res.set("Content-Type", "text/plain");
+	res.set("Transfer-Encoding", "chunked");
+
+	res.write("Not yet implemented.\n");
+
+	// Finish streaming
+	res.end();
 });
 
 app.post("/api/wakeonlan", (req, res) => {
