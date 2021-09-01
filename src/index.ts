@@ -17,12 +17,39 @@ import path from "path";
 const app = express();
 const port = process.env.PORT || 8000;
 
+// Parse application/json and application/x-www-form-urlencoded in POST requests.
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // Serve static files
 app.use("/", express.static(path.join(__dirname, "httpdocs")));
 
 // REST API
-app.get("/api", (req, res) => {
-	res.send("Hello World!");
+app.get("/api/device-name/host-name", (req, res) => {
+	const ip = req.body["ip"];
+	res.send("Not yet implemented.");
+});
+
+app.get("/api/device-name/vendor-name", (req, res) => {
+	const mac = req.body["mac"];
+	res.send("Not yet implemented.");
+});
+
+app.get("/api/host-discovery/arp-scan", (req, res) => {
+	const cidrIpNetwork = req.body["ip-network"];
+	res.send("Not yet implemented.");
+});
+
+app.get("/api/host-discovery/arp-cache-and-ping", (req, res) => {
+	const cidrIpNetwork = req.body["ip-network"];
+	res.send("Not yet implemented.");
+});
+
+app.get("/api/wakeonlan", (req, res) => {
+	const mac = req.body["mac"];
+	const port = req.body["port"];
+	const ip = req.body["ip"];
+	res.send("Not yet implemented.");
 });
 
 app.listen(port, () => {
