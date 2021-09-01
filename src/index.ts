@@ -25,27 +25,27 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/", express.static(path.join(__dirname, "httpdocs")));
 
 // REST API
-app.get("/api/device-name/host-name", (req, res) => {
+app.post("/api/device-name/host-name", (req, res) => {
 	const ip = req.body["ip"];
 	res.send("Not yet implemented.");
 });
 
-app.get("/api/device-name/vendor-name", (req, res) => {
+app.post("/api/device-name/vendor-name", (req, res) => {
 	const mac = req.body["mac"];
 	res.send("Not yet implemented.");
 });
 
-app.get("/api/host-discovery/arp-scan", (req, res) => {
+app.post("/api/host-discovery/arp-scan", (req, res) => {
 	const cidrIpNetwork = req.body["ip-network"];
 	res.send("Not yet implemented.");
 });
 
-app.get("/api/host-discovery/arp-cache-and-ping", (req, res) => {
+app.post("/api/host-discovery/arp-cache-and-ping", (req, res) => {
 	const cidrIpNetwork = req.body["ip-network"];
 	res.send("Not yet implemented.");
 });
 
-app.get("/api/wakeonlan", (req, res) => {
+app.post("/api/wakeonlan", (req, res) => {
 	const mac = req.body["mac"];
 	const port = req.body["port"];
 	const ip = req.body["ip"];
