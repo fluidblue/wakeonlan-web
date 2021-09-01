@@ -37,19 +37,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/", express.static(path.join(__dirname, "httpdocs")));
 
 // REST API
-app.post("/api/device-name/host-name", async (req, res, next) => {
+app.post("/api/device-name/host-name", wrap(async (req, res, next) => {
 	const ip = req.body["ip"];
 	res.send("Not yet implemented.");
 	next();
-});
+}));
 
-app.post("/api/device-name/vendor-name", async (req, res, next) => {
+app.post("/api/device-name/vendor-name", wrap(async (req, res, next) => {
 	const mac = req.body["mac"];
 	res.send("Not yet implemented.");
 	next();
-});
+}));
 
-app.post("/api/host-discovery/arp-scan", async (req, res, next) => {
+app.post("/api/host-discovery/arp-scan", wrap(async (req, res, next) => {
 	// Prepare for streaming
 	res.set("Content-Type", "text/plain; charset=utf-8");
 	res.set("Transfer-Encoding", "chunked");
@@ -82,9 +82,9 @@ app.post("/api/host-discovery/arp-scan", async (req, res, next) => {
 		res.end();
 		next();
 	}
-});
+}));
 
-app.post("/api/host-discovery/arp-cache-and-ping", async (req, res, next) => {
+app.post("/api/host-discovery/arp-cache-and-ping", wrap(async (req, res, next) => {
 	const cidrIpNetwork = req.body["ip-network"];
 
 	// Prepare for streaming
@@ -96,35 +96,37 @@ app.post("/api/host-discovery/arp-cache-and-ping", async (req, res, next) => {
 	// Finish streaming
 	res.end();
 	next();
-});
+}));
 
-app.post("/api/wakeonlan", async (req, res, next) => {
+app.post("/api/wakeonlan", wrap(async (req, res, next) => {
 	const mac = req.body["mac"];
 	const options = {
 		port: req.body["port"] || WakeOnLan.DEFAULT_PORT,
 		address: req.body["ip"] || WakeOnLan.IP_BROADCAST_ADDRESS
 	}
-	if (options.port < 1 || options.port > 65535 || !net.isIP(options.address)) {
+	options.port = parseInt(options.port);
+	if (!MACFunctions.isValidMac(mac) || options.port === NaN || options.port < 1 || options.port > 65535 || !net.isIP(options.address)) {
 		// Invalid input
-		next();
+		// Send 400: Bad Request
+		res.sendStatus(400);
 		return;
 	}
 
 	try {
 		const wolManager: WakeOnLan = new WolNativeNode();
 		await wolManager.wake(MACFunctions.getByteArrayFromMacAddress(mac), options);
-		res.send(JSON.stringify({
-			result: true
-		}));
 	} catch (err) {
 		console.log("Error:", err);
-		res.send(JSON.stringify({
-			result: false
-		}));
-	} finally {
-		next();
+		// Send 500: Internal Server Error
+		res.sendStatus(500);
+		return;
 	}
-});
+	res.send(JSON.stringify({
+		result: true
+	}));
+	next();
+}));
+
 
 app.listen(port, () => {
 	console.log(`wakeonlan-web listening at http://localhost:${port}`);

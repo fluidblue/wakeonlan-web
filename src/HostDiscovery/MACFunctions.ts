@@ -6,6 +6,14 @@ export class MACFunctions {
 
 	private constructor() {}
 
+	static isValidMac(mac: string): boolean {
+		// TODO: Use regular expression for MACs
+		if (mac && mac.length && mac.length === 17) {
+			return true;
+		}
+		return false;
+	}
+
 	static getByteArrayFromMacAddress(mac: MacAddress): MacAddressBytes {
 		const result: Uint8Array = Buffer.alloc(this.MAC_ADDR_LENGTH);
 		const macParts = mac.split(/\:|\-/);
