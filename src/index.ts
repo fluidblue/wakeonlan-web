@@ -22,6 +22,9 @@ import { MACFunctions } from "./HostDiscovery/MACFunctions";
 const app = express();
 const port = process.env.PORT || 8000;
 
+// TODO: Maybe add wrap function from
+// http://expressjs.com/en/advanced/best-practice-performance.html#use-promises
+
 // Parse application/json and application/x-www-form-urlencoded in POST requests.
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -30,19 +33,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/", express.static(path.join(__dirname, "httpdocs")));
 
 // REST API
-app.post("/api/device-name/host-name", (req, res, next) => {
+app.post("/api/device-name/host-name", async (req, res, next) => {
 	const ip = req.body["ip"];
 	res.send("Not yet implemented.");
 	next();
 });
 
-app.post("/api/device-name/vendor-name", (req, res, next) => {
+app.post("/api/device-name/vendor-name", async (req, res, next) => {
 	const mac = req.body["mac"];
 	res.send("Not yet implemented.");
 	next();
 });
 
-app.post("/api/host-discovery/arp-scan", (req, res, next) => {
+app.post("/api/host-discovery/arp-scan", async (req, res, next) => {
 	const cidrIpNetwork = req.body["ip-network"];
 
 	// Prepare for streaming
@@ -56,7 +59,7 @@ app.post("/api/host-discovery/arp-scan", (req, res, next) => {
 	next();
 });
 
-app.post("/api/host-discovery/arp-cache-and-ping", (req, res, next) => {
+app.post("/api/host-discovery/arp-cache-and-ping", async (req, res, next) => {
 	const cidrIpNetwork = req.body["ip-network"];
 
 	// Prepare for streaming
@@ -70,7 +73,7 @@ app.post("/api/host-discovery/arp-cache-and-ping", (req, res, next) => {
 	next();
 });
 
-app.post("/api/wakeonlan", (req, res, next) => {
+app.post("/api/wakeonlan", async (req, res, next) => {
 	const mac = req.body["mac"];
 	const port = req.body["port"] || WakeOnLan.DEFAULT_PORT;
 	const ip = req.body["ip"] || WakeOnLan.IP_BROADCAST_ADDRESS;
