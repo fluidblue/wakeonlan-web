@@ -1,3 +1,5 @@
+import net from "net";
+
 export type IPAddress = string;
 export type IPAddressNumerical = number;
 
@@ -28,6 +30,32 @@ export class IPFunctions {
 			result[i] = (ip & (0xFF << shift)) >>> shift;
 		}
 		return result.join(".");
+	}
+
+	static getIPNetworkFromString(cidrIpNetworkString: string): IPNetwork {
+		if (!cidrIpNetworkString || !cidrIpNetworkString.length || cidrIpNetworkString.length === 0) {
+			throw new SyntaxError("Invalid IP network");
+		}
+		const cidrIpNetworkArray = cidrIpNetworkString.split("/");
+		if (cidrIpNetworkArray.length != 2) {
+			throw new SyntaxError("Invalid IP network");
+		}
+		const ip: string = cidrIpNetworkArray[0];
+		if (!net.isIP(ip)) {
+			throw new SyntaxError("Invalid IP network");
+		}
+		const prefix: number = parseInt(cidrIpNetworkArray[1]);
+		if (prefix === NaN) {
+			throw new SyntaxError("Invalid IP network");
+		}
+		if (prefix < 1 || prefix > 32) {
+			throw new RangeError("IP prefix must be between 1 and 32.");
+		}
+		const ipNetwork: IPNetwork = {
+			ip: ip,
+			prefix: prefix
+		}
+		return ipNetwork;
 	}
 
 	static getSubnetMask(prefix: number): IPAddressNumerical {
