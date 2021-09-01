@@ -83,7 +83,7 @@ app.post("/api/host-discovery/arp-cache-and-ping", async (req, res, next) => {
 	const cidrIpNetwork = req.body["ip-network"];
 
 	// Prepare for streaming
-	res.set("Content-Type", "text/plain");
+	res.set("Content-Type", "text/plain; charset=utf-8");
 	res.set("Transfer-Encoding", "chunked");
 
 	res.write("Not yet implemented.\n");
