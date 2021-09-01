@@ -17,12 +17,16 @@ import path from "path";
 import { WakeOnLan } from "./WakeOnLan/WakeOnLan";
 import WolNativeNode from "./WakeOnLan/WolNativeNode";
 
+import { HostDiscovery } from "./HostDiscovery/HostDiscovery";
+import ARPScan from "./HostDiscovery/ARPScan"
+
+import { IPFunctions, IPNetwork } from "./HostDiscovery/IPFunctions";
 import { MACFunctions } from "./HostDiscovery/MACFunctions";
 
 const app = express();
 const port = process.env.PORT || 8000;
 
-// TODO: Maybe add wrap function from
+// TODO: Look at wrap function from
 // http://expressjs.com/en/advanced/best-practice-performance.html#use-promises
 
 // Parse application/json and application/x-www-form-urlencoded in POST requests.
@@ -46,17 +50,33 @@ app.post("/api/device-name/vendor-name", async (req, res, next) => {
 });
 
 app.post("/api/host-discovery/arp-scan", async (req, res, next) => {
-	const cidrIpNetwork = req.body["ip-network"];
-
 	// Prepare for streaming
 	res.set("Content-Type", "text/plain");
 	res.set("Transfer-Encoding", "chunked");
 
-	res.write("Not yet implemented.\n");
+	try {
+		const cidrIpNetwork = req.body["ip-network"];
+		const ipNetwork: IPNetwork = IPFunctions.getIPNetworkFromString(cidrIpNetwork);
 
-	// Finish streaming
-	res.end();
-	next();
+		const hostDiscovery: HostDiscovery = new ARPScan();
+		await hostDiscovery.discover(ipNetwork, undefined, (ip, mac) => {
+			// Host discovered
+			const host = {
+				ip: ip,
+				mac: MACFunctions.getMacAddressFromByteArray(mac)
+			};
+			res.write(JSON.stringify(host) + "\n");
+		})
+	} catch (err) {
+		console.log("Error: ", err);
+		res.write(JSON.stringify({
+			result: false
+		}));
+	} finally {
+		// Finish streaming
+		res.end();
+		next();
+	}
 });
 
 app.post("/api/host-discovery/arp-cache-and-ping", async (req, res, next) => {
