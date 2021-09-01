@@ -39,14 +39,16 @@ app.use("/", express.static(path.join(__dirname, "httpdocs")));
 // REST API
 app.post("/api/device-name/host-name", wrap(async (req, res, next) => {
 	const ip = req.body["ip"];
-	res.send("Not yet implemented.");
-	next();
+
+	// Send 501: Not Implemented
+	res.sendStatus(501);
 }));
 
 app.post("/api/device-name/vendor-name", wrap(async (req, res, next) => {
 	const mac = req.body["mac"];
-	res.send("Not yet implemented.");
-	next();
+
+	// Send 501: Not Implemented
+	res.sendStatus(501);
 }));
 
 app.post("/api/host-discovery/arp-scan", wrap(async (req, res, next) => {
@@ -92,15 +94,8 @@ app.post("/api/host-discovery/arp-scan", wrap(async (req, res, next) => {
 app.post("/api/host-discovery/arp-cache-and-ping", wrap(async (req, res, next) => {
 	const cidrIpNetwork = req.body["ip-network"];
 
-	// Prepare for streaming
-	res.set("Content-Type", "text/plain; charset=utf-8");
-	res.set("Transfer-Encoding", "chunked");
-
-	res.write("Not yet implemented.\n");
-
-	// Finish streaming
-	res.end();
-	next();
+	// Send 501: Not Implemented
+	res.sendStatus(501);
 }));
 
 app.post("/api/wakeonlan", wrap(async (req, res, next) => {
