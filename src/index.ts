@@ -13,6 +13,7 @@
  
 import express from "express";
 import path from "path";
+import net from "net";
 
 import { WakeOnLan } from "./WakeOnLan/WakeOnLan";
 import WolNativeNode from "./WakeOnLan/WolNativeNode";
@@ -58,17 +59,21 @@ app.post("/api/host-discovery/arp-scan", async (req, res, next) => {
 		const cidrIpNetwork = req.body["ip-network"];
 		const ipNetwork: IPNetwork = IPFunctions.getIPNetworkFromString(cidrIpNetwork);
 
-		const hostDiscovery: HostDiscovery = new ARPScan();
-		await hostDiscovery.discover(ipNetwork, undefined, (ip, mac) => {
-			// Host discovered
-			const host = {
-				ip: ip,
-				mac: MACFunctions.getMacAddressFromByteArray(mac)
-			};
-			res.write(JSON.stringify(host) + "\n");
-		})
+		try {
+			const hostDiscovery: HostDiscovery = new ARPScan();
+			await hostDiscovery.discover(ipNetwork, undefined, (ip, mac) => {
+				// Host discovered
+				const host = {
+					ip: ip,
+					mac: MACFunctions.getMacAddressFromByteArray(mac)
+				};
+				res.write(JSON.stringify(host) + "\n");
+			});
+		} catch (err) {
+			console.log("Error:", err);
+			throw new Error(err);
+		}
 	} catch (err) {
-		console.log("Error: ", err);
 		const data = {
 			result: false
 		};
@@ -102,13 +107,21 @@ app.post("/api/wakeonlan", async (req, res, next) => {
 	}
 
 	try {
-		const wolManager: WakeOnLan = new WolNativeNode();
-		await wolManager.wake(MACFunctions.getByteArrayFromMacAddress(mac), options);
-		res.send(JSON.stringify({
-			result: true
-		}));
+		if (options.port < 1 || options.port > 65535 || !net.isIP(options.address)) {
+			throw new Error("Invalid input");
+		}
+
+		try {
+			const wolManager: WakeOnLan = new WolNativeNode();
+			await wolManager.wake(MACFunctions.getByteArrayFromMacAddress(mac), options);
+			res.send(JSON.stringify({
+				result: true
+			}));
+		} catch (err) {
+			console.log("Error:", err);
+			throw new Error(err);
+		}
 	} catch (err) {
-		console.log("Error: ", err);
 		res.send(JSON.stringify({
 			result: false
 		}));
