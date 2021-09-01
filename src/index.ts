@@ -15,6 +15,8 @@ import express from "express";
 import path from "path";
 import net from "net";
 
+import wrap from "./wrap";
+
 import { WakeOnLan } from "./WakeOnLan/WakeOnLan";
 import WolNativeNode from "./WakeOnLan/WolNativeNode";
 
@@ -26,9 +28,6 @@ import { MACFunctions } from "./HostDiscovery/MACFunctions";
 
 const app = express();
 const port = process.env.PORT || 8000;
-
-// TODO: Look at wrap function from
-// http://expressjs.com/en/advanced/best-practice-performance.html#use-promises
 
 // Parse application/json and application/x-www-form-urlencoded in POST requests.
 app.use(express.json());
