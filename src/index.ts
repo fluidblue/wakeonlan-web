@@ -96,21 +96,19 @@ app.post("/api/host-discovery/arp-cache-and-ping", async (req, res, next) => {
 
 app.post("/api/wakeonlan", async (req, res, next) => {
 	const mac = req.body["mac"];
-	const port = req.body["port"] || WakeOnLan.DEFAULT_PORT;
-	const ip = req.body["ip"] || WakeOnLan.IP_BROADCAST_ADDRESS;
-
 	const options = {
-		port: port,
-		address: ip
+		port: req.body["port"] || WakeOnLan.DEFAULT_PORT,
+		address: req.body["ip"] || WakeOnLan.IP_BROADCAST_ADDRESS
 	}
 
-	const wolManager: WakeOnLan = new WolNativeNode();
 	try {
+		const wolManager: WakeOnLan = new WolNativeNode();
 		await wolManager.wake(MACFunctions.getByteArrayFromMacAddress(mac), options);
 		res.send(JSON.stringify({
 			result: true
 		}));
 	} catch (err) {
+		console.log("Error: ", err);
 		res.send(JSON.stringify({
 			result: false
 		}));
