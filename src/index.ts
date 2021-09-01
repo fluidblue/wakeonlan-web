@@ -84,17 +84,18 @@ app.post("/api/wakeonlan", async (req, res, next) => {
 	}
 
 	const wolManager: WakeOnLan = new WolNativeNode();
-	wolManager.wake(MACFunctions.getByteArrayFromMacAddress(mac), options).catch((err) => {
-		res.send(JSON.stringify({
-			result: false
-		}));
-	}).then(() => {
+	try {
+		await wolManager.wake(MACFunctions.getByteArrayFromMacAddress(mac), options);
 		res.send(JSON.stringify({
 			result: true
 		}));
-	}).finally(() => {
+	} catch (err) {
+		res.send(JSON.stringify({
+			result: false
+		}));
+	} finally {
 		next();
-	});
+	}
 });
 
 app.listen(port, () => {
