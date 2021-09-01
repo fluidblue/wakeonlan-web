@@ -9,8 +9,8 @@ export default class ARPCacheAndPing implements HostDiscovery {
 
 	async discover(
 		ipSubnet: IPNetwork,
-		callbackProgress: (done: number, total: number) => void,
-		callbackHostFound: (ipAddress: string, macAddress: MacAddressBytes) => void
+		callbackProgress?: (done: number, total: number) => void | null,
+		callbackHostFound?: (ipAddress: string, macAddress: MacAddressBytes) => void | null
 	): Promise<ARPCacheEntry[]> {
 		if (ipSubnet.prefix < 1 || ipSubnet.prefix > 32) {
 			throw new RangeError("IP prefix must be between 1 and 32.");
@@ -44,9 +44,13 @@ export default class ARPCacheAndPing implements HostDiscovery {
 			const host: ARPCacheEntry | null = await runningPromises[i];
 			if (host) {
 				hosts.push(host);
-				callbackHostFound(host.ip, MACFunctions.getByteArrayFromMacAddress(host.mac));
+				if (callbackHostFound) {
+					callbackHostFound(host.ip, MACFunctions.getByteArrayFromMacAddress(host.mac));
+				}
 			}
-			callbackProgress(i + 1, runningPromises.length);
+			if (callbackProgress) {
+				callbackProgress(i + 1, runningPromises.length);
+			}
 		}
 
 		return hosts;

@@ -16,8 +16,8 @@ export default class ARPScan implements HostDiscovery {
 
 	async discover(
 		ipSubnet: IPNetwork,
-		callbackProgress: (done: number, total: number) => void,
-		callbackHostFound: (ipAddress: string, macAddress: MacAddressBytes) => void
+		callbackProgress?: (done: number, total: number) => void | null,
+		callbackHostFound?: (ipAddress: string, macAddress: MacAddressBytes) => void | null
 	): Promise<ARPCacheEntry[]> {
 		// Check for valid input
 		if (!net.isIP(ipSubnet.ip)) {
@@ -53,7 +53,9 @@ export default class ARPScan implements HostDiscovery {
 					ip: ip,
 					mac: mac
 				});
-				callbackHostFound(ip, MACFunctions.getByteArrayFromMacAddress(mac));
+				if (callbackHostFound) {
+					callbackHostFound(ip, MACFunctions.getByteArrayFromMacAddress(mac));
+				}
 			}));
 
 			childProcess.stderr.on("data", this.createChunkAssembler((line) => {
@@ -76,9 +78,11 @@ export default class ARPScan implements HostDiscovery {
 		});
 		await promise;
 
-		// TODO: Use callbackProgress during arp-scan running
-		const totalIPs = IPFunctions.getLastAddress(ipSubnet) - IPFunctions.getFirstAddress(ipSubnet) + 1;
-		callbackProgress(totalIPs, totalIPs);
+		if (callbackProgress) {
+			// TODO: Use callbackProgress during arp-scan running
+			const totalIPs = IPFunctions.getLastAddress(ipSubnet) - IPFunctions.getFirstAddress(ipSubnet) + 1;
+			callbackProgress(totalIPs, totalIPs);
+		}
 
 		return hosts;
 	}
