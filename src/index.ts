@@ -50,38 +50,43 @@ app.post("/api/device-name/vendor-name", wrap(async (req, res, next) => {
 }));
 
 app.post("/api/host-discovery/arp-scan", wrap(async (req, res, next) => {
+	const cidrIpNetwork = req.body["ip-network"];
+	let ipNetwork: IPNetwork;
+	try {
+		ipNetwork = IPFunctions.getIPNetworkFromString(cidrIpNetwork);
+	} catch (err) {
+		// Invalid input
+		// Send 400: Bad Request
+		res.sendStatus(400);
+		return;
+	}
+
 	// Prepare for streaming
 	res.set("Content-Type", "text/plain; charset=utf-8");
 	res.set("Transfer-Encoding", "chunked");
 
 	try {
-		const cidrIpNetwork = req.body["ip-network"];
-		const ipNetwork: IPNetwork = IPFunctions.getIPNetworkFromString(cidrIpNetwork);
-
-		try {
-			const hostDiscovery: HostDiscovery = new ARPScan();
-			await hostDiscovery.discover(ipNetwork, undefined, (ip, mac) => {
-				// Host discovered
-				const host = {
-					ip: ip,
-					mac: MACFunctions.getMacAddressFromByteArray(mac)
-				};
-				res.write(JSON.stringify(host) + "\n");
-			});
-		} catch (err) {
-			console.log("Error:", err);
-			throw new Error(err);
-		}
+		const hostDiscovery: HostDiscovery = new ARPScan();
+		await hostDiscovery.discover(ipNetwork, undefined, (ip, mac) => {
+			// Host discovered
+			const host = {
+				ip: ip,
+				mac: MACFunctions.getMacAddressFromByteArray(mac)
+			};
+			res.write(JSON.stringify(host) + "\n");
+		});
 	} catch (err) {
-		const data = {
+		console.log("Error:", err);
+		const errorNotice = {
 			result: false
-		};
-		res.write(JSON.stringify(data) + "\n");
+		}
+		res.write(JSON.stringify(errorNotice) + "\n");
+		return;
 	} finally {
 		// Finish streaming
 		res.end();
-		next();
 	}
+	next();
 }));
 
 app.post("/api/host-discovery/arp-cache-and-ping", wrap(async (req, res, next) => {
@@ -126,7 +131,6 @@ app.post("/api/wakeonlan", wrap(async (req, res, next) => {
 	}));
 	next();
 }));
-
 
 app.listen(port, () => {
 	console.log(`wakeonlan-web listening at http://localhost:${port}`);
