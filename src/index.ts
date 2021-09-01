@@ -15,7 +15,7 @@ import express from "express";
 import path from "path";
 
 const app = express();
-const port = 8000;
+const port = process.env.PORT || 8000;
 
 // Serve static files
 app.use("/", express.static(path.join(__dirname, "httpdocs")));
