@@ -69,9 +69,10 @@ app.post("/api/host-discovery/arp-scan", async (req, res, next) => {
 		})
 	} catch (err) {
 		console.log("Error: ", err);
-		res.write(JSON.stringify({
+		const data = {
 			result: false
-		}));
+		};
+		res.write(JSON.stringify(data) + "\n");
 	} finally {
 		// Finish streaming
 		res.end();
