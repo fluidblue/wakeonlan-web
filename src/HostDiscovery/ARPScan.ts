@@ -16,8 +16,8 @@ export default class ARPScan implements HostDiscovery {
 
 	async discover(
 		ipSubnet: IPNetwork,
-		callbackProgress?: (done: number, total: number) => void | null,
-		callbackHostFound?: (ipAddress: string, macAddress: MacAddressBytes) => void | null
+		callbackProgress?: (done: number, total: number) => void,
+		callbackHostFound?: (ipAddress: string, macAddress: MacAddressBytes) => void
 	): Promise<ARPCacheEntry[]> {
 		// Check for valid input
 		if (!net.isIP(ipSubnet.ip)) {
