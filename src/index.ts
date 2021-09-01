@@ -105,23 +105,20 @@ app.post("/api/wakeonlan", async (req, res, next) => {
 		port: req.body["port"] || WakeOnLan.DEFAULT_PORT,
 		address: req.body["ip"] || WakeOnLan.IP_BROADCAST_ADDRESS
 	}
+	if (options.port < 1 || options.port > 65535 || !net.isIP(options.address)) {
+		// Invalid input
+		next();
+		return;
+	}
 
 	try {
-		if (options.port < 1 || options.port > 65535 || !net.isIP(options.address)) {
-			throw new Error("Invalid input");
-		}
-
-		try {
-			const wolManager: WakeOnLan = new WolNativeNode();
-			await wolManager.wake(MACFunctions.getByteArrayFromMacAddress(mac), options);
-			res.send(JSON.stringify({
-				result: true
-			}));
-		} catch (err) {
-			console.log("Error:", err);
-			throw new Error(err);
-		}
+		const wolManager: WakeOnLan = new WolNativeNode();
+		await wolManager.wake(MACFunctions.getByteArrayFromMacAddress(mac), options);
+		res.send(JSON.stringify({
+			result: true
+		}));
 	} catch (err) {
+		console.log("Error:", err);
 		res.send(JSON.stringify({
 			result: false
 		}));
