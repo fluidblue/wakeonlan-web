@@ -4,6 +4,7 @@
   "description": "wakeonlan-web",
   "main": "build/index.js",
   "scripts": {
+    "start": "npx ts-node src/index.ts",
     "test": "ts-node node_modules/jasmine/bin/jasmine"
   },
   "author": "fluidblue",

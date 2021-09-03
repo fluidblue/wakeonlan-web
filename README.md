@@ -56,6 +56,7 @@ docker-compose up -d
 
     cd backend
     npm install
+    npm start
 
 **Test**
 
