@@ -16,6 +16,7 @@ import path from "path";
 import net from "net";
 
 import wrap from "./wrap";
+import getDate from "./date";
 
 import { WakeOnLan } from "./WakeOnLan/WakeOnLan";
 import WolNativeNode from "./WakeOnLan/WolNativeNode";
@@ -32,6 +33,12 @@ const port = process.env.PORT || 8000;
 // Parse application/json and application/x-www-form-urlencoded in POST requests.
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Basic logging
+app.use(wrap(async function (req, res, next) {
+	console.log("[" + getDate() + "] " + req.method + " " + req.url);
+	next();
+}));
 
 // Serve static files
 app.use("/", express.static(path.join(__dirname, "httpdocs")));
