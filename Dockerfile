@@ -12,8 +12,14 @@ RUN yarn build
 
 FROM node:16-buster
 WORKDIR /wakeonlan-web
+
+# Maximize layer caching
+COPY ./backend/package* ./
+RUN npm install
+
 COPY ./backend .
 COPY --from=build-frontend /frontend/build ./src/httpdocs
-RUN npm install
+
 RUN apt-get update && apt-get install -y arp-scan
+
 CMD ["npx", "ts-node", "src/index.ts"]
