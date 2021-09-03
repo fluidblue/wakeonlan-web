@@ -1,0 +1,41 @@
+version: "3.8"
+
+# Hint: Versions and tags are set in the file ".env"
+
+services:
+    wakeonlan-web:
+        image: fluidblue/wakeonlan-web:latest
+        build:
+            context: .
+            dockerfile: Dockerfile
+        init: true
+        ports:
+            - 127.0.0.1:8000:8000
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "20m"
+                max-file: "5"
+
+    mariadb:
+        image: mariadb:10.6
+        environment:
+            MARIADB_ROOT_PASSWORD: test_password
+        ports:
+            - 127.0.0.1:3306:3306
+        volumes:
+            - mariadb-data:/var/lib/mysql
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "20m"
+                max-file: "5"
+
+    adminer:
+        image: adminer
+        restart: always
+        ports:
+            - 8080:8080
+
+volumes:
+    mariadb-data:
