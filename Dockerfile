@@ -1,4 +1,5 @@
 # syntax=docker/dockerfile:1
+
 FROM node:16 AS build-frontend
 WORKDIR /frontend
 
