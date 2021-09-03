@@ -3,6 +3,10 @@ import logo from './logo.svg';
 import './App.css';
 
 function App() {
+  let api = '/api';
+  if (process.env.NODE_ENV === 'development') {
+    api = 'http://localhost:8000';
+  }
   return (
     <div className="App">
       <header className="App-header">
@@ -18,6 +22,7 @@ function App() {
         >
           Learn React
         </a>
+        <a href={api + "/host-discovery/arp-scan"}>API test</a>
       </header>
     </div>
   );
