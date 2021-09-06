@@ -23,4 +23,4 @@ COPY --from=build-frontend /frontend/build ./src/httpdocs
 
 RUN apt-get update && apt-get install -y arp-scan
 
-CMD ["npx", "ts-node", "src/index.ts"]
+CMD ["npm", "start"]
