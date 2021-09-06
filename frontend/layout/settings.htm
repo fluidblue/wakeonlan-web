@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- Bootstrap CSS -->
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
+		<!-- <link rel="stylesheet" href="./node_modules/bootstrap-icons/font/bootstrap-icons.css"> -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+		<!-- Optional JavaScript; choose one of the two! -->
+
+		<!-- Option 1: Bootstrap Bundle with Popper -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+
+		<!-- Option 2: Separate Popper and Bootstrap JS -->
+		<!--
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
+		-->
+
+		<title>Settings</title>
+		<style>
+			.settings {
+				padding: 2rem;
+				padding-top: 0;
+			}
+
+			.settings h6 {
+				margin-top: 2rem;
+			}
+
+			.settings hr {
+				margin-top: 2rem;
+				margin-bottom: 2rem;
+			}
+
+			.settings button {
+				/* padding-left: 2rem;
+				padding-right: 2rem; */
+				width: 8rem;
+			}
+
+			.settings button[type=submit] {
+				float: right;
+			}
+
+			.settings .checkbox-fix {
+				user-select: none;
+			}
+
+			@media (min-width: 768px) {
+				.settings {
+					width: 768px;
+					margin-left: auto;
+					margin-right: auto;
+				}
+			}
+		</style>
+	</head>
+	<body class="bg-light">
+		<div class="settings">
+			<!-- <h5 class="mb-3">Settings</h5> -->
+			<form>
+				<!-- <hr /> -->
+				<h6 class="mb-3 fw-bold">Host discovery</h6>
+				<div class="mb-3">
+					<label for="inputNetwork" class="form-label">IP network</label>
+					<input type="text" class="form-control" id="inputNetwork" value="192.168.178.0/24" placeholder="Enter network, e.g. 192.168.178.0/24" required disabled />
+				</div>
+				<div class="mb-3">
+					<input class="form-check-input" type="checkbox" value="" id="checkboxAutoDetect" checked>
+					<label class="form-check-label checkbox-fix" for="checkboxAutoDetect">Automatically detect network</label>
+				</div>
+				<div class="mb-3">
+					<label for="selectMethod" class="form-label">Method</label>
+					<select class="form-select" id="selectMethod">
+						<option value="arp-scan" selected>arp-scan</option>
+						<option value="arp-cache-and-ping">ARP cache and ping</option>
+					</select>
+				</div>
+				<!-- <hr /> -->
+				<h6 class="mb-3 fw-bold">Wake on LAN</h6>
+				<div class="mb-3">
+					<label for="inputPort" class="form-label">Port</label>
+					<input type="text" class="form-control" id="inputPort" value="9" placeholder="Enter port number" required />
+				</div>
+				<hr />
+				<div class="mb-3">
+					<button type="button" class="btn btn-secondary">Cancel</button>
+					<button type="submit" class="btn btn-primary">Save</button>
+				</div>
+			  </form>
+		</div>
+	</body>
+</html>
