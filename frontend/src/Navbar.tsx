@@ -1,6 +1,8 @@
 import React from 'react';
 import './Navbar.css';
 
+import { NavLink} from 'react-router-dom';
+
 function Navbar() {
   return (
     <nav className="navbar navbar-expand-md navbar-light bg-light">
@@ -14,18 +16,29 @@ function Navbar() {
         </button>
         <div className="collapse navbar-collapse navbar-collapse-custom" id="navbarNavAltMarkup">
           <div className="navbar-nav navbar-nav-custom">
-            <a className="nav-link active" aria-current="page" href="/hosts">
+            <NavLink
+              className="nav-link"
+              activeClassName="active"
+              aria-current="page"
+              to="/hosts"
+              isActive={(match, location) => {
+                if (location && location.pathname && location.pathname === "/") {
+                  return true;
+                }
+                return match ? true : false;
+              }}
+            >
               <i className="bi bi-grid"></i>
               &nbsp;Saved hosts
-            </a>
-            <a className="nav-link" href="/discover">
+            </NavLink>
+            <NavLink className="nav-link" activeClassName="active" aria-current="page" to="/discover">
               <i className="bi bi-wifi"></i>
               &nbsp;Discover hosts
-            </a>
-            <a className="nav-link" href="/settings">
+            </NavLink>
+            <NavLink className="nav-link" activeClassName="active" aria-current="page" to="/settings">
               <i className="bi bi-gear"></i>
               &nbsp;Settings
-            </a>
+            </NavLink>
           </div>
         </div>
       </div>
