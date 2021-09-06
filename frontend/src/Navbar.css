@@ -1,0 +1,48 @@
+.main-icon {
+	font-size: 2rem;
+
+	margin-right: 0.5rem;
+}
+
+.brand {
+	display: flex;
+	align-items: center;
+
+	margin-right: 2rem;
+}
+
+.brand h4, .brand h5 {
+	margin: 0;
+}
+
+
+/* .navbar-custom-blue extends .navbar */
+
+.navbar-custom-blue .navbar-nav .nav-link {
+	color: #0d6efd; /* color from .link-primary */
+}
+
+.navbar-custom-blue .navbar-nav .nav-link:hover,
+.navbar-custom-blue .navbar-nav .nav-link:focus {
+	color: #0a58ca; /* color from .link-primary:hover, .link-primary:focus */
+}
+
+.navbar-custom-blue .navbar-nav .nav-link.disabled {
+	color: rgba(0, 0, 0, .3); /* color from .navbar-light .navbar-nav .nav-link.disabled */
+}
+
+.navbar-custom-blue .navbar-nav .nav-link.active {
+	/* color from .text-secondary */
+	--bs-text-opacity: 1;
+	color: rgba(var(--bs-secondary-rgb), var(--bs-text-opacity)) !important;
+}
+
+
+.navbar-collapse-custom {
+	flex-grow: unset;
+}
+
+.navbar-nav-custom a i {
+	margin-left: 0.4rem;
+	margin-right: 0.1rem;
+}

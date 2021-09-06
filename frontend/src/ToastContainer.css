@@ -1,0 +1,3 @@
+#toastContainer {
+	z-index: 11; /* Value from Bootstrap documentation */
+}
