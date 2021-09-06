@@ -5,7 +5,7 @@ function Navbar() {
   return (
     <nav className="navbar navbar-expand-md navbar-light bg-light">
       <div className="container-fluid">
-        <a className="navbar-brand brand" href="#home">
+        <a className="navbar-brand brand" href=".">
           <i className="bi bi-power main-icon"></i>
           <h5>wakeonlan-web</h5>
         </a>
@@ -14,15 +14,15 @@ function Navbar() {
         </button>
         <div className="collapse navbar-collapse navbar-collapse-custom" id="navbarNavAltMarkup">
           <div className="navbar-nav navbar-nav-custom">
-            <a className="nav-link active" aria-current="page" href="#savedhosts">
+            <a className="nav-link active" aria-current="page" href="/hosts">
               <i className="bi bi-grid"></i>
               &nbsp;Saved hosts
             </a>
-            <a className="nav-link" href="#discoverhosts">
+            <a className="nav-link" href="/discover">
               <i className="bi bi-wifi"></i>
               &nbsp;Discover hosts
             </a>
-            <a className="nav-link" href="#settings">
+            <a className="nav-link" href="/settings">
               <i className="bi bi-gear"></i>
               &nbsp;Settings
             </a>
