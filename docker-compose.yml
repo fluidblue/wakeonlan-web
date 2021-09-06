@@ -3,14 +3,41 @@ version: "3.8"
 # Hint: Versions and tags are set in the file ".env"
 
 services:
-    wakeonlan-web:
-        image: fluidblue/wakeonlan-web:latest
+    reverse-proxy:
+        image: nginx:1.21
+        ports:
+            - 8000:80
+        volumes:
+            - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+            - ./config/nginx/conf.d:/etc/nginx/conf.d
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "20m"
+                max-file: "5"
+
+    frontend:
+        image: node:16
+        working_dir: /frontend
+        command: ["yarn", "start"]
+        init: true
+        # TODO: Remove port
+        ports:
+            - 3000:3000
+        volumes:
+            - ./frontend:/frontend
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "20m"
+                max-file: "5"
+
+    backend:
+        image: fluidblue/wakeonlan-web-backend:latest
         build:
-            context: .
+            context: ./backend
             dockerfile: Dockerfile
         init: true
-        ports:
-            - 8000:8000
         logging:
             driver: "json-file"
             options:
