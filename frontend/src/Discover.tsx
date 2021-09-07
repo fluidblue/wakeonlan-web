@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import './Discover.css';
 
+import HostItem from './HostItem';
+
 function Discover() {
   const [scanning, setScanning] = useState(false);
   const [scanned, setScanned] = useState(false);
@@ -70,24 +72,9 @@ function Discover() {
       </div>
 
       <ul className="list-group">
-        <li className="list-group-item list-group-item-action link-primary host-item" onClick={handleItemClick}>
-          <div>
-            <div className="fw-bold">Hostname 1</div>
-            <div className="opacity-75">00:11:22:33:44:55</div>
-          </div>
-        </li>
-        <li className="list-group-item list-group-item-action link-primary host-item" onClick={handleItemClick}>
-          <div>
-            <div className="fw-bold">Hostname 2</div>
-            <div className="opacity-75">00:11:22:33:44:55</div>
-          </div>
-        </li>
-        <li className="list-group-item list-group-item-action link-primary host-item" onClick={handleItemClick}>
-          <div>
-            <div className="fw-bold">Hostname 3</div>
-            <div className="opacity-75">00:11:22:33:44:55</div>
-          </div>
-        </li>
+        <HostItem hostname="Hostname 1" mac="00:11:22:33:44:55" handleItemClick={handleItemClick} />
+        <HostItem hostname="Hostname 2" mac="00:11:22:33:44:55" handleItemClick={handleItemClick} />
+        <HostItem hostname="Hostname 3" mac="00:11:22:33:44:55" handleItemClick={handleItemClick} />
       </ul>
 
       {spinner}
