@@ -65,7 +65,7 @@ function Discover(props: DiscoverProps) {
   }
 
   let scanFinishedNotice = null;
-  if (!scanning) {
+  if (scanned) {
     scanFinishedNotice = (
       <div className="d-flex flex-column align-items-center mx-2 mt-4 scan-finished-notice">
         <div>
