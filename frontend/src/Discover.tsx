@@ -4,6 +4,7 @@ import './Discover.css';
 
 function Discover() {
   const [scanning, setScanning] = useState(false);
+  const [scanned, setScanned] = useState(false);
   const history = useHistory();
 
   function handleItemClick(e: React.MouseEvent<HTMLLIElement, MouseEvent>) {
@@ -11,6 +12,7 @@ function Discover() {
   }
 
   function handleRescanClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    setScanned(false);
     startScan();
   }
 
@@ -22,13 +24,16 @@ function Discover() {
     setScanning(true);
     window.setTimeout(() => {
       setScanning(false);
+      setScanned(true);
     }, 3000);
   }, []);
 
   // Start scanning when the activity is entered.
   useEffect(() => {
-    startScan();
-  }, [startScan]);
+    if (!scanned) {
+      startScan();
+    }
+  }, [scanned, startScan]);
 
   let spinner = null;
   if (scanning) {
