@@ -1,16 +1,34 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import './Discover.css';
 
 function Discover() {
-  const [scanning, setScanning] = useState(true);
+  const [scanning, setScanning] = useState(false);
+  const history = useHistory();
 
   function handleItemClick(e: React.MouseEvent<HTMLLIElement, MouseEvent>) {
-    alert('savehost');
+    history.push('/add');
   }
 
-  window.setTimeout(() => {
-    setScanning(false);
-  }, 3000);
+  function handleRescanClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    startScan();
+  }
+
+  function handleAddManuallyClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    history.push('/add');
+  }
+
+  const startScan = useCallback(() => {
+    setScanning(true);
+    window.setTimeout(() => {
+      setScanning(false);
+    }, 3000);
+  }, []);
+
+  // Start scanning when the activity is entered.
+  useEffect(() => {
+    startScan();
+  }, [startScan]);
 
   let spinner = null;
   if (scanning) {
@@ -32,8 +50,8 @@ function Discover() {
         <div className="mt-3">
           <div className="text-center mb-2">Host not found?</div>
           <div className="d-flex">
-            <button type="button" className="btn btn-sm btn-secondary">Rescan</button>
-            <button type="button" className="btn btn-sm btn-secondary ms-2">Add manually</button>
+            <button type="button" className="btn btn-sm btn-secondary" onClick={handleRescanClick}>Rescan</button>
+            <button type="button" className="btn btn-sm btn-secondary ms-2" onClick={handleAddManuallyClick}>Add manually</button>
           </div>
         </div>
       </div>
