@@ -1,0 +1,7 @@
+.host-item {
+	cursor: pointer;
+
+	display: flex;
+	justify-content: space-between;
+	align-items: stretch;
+}
