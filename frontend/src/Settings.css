@@ -1,0 +1,20 @@
+.settings h6:not(:first-child) {
+	margin-top: 2rem;
+}
+
+.settings hr {
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+}
+
+.settings button {
+	width: 8rem;
+}
+
+.settings button[type=submit] {
+	float: right;
+}
+
+.settings .checkbox-fix {
+	user-select: none;
+}

@@ -9,6 +9,7 @@ import {
 
 import Navbar from './Navbar';
 import SavedHosts from './SavedHosts';
+import Settings from './Settings';
 import ToastContainer from './ToastContainer';
 
 function App() {
@@ -27,7 +28,7 @@ function App() {
             Discover
           </Route>
           <Route path="/settings">
-            Settings
+            <Settings />
           </Route>
           <Route path="/add">
             Add host
