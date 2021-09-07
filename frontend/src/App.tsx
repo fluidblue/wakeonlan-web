@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
 import {
@@ -14,7 +14,11 @@ import Settings from './Settings';
 import EditHost from './EditHost';
 import ToastContainer from './ToastContainer';
 
+import Host from './Host';
+
 function App() {
+  const [hostToBeAdded, setHostToBeAdded] = useState<Host | null>(null);
+
   let api = '/api';
   if (process.env.NODE_ENV === 'development') {
     api = 'http://localhost:8000' + api;
@@ -27,16 +31,16 @@ function App() {
       <main>
         <Switch>
           <Route path="/discover">
-            <Discover />
+            <Discover onHostToBeAddedChange={setHostToBeAdded} />
           </Route>
           <Route path="/settings">
             <Settings />
           </Route>
           <Route path="/add">
-            <EditHost add={true} />
+            <EditHost host={hostToBeAdded} add={true} />
           </Route>
           <Route path="/edit/:id">
-            <EditHost />
+            <EditHost host={hostToBeAdded} />
           </Route>
           <Route path={["/hosts", "/"]}>
             <SavedHosts />

@@ -7,18 +7,23 @@ import Host from './Host';
 
 const hostsMock: Host[] = [
   { name: 'Hostname 1', mac: '00:11:22:33:44:55' },
-  { name: 'Hostname 2', mac: '00:11:22:33:44:55' },
-  { name: 'Hostname 3', mac: '00:11:22:33:44:55' }
+  { name: 'Hostname 2', mac: '00:11:22:33:44:66' },
+  { name: 'Hostname 3', mac: '00:11:22:33:44:77' }
 ];
 
-function Discover() {
+interface DiscoverProps {
+  onHostToBeAddedChange: React.Dispatch<React.SetStateAction<Host | null>>;
+}
+
+function Discover(props: DiscoverProps) {
   const [scanning, setScanning] = useState(false);
   const [scanned, setScanned] = useState(false);
   const [hosts, setHosts] = useState<Host[]>([]);
 
   const history = useHistory();
 
-  function handleItemClick(e: React.MouseEvent<HTMLLIElement, MouseEvent>) {
+  function handleItemClick(host: Host) {
+    props.onHostToBeAddedChange(host);
     history.push('/add');
   }
 
@@ -28,6 +33,7 @@ function Discover() {
   }
 
   function handleAddManuallyClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    props.onHostToBeAddedChange(null);
     history.push('/add');
   }
 
@@ -77,7 +83,7 @@ function Discover() {
   }
 
   const hostItems = hosts.map((host) => {
-    return <HostItem hostname={host.name} mac={host.mac} handleItemClick={handleItemClick} />;
+    return <HostItem host={host} onClick={handleItemClick} key={host.mac} />;
   });
 
   return (

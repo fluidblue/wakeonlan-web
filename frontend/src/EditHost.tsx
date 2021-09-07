@@ -2,13 +2,11 @@ import React from 'react';
 import { useHistory } from 'react-router';
 import './EditHost.css';
 
+import Host from './Host';
+
 interface EditHostProps {
   add?: boolean;
-
-  id?: number;
-
-  hostname?: string;
-  mac?: string;
+  host?: Host | null;
 }
 
 function EditHost(props: EditHostProps) {
@@ -30,6 +28,8 @@ function EditHost(props: EditHostProps) {
   }
 
   const title = props.add ? "Save host" : "Edit host";
+  const hostname = props.host ? props.host.name : '';
+  const mac = props.host ? props.host.mac : '';
 
   return (
     <>
@@ -56,11 +56,11 @@ function EditHost(props: EditHostProps) {
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="inputHostName" className="form-label">Hostname</label>
-            <input type="text" className="form-control" id="inputHostName" value="Hostname 1" placeholder="Enter hostname" required />
+            <input type="text" className="form-control" id="inputHostName" defaultValue={hostname} placeholder="Enter hostname" required />
           </div>
           <div className="mb-3">
             <label htmlFor="inputMacAddress" className="form-label">MAC address</label>
-            <input type="text" className="form-control" id="inputMacAddress" value="00:11:22:33:44:55" placeholder="00:11:22:33:44:55" required />
+            <input type="text" className="form-control" id="inputMacAddress" defaultValue={mac} placeholder="00:11:22:33:44:55" required />
           </div>
           <hr />
           <div className="mb-3">
