@@ -2,6 +2,10 @@ import React from 'react';
 import './Discover.css';
 
 function Discover() {
+  function handleItemClick(e: React.MouseEvent<HTMLLIElement, MouseEvent>) {
+    alert('savehost');
+  }
+
   return (
     <>
       <div className="host-discovery-notice text-muted">
@@ -9,19 +13,19 @@ function Discover() {
       </div>
 
       <ul className="list-group">
-        <li className="list-group-item list-group-item-action link-primary host-item">
+        <li className="list-group-item list-group-item-action link-primary host-item" onClick={handleItemClick}>
           <div>
             <div className="fw-bold">Hostname 1</div>
             <div className="opacity-75">00:11:22:33:44:55</div>
           </div>
         </li>
-        <li className="list-group-item list-group-item-action link-primary host-item">
+        <li className="list-group-item list-group-item-action link-primary host-item" onClick={handleItemClick}>
           <div>
             <div className="fw-bold">Hostname 2</div>
             <div className="opacity-75">00:11:22:33:44:55</div>
           </div>
         </li>
-        <li className="list-group-item list-group-item-action link-primary host-item">
+        <li className="list-group-item list-group-item-action link-primary host-item" onClick={handleItemClick}>
           <div>
             <div className="fw-bold">Hostname 3</div>
             <div className="opacity-75">00:11:22:33:44:55</div>
