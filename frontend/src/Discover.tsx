@@ -4,9 +4,22 @@ import './Discover.css';
 
 import HostItem from './HostItem';
 
+interface Host {
+  name: string;
+  mac: string;
+}
+
+const hostsMock: Host[] = [
+  { name: 'Hostname 1', mac: '00:11:22:33:44:55' },
+  { name: 'Hostname 2', mac: '00:11:22:33:44:55' },
+  { name: 'Hostname 3', mac: '00:11:22:33:44:55' }
+];
+
 function Discover() {
   const [scanning, setScanning] = useState(false);
   const [scanned, setScanned] = useState(false);
+  const [hosts, setHosts] = useState<Host[]>([]);
+
   const history = useHistory();
 
   function handleItemClick(e: React.MouseEvent<HTMLLIElement, MouseEvent>) {
@@ -23,10 +36,12 @@ function Discover() {
   }
 
   const startScan = useCallback(() => {
+    setHosts([]);
     setScanning(true);
     window.setTimeout(() => {
       setScanning(false);
       setScanned(true);
+      setHosts(hostsMock);
     }, 3000);
   }, []);
 
@@ -65,6 +80,10 @@ function Discover() {
     );
   }
 
+  const hostItems = hosts.map((host) => {
+    return <HostItem hostname={host.name} mac={host.mac} handleItemClick={handleItemClick} />;
+  });
+
   return (
     <>
       <div className="host-discovery-notice text-muted">
@@ -72,9 +91,7 @@ function Discover() {
       </div>
 
       <ul className="list-group">
-        <HostItem hostname="Hostname 1" mac="00:11:22:33:44:55" handleItemClick={handleItemClick} />
-        <HostItem hostname="Hostname 2" mac="00:11:22:33:44:55" handleItemClick={handleItemClick} />
-        <HostItem hostname="Hostname 3" mac="00:11:22:33:44:55" handleItemClick={handleItemClick} />
+        {hostItems}
       </ul>
 
       {spinner}
