@@ -1,0 +1,12 @@
+.host-discovery-notice {
+	margin-bottom: 1.5rem;
+	text-align: center;
+}
+
+.host-item {
+	cursor: pointer;
+
+	display: flex;
+	justify-content: space-between;
+	align-items: stretch;
+}

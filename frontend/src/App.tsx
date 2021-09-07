@@ -9,6 +9,7 @@ import {
 
 import Navbar from './Navbar';
 import SavedHosts from './SavedHosts';
+import Discover from './Discover';
 import Settings from './Settings';
 import ToastContainer from './ToastContainer';
 
@@ -25,7 +26,7 @@ function App() {
       <main>
         <Switch>
           <Route path="/discover">
-            Discover
+            <Discover />
           </Route>
           <Route path="/settings">
             <Settings />
