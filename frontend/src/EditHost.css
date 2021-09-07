@@ -1,0 +1,12 @@
+.edithost hr {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.edithost button {
+    width: 8rem;
+}
+
+.edithost button[type=submit] {
+    float: right;
+}

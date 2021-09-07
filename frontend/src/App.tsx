@@ -11,6 +11,7 @@ import Navbar from './Navbar';
 import SavedHosts from './SavedHosts';
 import Discover from './Discover';
 import Settings from './Settings';
+import EditHost from './EditHost';
 import ToastContainer from './ToastContainer';
 
 function App() {
@@ -32,10 +33,10 @@ function App() {
             <Settings />
           </Route>
           <Route path="/add">
-            Add host
+            <EditHost add={true} />
           </Route>
           <Route path="/edit/:id">
-            Edit host
+            <EditHost />
           </Route>
           <Route path={["/hosts", "/"]}>
             <SavedHosts />
