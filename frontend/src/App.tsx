@@ -12,6 +12,7 @@ import SavedHosts from './SavedHosts';
 import Discover from './Discover';
 import Settings from './Settings';
 import EditHost from './EditHost';
+import NotFound from './NotFound';
 import ToastContainer from './ToastContainer';
 
 import Host from './Host';
@@ -30,6 +31,9 @@ function App() {
       <hr className="header-separator" />
       <main>
         <Switch>
+          <Route exact path={["/hosts", "/"]}>
+            <SavedHosts />
+          </Route>
           <Route path="/discover">
             <Discover onHostToBeAddedChange={setHostToBeAdded} />
           </Route>
@@ -42,8 +46,8 @@ function App() {
           <Route path="/edit/:id">
             <EditHost host={hostToBeAdded} />
           </Route>
-          <Route path={["/hosts", "/"]}>
-            <SavedHosts />
+          <Route path="*">
+            <NotFound />
           </Route>
         </Switch>
       </main>
