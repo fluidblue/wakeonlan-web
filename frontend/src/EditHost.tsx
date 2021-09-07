@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router';
 import './EditHost.css';
 
 interface EditHostProps {
@@ -11,6 +12,17 @@ interface EditHostProps {
 }
 
 function EditHost(props: EditHostProps) {
+  const history = useHistory();
+
+  function handleCancelClick() {
+    history.goBack();
+  }
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    alert('Save');
+  }
+
   const showDeleteButton = !props.add;
   let deleteButton = null;
   if (showDeleteButton) {
@@ -41,7 +53,7 @@ function EditHost(props: EditHostProps) {
 
       <div className="edithost">
         <h6 className="mb-3 fw-bold">{title}</h6>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="inputHostName" className="form-label">Hostname</label>
             <input type="text" className="form-control" id="inputHostName" value="Hostname 1" placeholder="Enter hostname" required />
@@ -52,7 +64,7 @@ function EditHost(props: EditHostProps) {
           </div>
           <hr />
           <div className="mb-3">
-            <button type="button" className="btn btn-secondary">Cancel</button>
+            <button type="button" className="btn btn-secondary" onClick={handleCancelClick}>Cancel</button>
             <button type="submit" className="btn btn-primary">Save</button>
           </div>
           {deleteButton}
