@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router';
 import './EditHost.css';
 
@@ -20,6 +20,13 @@ function EditHost(props: EditHostProps) {
     e.preventDefault();
     alert('Save');
   }
+
+  useEffect(() => {
+    const input = document.getElementById('inputHostName');
+    if (input) {
+      input.focus();
+    }
+  }, []);
 
   const showDeleteButton = !props.add;
   let deleteButton = null;
