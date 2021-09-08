@@ -1,9 +1,24 @@
 import React from 'react';
 import './SavedHosts.css';
 
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
-function SavedHosts() {
+import Host from './Host';
+
+interface SavedHostsProps {
+  onHostToBeAddedChange: React.Dispatch<React.SetStateAction<Host | null>>;
+}
+
+function SavedHosts(props: SavedHostsProps) {
+  const history = useHistory();
+
+  const manualAddClickHref = '/add';
+  function handleManualAddClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
+    e.preventDefault();
+    props.onHostToBeAddedChange(null);
+    history.push(manualAddClickHref);
+  }
+
   return (
     <>
       <ul className="list-group">
@@ -47,7 +62,7 @@ function SavedHosts() {
           <i className="bi bi-plus-lg"></i>
         </button>
         <ul className="dropdown-menu">
-          <li><Link className="dropdown-item" to="/add">Manual</Link></li>
+          <li><a className="dropdown-item" href={manualAddClickHref} onClick={handleManualAddClick}>Manual</a></li>
           <li><hr className="dropdown-divider" /></li>
           <li><Link className="dropdown-item" to="/discover">Automatic</Link></li>
         </ul>

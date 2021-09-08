@@ -32,7 +32,7 @@ function App() {
       <main>
         <Switch>
           <Route exact path={["/hosts", "/"]}>
-            <SavedHosts />
+            <SavedHosts onHostToBeAddedChange={setHostToBeAdded} />
           </Route>
           <Route path="/discover">
             <Discover onHostToBeAddedChange={setHostToBeAdded} />
