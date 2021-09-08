@@ -14,7 +14,7 @@ function SavedHost(props: SavedHostProps) {
   }
 
   function handleHostItemClick(e: React.MouseEvent<HTMLLIElement, MouseEvent>) {
-    alert('wol');
+    alert('wol ' + props.mac);
     showToast();
   }
 
