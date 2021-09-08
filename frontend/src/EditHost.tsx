@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { createRef, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import './EditHost.css';
 
@@ -11,6 +11,7 @@ interface EditHostProps {
 
 function EditHost(props: EditHostProps) {
   const history = useHistory();
+  const inputHostName = createRef<HTMLInputElement>();
 
   function handleCancelClick() {
     history.goBack();
@@ -22,11 +23,10 @@ function EditHost(props: EditHostProps) {
   }
 
   useEffect(() => {
-    const input = document.getElementById('inputHostName');
-    if (input) {
-      input.focus();
+    if (inputHostName.current) {
+      inputHostName.current.focus();
     }
-  }, []);
+  }, [inputHostName]);
 
   const showDeleteButton = !props.add;
   let deleteButton = null;
@@ -63,7 +63,7 @@ function EditHost(props: EditHostProps) {
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="inputHostName" className="form-label">Hostname</label>
-            <input type="text" className="form-control" id="inputHostName" defaultValue={hostname} placeholder="Enter hostname" required />
+            <input type="text" className="form-control" id="inputHostName" ref={inputHostName} defaultValue={hostname} placeholder="Enter hostname" required />
           </div>
           <div className="mb-3">
             <label htmlFor="inputMacAddress" className="form-label">MAC address</label>
