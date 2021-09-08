@@ -28,6 +28,11 @@ function App() {
     api = 'http://localhost:8000' + api;
   }
 
+  function onHostWoken(hostname: string, mac: string) {
+    // TODO
+    console.log("onHostWoken: " + hostname);
+  }
+
   return (
     <Router>
       <Navbar />
@@ -35,7 +40,7 @@ function App() {
       <main>
         <Switch>
           <Route exact path={["/hosts", "/"]}>
-            <SavedHosts onHostToBeAddedChange={setHostToBeAdded} />
+            <SavedHosts onHostToBeAddedChange={setHostToBeAdded} onHostWoken={onHostWoken} />
           </Route>
           <Route path="/discover">
             <Discover

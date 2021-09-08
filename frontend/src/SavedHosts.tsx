@@ -14,6 +14,7 @@ const savedHostsMock: Host[] = [
 
 interface SavedHostsProps {
   onHostToBeAddedChange: React.Dispatch<React.SetStateAction<Host | null>>;
+  onHostWoken: (hostname: string, mac: string) => void;
 }
 
 function SavedHosts(props: SavedHostsProps) {
@@ -27,7 +28,7 @@ function SavedHosts(props: SavedHostsProps) {
   }
 
   const savedHosts = savedHostsMock.map((savedHost) => {
-    return <SavedHost hostname={savedHost.name} mac={savedHost.mac} />;
+    return <SavedHost hostname={savedHost.name} mac={savedHost.mac} onWoken={props.onHostWoken} key={savedHost.mac} />;
   });
 
   return (

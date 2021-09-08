@@ -6,16 +6,17 @@ import { Link } from 'react-router-dom';
 interface SavedHostProps {
   hostname: string;
   mac: string;
-}
-  
-function SavedHost(props: SavedHostProps) {
-  function showToast() {
-    // TODO: Use props.hostname
-  }
 
+  onWoken?: (hostname: string, mac: string) => void;
+}
+
+function SavedHost(props: SavedHostProps) {
   function handleHostItemClick(e: React.MouseEvent<HTMLLIElement, MouseEvent>) {
     alert('wol ' + props.mac);
-    showToast();
+
+    if (props.onWoken) {
+      props.onWoken(props.hostname, props.mac);
+    }
   }
 
   const editLink = '/edit/' + props.mac.replace(':', '-');
