@@ -3,6 +3,17 @@
 wakeonlan-web.
 
 
+## Installation using Docker Compose
+
+1. Open docker-compose.yml and set MariaDB root password.
+
+2. In the root directory of the repository:
+```
+docker-compose build
+docker-compose up -d
+```
+
+
 ## Installation using Docker
 
 Note: This type of installation only installs a wakeonlan-web container.
@@ -21,17 +32,6 @@ From the Docker docs:
 **Docker testing (Standard network driver)**
 
     docker run -dp 8000:8000 wakeonlan-web
-
-
-## Installation using Docker Compose
-
-1. Open docker-compose.yml and set MariaDB root password.
-
-2. In the root directory of the repository:
-```
-docker-compose build
-docker-compose up -d
-```
 
 
 ## Development
