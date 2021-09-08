@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import './Discover.css';
 
@@ -30,36 +30,41 @@ function Discover(props: DiscoverProps) {
     history.push('/add');
   }
 
-  function handleRescanClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    props.onScannedChange(false);
-    startScan();
-  }
-
   function handleAddManuallyClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     props.onHostToBeAddedChange(null);
     history.push('/add');
   }
 
-  // Destructure props object for useCallback
-  const { onScannedChange } = props;
-  const { onDiscoveredHostsChange } = props;
+  function handleRescanClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    props.onScannedChange(false);
+  }
 
-  const startScan = useCallback(() => {
-    onDiscoveredHostsChange([]);
-    setScanning(true);
-    window.setTimeout(() => {
-      setScanning(false);
-      onScannedChange(true);
-      onDiscoveredHostsChange(hostsMock);
-    }, 3000);
-  }, [onScannedChange, onDiscoveredHostsChange]);
+  // Destructure props for useEffect
+  const { onDiscoveredHostsChange, onScannedChange } = props;
 
   // Start scanning when the activity is entered.
   useEffect(() => {
+    let ignore = false;
+
     if (!props.scanned) {
-      startScan();
+      onDiscoveredHostsChange([]);
+      setScanning(true);
+
+      window.setTimeout(() => {
+        if (ignore) {
+          console.log('Ignored.');
+          return;
+        }
+        setScanning(false);
+        onScannedChange(true);
+        onDiscoveredHostsChange(hostsMock);
+        console.log('Finished.');
+      }, 5000);
     }
-  }, [props.scanned, startScan]);
+    return () => {
+      ignore = true;
+    };
+  }, [props.scanned, onDiscoveredHostsChange, onScannedChange]);
 
   let spinner = null;
   if (scanning) {
