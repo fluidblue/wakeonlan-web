@@ -57,7 +57,7 @@ function Discover(props: DiscoverProps) {
   let spinner = null;
   if (scanning) {
     spinner = (
-      <div className="d-flex align-items-center mt-3 mx-2 spinner">
+      <div className="d-flex align-items-center mx-2 spinner">
         <span className="fw-bold">Scanning 192.168.188.0/24</span>
         <div className="spinner-border ms-auto" role="status" aria-hidden="true"></div>
       </div>
@@ -67,7 +67,7 @@ function Discover(props: DiscoverProps) {
   let scanFinishedNotice = null;
   if (scanned) {
     scanFinishedNotice = (
-      <div className="d-flex flex-column align-items-center mx-2 mt-4 scan-finished-notice">
+      <div className="d-flex flex-column align-items-center mx-2 scan-finished-notice">
         <div>
           <div className="fw-bold text-center">Scan finished.</div>
         </div>
@@ -85,19 +85,22 @@ function Discover(props: DiscoverProps) {
   const hostItems = hosts.map((host) => {
     return <HostItem host={host} onClick={handleItemClick} key={host.mac} />;
   });
+  let hostItemsParent = null;
+  if (hostItems && hostItems.length > 0) {
+    hostItemsParent = (
+      <ul className="list-group mb-4">
+        {hostItems}
+      </ul>
+    );
+  }
 
   return (
     <>
       <div className="host-discovery-notice text-muted">
         Note: For host discovery, hosts must be powered on.
       </div>
-
-      <ul className="list-group">
-        {hostItems}
-      </ul>
-
+      {hostItemsParent}
       {spinner}
-
       {scanFinishedNotice}
     </>
   );
