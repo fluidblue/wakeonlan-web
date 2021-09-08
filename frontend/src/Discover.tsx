@@ -52,14 +52,12 @@ function Discover(props: DiscoverProps) {
 
       window.setTimeout(() => {
         if (ignore) {
-          console.log('Ignored.');
           return;
         }
         setScanning(false);
         onScannedChange(true);
         onDiscoveredHostsChange(hostsMock);
-        console.log('Finished.');
-      }, 5000);
+      }, 3000);
     }
     return () => {
       ignore = true;
