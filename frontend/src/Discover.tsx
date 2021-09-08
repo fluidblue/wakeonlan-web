@@ -13,13 +13,16 @@ const hostsMock: Host[] = [
 
 interface DiscoverProps {
   onHostToBeAddedChange: React.Dispatch<React.SetStateAction<Host | null>>;
+
+  onDiscoveredHostsChange: React.Dispatch<React.SetStateAction<Host[]>>;
+  discoveredHosts: Host[];
+
+  onScannedChange: React.Dispatch<React.SetStateAction<boolean>>;
+  scanned: boolean;
 }
 
 function Discover(props: DiscoverProps) {
   const [scanning, setScanning] = useState(false);
-  const [scanned, setScanned] = useState(false);
-  const [hosts, setHosts] = useState<Host[]>([]);
-
   const history = useHistory();
 
   function handleItemClick(host: Host) {
@@ -28,7 +31,7 @@ function Discover(props: DiscoverProps) {
   }
 
   function handleRescanClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    setScanned(false);
+    props.onScannedChange(false);
     startScan();
   }
 
@@ -37,22 +40,26 @@ function Discover(props: DiscoverProps) {
     history.push('/add');
   }
 
+  // Destructure props object for useCallback
+  const { onScannedChange } = props;
+  const { onDiscoveredHostsChange } = props;
+
   const startScan = useCallback(() => {
-    setHosts([]);
+    onDiscoveredHostsChange([]);
     setScanning(true);
     window.setTimeout(() => {
       setScanning(false);
-      setScanned(true);
-      setHosts(hostsMock);
+      onScannedChange(true);
+      onDiscoveredHostsChange(hostsMock);
     }, 3000);
-  }, []);
+  }, [onScannedChange, onDiscoveredHostsChange]);
 
   // Start scanning when the activity is entered.
   useEffect(() => {
-    if (!scanned) {
+    if (!props.scanned) {
       startScan();
     }
-  }, [scanned, startScan]);
+  }, [props.scanned, startScan]);
 
   let spinner = null;
   if (scanning) {
@@ -65,7 +72,7 @@ function Discover(props: DiscoverProps) {
   }
 
   let scanFinishedNotice = null;
-  if (scanned) {
+  if (props.scanned) {
     scanFinishedNotice = (
       <div className="d-flex flex-column align-items-center mx-2 scan-finished-notice">
         <div>
@@ -82,7 +89,7 @@ function Discover(props: DiscoverProps) {
     );
   }
 
-  const hostItems = hosts.map((host) => {
+  const hostItems = props.discoveredHosts.map((host) => {
     return <HostItem host={host} onClick={handleItemClick} key={host.mac} />;
   });
   let hostItemsParent = null;

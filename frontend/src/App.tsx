@@ -20,6 +20,9 @@ import Host from './Host';
 function App() {
   const [hostToBeAdded, setHostToBeAdded] = useState<Host | null>(null);
 
+  const [scanned, setScanned] = useState(false);
+  const [discoveredHosts, setDiscoveredHosts] = useState<Host[]>([]);
+
   let api = '/api';
   if (process.env.NODE_ENV === 'development') {
     api = 'http://localhost:8000' + api;
@@ -35,7 +38,13 @@ function App() {
             <SavedHosts onHostToBeAddedChange={setHostToBeAdded} />
           </Route>
           <Route path="/discover">
-            <Discover onHostToBeAddedChange={setHostToBeAdded} />
+            <Discover
+              onHostToBeAddedChange={setHostToBeAdded}
+              onDiscoveredHostsChange={setDiscoveredHosts}
+              discoveredHosts={discoveredHosts}
+              onScannedChange={setScanned}
+              scanned={scanned}
+            />
           </Route>
           <Route path="/settings">
             <Settings />
