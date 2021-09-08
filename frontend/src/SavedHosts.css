@@ -1,13 +1,14 @@
-.add {
-	float: right;
+.add-button-container {
+	display: flex;
+	justify-content: flex-end;
 	padding-top: 1.25rem;
 }
 
-.add button {
+.add-button-container button {
 	width: 2.75rem;
 	height: 2.75rem;
 }
 
-.add button::after {
+.add-button-container button::after {
 	display: none !important;
 }

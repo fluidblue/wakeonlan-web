@@ -36,15 +36,17 @@ function SavedHosts(props: SavedHostsProps) {
         {savedHosts}
       </ul>
 
-      <div className="btn-group dropup add">
-        <button type="button" className="btn btn-primary rounded-circle dropdown-toggle" data-bs-toggle="dropdown" data-bs-offset="0,5" aria-expanded="false" title="Add">
-          <i className="bi bi-plus-lg"></i>
-        </button>
-        <ul className="dropdown-menu">
-          <li><a className="dropdown-item" href={manualAddClickHref} onClick={handleManualAddClick}>Manual</a></li>
-          <li><hr className="dropdown-divider" /></li>
-          <li><Link className="dropdown-item" to="/discover">Automatic</Link></li>
-        </ul>
+      <div className="add-button-container">
+        <div className="btn-group dropup">
+          <button type="button" className="btn btn-primary rounded-circle dropdown-toggle" data-bs-toggle="dropdown" data-bs-offset="0,5" aria-expanded="false" title="Add">
+            <i className="bi bi-plus-lg"></i>
+          </button>
+          <ul className="dropdown-menu">
+            <li><a className="dropdown-item" href={manualAddClickHref} onClick={handleManualAddClick}>Manual</a></li>
+            <li><hr className="dropdown-divider" /></li>
+            <li><Link className="dropdown-item" to="/discover">Automatic</Link></li>
+          </ul>
+        </div>
       </div>
     </>
   );
