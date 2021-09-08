@@ -29,7 +29,7 @@ function SavedHosts(props: SavedHostsProps) {
       </ul>
 
       <div className="btn-group dropup add">
-        <button type="button" className="btn btn-primary rounded-circle dropdown-toggle" data-bs-toggle="dropdown" data-bs-offset="0,5" aria-expanded="false">
+        <button type="button" className="btn btn-primary rounded-circle dropdown-toggle" data-bs-toggle="dropdown" data-bs-offset="0,5" aria-expanded="false" title="Add">
           <i className="bi bi-plus-lg"></i>
         </button>
         <ul className="dropdown-menu">
