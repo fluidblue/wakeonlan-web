@@ -4,6 +4,7 @@ import './SavedHosts.css';
 import { Link, useHistory } from 'react-router-dom';
 
 import Host from './Host';
+import SavedHost from './SavedHost';
 
 interface SavedHostsProps {
   onHostToBeAddedChange: React.Dispatch<React.SetStateAction<Host | null>>;
@@ -22,39 +23,9 @@ function SavedHosts(props: SavedHostsProps) {
   return (
     <>
       <ul className="list-group">
-        <li className="list-group-item list-group-item-action link-primary host-item">
-          <div>
-            <div className="fw-bold hostname">Hostname 1</div>
-            <div className="opacity-75">00:11:22:33:44:55</div>
-          </div>
-          <div>
-            <Link to="/edit/00-11-22-33-44-55" className="link-secondary text-decoration-none edit-trigger">
-              <i className="bi bi-pencil"></i>
-            </Link>
-          </div>
-        </li>
-        <li className="list-group-item list-group-item-action link-primary host-item">
-          <div>
-            <div className="fw-bold hostname">Hostname 2</div>
-            <div className="opacity-75">00:11:22:33:44:55</div>
-          </div>
-          <div>
-            <Link to="/edit/00-11-22-33-44-55" className="link-secondary text-decoration-none edit-trigger">
-              <i className="bi bi-pencil"></i>
-            </Link>
-          </div>
-        </li>
-        <li className="list-group-item list-group-item-action link-primary host-item">
-          <div>
-            <div className="fw-bold hostname">Hostname 3</div>
-            <div className="opacity-75">00:11:22:33:44:55</div>
-          </div>
-          <div>
-            <Link to="/edit/00-11-22-33-44-55" className="link-secondary text-decoration-none edit-trigger">
-              <i className="bi bi-pencil"></i>
-            </Link>
-          </div>
-        </li>
+        <SavedHost hostname="Hostname 1" mac="00:11:22:33:44:55" />
+        <SavedHost hostname="Hostname 2" mac="00:11:22:33:44:66" />
+        <SavedHost hostname="Hostname 3" mac="00:11:22:33:44:77" />
       </ul>
 
       <div className="btn-group dropup add">
