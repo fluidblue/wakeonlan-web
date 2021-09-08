@@ -6,6 +6,12 @@ import { Link, useHistory } from 'react-router-dom';
 import Host from './Host';
 import SavedHost from './SavedHost';
 
+const savedHostsMock: Host[] = [
+  { name: 'Hostname 1', mac: '00:11:22:33:44:55' },
+  { name: 'Hostname 2', mac: '00:11:22:33:44:66' },
+  { name: 'Hostname 3', mac: '00:11:22:33:44:77' }
+];
+
 interface SavedHostsProps {
   onHostToBeAddedChange: React.Dispatch<React.SetStateAction<Host | null>>;
 }
@@ -20,12 +26,14 @@ function SavedHosts(props: SavedHostsProps) {
     history.push(manualAddClickHref);
   }
 
+  const savedHosts = savedHostsMock.map((savedHost) => {
+    return <SavedHost hostname={savedHost.name} mac={savedHost.mac} />;
+  });
+
   return (
     <>
       <ul className="list-group">
-        <SavedHost hostname="Hostname 1" mac="00:11:22:33:44:55" />
-        <SavedHost hostname="Hostname 2" mac="00:11:22:33:44:66" />
-        <SavedHost hostname="Hostname 3" mac="00:11:22:33:44:77" />
+        {savedHosts}
       </ul>
 
       <div className="btn-group dropup add">
