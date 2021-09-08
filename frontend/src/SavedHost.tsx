@@ -9,10 +9,19 @@ interface SavedHostProps {
 }
   
 function SavedHost(props: SavedHostProps) {
+  function showToast() {
+    // TODO: Use props.hostname
+  }
+
+  function handleHostItemClick(e: React.MouseEvent<HTMLLIElement, MouseEvent>) {
+    alert('wol');
+    showToast();
+  }
+
   const editLink = '/edit/' + props.mac.replace(':', '-');
 
   return (
-    <li className="list-group-item list-group-item-action link-primary host-item">
+    <li className="list-group-item list-group-item-action link-primary host-item" onClick={handleHostItemClick}>
       <div>
         <div className="fw-bold hostname">{props.hostname}</div>
         <div className="opacity-75">{props.mac}</div>
