@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Toast } from 'bootstrap';
 
 interface ToastItemProps {
@@ -8,17 +8,14 @@ interface ToastItemProps {
 function ToastItem(props: ToastItemProps) {
   const refToast = useRef<HTMLDivElement>(null);
 
-  const showToast = useCallback(() => {
-    if (refToast.current) {
-      const element: Element = refToast.current;
-      var toast = new Toast(element);
-      toast.show();
-    }
-  }, []);
-
   useEffect(() => {
-    showToast();
-  }, [showToast]);
+    if (!refToast.current) {
+      return;
+    }
+    const element: Element = refToast.current;
+    var toast = new Toast(element);
+    toast.show();
+  }, []);
 
   return (
     <div ref={refToast} className="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
