@@ -34,7 +34,7 @@ function App() {
 
   function onHostWoken(hostname: string, mac: string) {
     setToastItems(toastItems.concat(
-      <ToastItem>
+      <ToastItem key={Date.now()}>
         Wake-on-LAN packet sent to:<br />
         {hostname}
       </ToastItem>
