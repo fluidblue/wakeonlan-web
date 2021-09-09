@@ -12,7 +12,7 @@ interface SavedHostProps {
 
 function SavedHost(props: SavedHostProps) {
   function handleHostItemClick(e: React.MouseEvent<HTMLLIElement, MouseEvent>) {
-    alert('wol ' + props.mac);
+    console.log('wol ' + props.mac);
 
     if (props.onWoken) {
       props.onWoken(props.hostname, props.mac);

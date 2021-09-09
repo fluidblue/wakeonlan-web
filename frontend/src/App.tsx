@@ -13,7 +13,9 @@ import Discover from './Discover';
 import Settings from './Settings';
 import EditHost from './EditHost';
 import NotFound from './NotFound';
+
 import ToastContainer from './ToastContainer';
+import ToastItem from './ToastItem';
 
 import Host from './Host';
 
@@ -23,14 +25,20 @@ function App() {
   const [scanned, setScanned] = useState(false);
   const [discoveredHosts, setDiscoveredHosts] = useState<Host[]>([]);
 
+  const [toastItems, setToastItems] = useState<React.ReactNode[]>([]);
+
   let api = '/api';
   if (process.env.NODE_ENV === 'development') {
     api = 'http://localhost:8000' + api;
   }
 
   function onHostWoken(hostname: string, mac: string) {
-    // TODO
-    console.log("onHostWoken: " + hostname);
+    setToastItems(toastItems.concat(
+      <ToastItem>
+        Wake-on-LAN packet sent to:<br />
+        {hostname}
+      </ToastItem>
+    ));
   }
 
   return (
@@ -65,7 +73,9 @@ function App() {
           </Route>
         </Switch>
       </main>
-      <ToastContainer />
+      <ToastContainer>
+        {toastItems}
+      </ToastContainer>
     </Router>
   );
 }
