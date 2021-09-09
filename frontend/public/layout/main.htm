@@ -83,6 +83,9 @@
 			}
 		</style>
 		<script>
+			/**
+			 * Safe alternative to innerHTML.
+			 */
 			function setText(element, text) {
 				const textNode = document.createTextNode(text);
 				const children = element.childNodes;
