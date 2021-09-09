@@ -19,7 +19,7 @@ function SavedHost(props: SavedHostProps) {
     }
   }
 
-  const editLink = '/edit/' + props.mac.replace(':', '-');
+  const editLink = '/edit/' + props.mac.replaceAll(':', '-');
 
   return (
     <li className="list-group-item list-group-item-action link-primary host-item" onClick={handleHostItemClick}>
