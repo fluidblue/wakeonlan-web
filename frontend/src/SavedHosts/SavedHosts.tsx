@@ -3,7 +3,7 @@ import './SavedHosts.css';
 
 import { Link, useHistory } from 'react-router-dom';
 
-import Host from './Host';
+import Host from '../Host';
 import SavedHost from './SavedHost';
 
 const savedHostsMock: Host[] = [

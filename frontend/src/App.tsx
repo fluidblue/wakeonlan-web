@@ -7,15 +7,15 @@ import {
   Route
 } from 'react-router-dom';
 
-import Navbar from './Navbar';
-import SavedHosts from './SavedHosts';
-import Discover from './Discover';
-import Settings from './Settings';
-import EditHost from './EditHost';
+import Navbar from './Navbar/Navbar';
+import SavedHosts from './SavedHosts/SavedHosts';
+import Discover from './Discover/Discover';
+import Settings from './Settings/Settings';
+import EditHost from './EditHost/EditHost';
 import NotFound from './NotFound';
 
-import ToastContainer from './ToastContainer';
-import ToastItem from './ToastItem';
+import ToastContainer from './Toasts/ToastContainer';
+import ToastItem from './Toasts/ToastItem';
 
 import Host from './Host';
 

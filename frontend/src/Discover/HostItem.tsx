@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Host from './Host';
+import Host from '../Host';
 
 interface HostProps {
   host: Host;

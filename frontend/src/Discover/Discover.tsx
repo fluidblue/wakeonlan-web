@@ -3,7 +3,7 @@ import { useHistory } from 'react-router';
 import './Discover.css';
 
 import HostItem from './HostItem';
-import Host from './Host';
+import Host from '../Host';
 
 const hostsMock: Host[] = [
   { name: 'Hostname 1', mac: '00:11:22:33:44:55' },

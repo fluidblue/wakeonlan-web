@@ -2,7 +2,7 @@ import React, { createRef, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import './EditHost.css';
 
-import Host from './Host';
+import Host from '../Host';
 
 interface EditHostProps {
   add?: boolean;
