@@ -21,7 +21,7 @@ function SavedHost(props: SavedHostProps) {
     }
   }
 
-  const editLink = '/edit/' + props.mac.replaceAll(':', '-');
+  const editLink = '/edit/' + props.mac.replace(/:/g, '-');
   function handleHostItemEditClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
     history.push(editLink);
     e.stopPropagation();
