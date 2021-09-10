@@ -1,14 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Settings.css';
 
+interface IPNetwork {
+  ip: string,
+  prefix: number
+}
+
+function ipNetworkToString(ipNetwork: IPNetwork): string {
+  return ipNetwork.ip + "/" + ipNetwork.prefix;
+}
+
+function ipNetworksToString(ipNetworks: IPNetwork[]): string {
+  let result = "";
+  let first: boolean = true;
+  for (const ipNetwork of ipNetworks) {
+    if (first) {
+      first = false;
+    } else {
+      result += ", ";
+    }
+    result += ipNetworkToString(ipNetwork);
+  }
+  return result;
+}
+
 function Settings() {
+  const [ipNetworks, setIpNetworks] = useState<IPNetwork[]>([
+    { ip: "192.168.178.0", prefix: 24 }
+  ]);
+
   return (
     <div className="settings">
       <form>
         <h6 className="mb-3 fw-bold">Host discovery</h6>
         <div className="mb-3">
           <label htmlFor="inputNetwork" className="form-label">IP network</label>
-          <input type="text" className="form-control" id="inputNetwork" value="192.168.178.0/24" placeholder="Enter network, e.g. 192.168.178.0/24" required disabled />
+          <input type="text" className="form-control" id="inputNetwork" value={ipNetworksToString(ipNetworks)} placeholder="Enter network, e.g. 192.168.178.0/24" required disabled />
         </div>
         <div className="mb-3">
           <input className="form-check-input" type="checkbox" value="" id="checkboxAutoDetect" checked />
