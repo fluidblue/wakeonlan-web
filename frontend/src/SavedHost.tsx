@@ -1,7 +1,7 @@
 import React from 'react';
 import './SavedHost.css';
 
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 interface SavedHostProps {
   hostname: string;
@@ -11,6 +11,8 @@ interface SavedHostProps {
 }
 
 function SavedHost(props: SavedHostProps) {
+  const history = useHistory();
+
   function handleHostItemClick(e: React.MouseEvent<HTMLLIElement, MouseEvent>) {
     console.log('wol ' + props.mac);
 
@@ -20,6 +22,11 @@ function SavedHost(props: SavedHostProps) {
   }
 
   const editLink = '/edit/' + props.mac.replaceAll(':', '-');
+  function handleHostItemEditClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
+    history.push(editLink);
+    e.stopPropagation();
+    e.preventDefault();
+  }
 
   return (
     <li className="list-group-item list-group-item-action link-primary host-item" onClick={handleHostItemClick}>
@@ -28,9 +35,9 @@ function SavedHost(props: SavedHostProps) {
         <div className="opacity-75">{props.mac}</div>
       </div>
       <div>
-        <Link to={editLink} className="link-secondary text-decoration-none edit-trigger">
+        <a href={editLink} className="link-secondary text-decoration-none edit-trigger" onClick={handleHostItemEditClick}>
           <i className="bi bi-pencil"></i>
-        </Link>
+        </a>
       </div>
     </li>
   );
