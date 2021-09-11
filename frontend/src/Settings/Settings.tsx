@@ -24,12 +24,26 @@ function ipNetworksToString(ipNetworks: IPNetwork[]): string {
   return result;
 }
 
-const ipNetworksMock: IPNetwork[] = [
+const ipNetworksAutoDetectedMock: IPNetwork[] = [
   { ip: "192.168.178.0", prefix: 24 }
 ];
 
 function Settings() {
-  const [ipNetworks, setIpNetworks] = useState<IPNetwork[]>(ipNetworksMock);
+  const [ipNetworks, setIpNetworks] = useState<IPNetwork[]>(ipNetworksAutoDetectedMock);
+  const [autoDetectNetworks, setAutoDetectNetworks] = useState<boolean>(true);
+
+  function onCheckboxAutoDetectChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.checked) {
+      setIpNetworks(ipNetworksAutoDetectedMock);
+      setAutoDetectNetworks(true);
+    } else {
+      setAutoDetectNetworks(false);
+    }
+  }
+
+  function onInputNetworkChange(e: React.ChangeEvent<HTMLInputElement>) {
+    console.log(e.target.value); // TODO
+  }
 
   return (
     <div className="settings">
@@ -37,10 +51,25 @@ function Settings() {
         <h6 className="mb-3 fw-bold">Host discovery</h6>
         <div className="mb-3">
           <label htmlFor="inputNetwork" className="form-label">IP network</label>
-          <input type="text" className="form-control" id="inputNetwork" value={ipNetworksToString(ipNetworks)} placeholder="Enter network, e.g. 192.168.178.0/24" required disabled />
+          <input
+            type="text"
+            className="form-control"
+            id="inputNetwork"
+            value={ipNetworksToString(ipNetworks)}
+            placeholder="Enter network, e.g. 192.168.178.0/24"
+            required
+            onChange={onInputNetworkChange}
+            disabled={autoDetectNetworks}
+          />
         </div>
         <div className="mb-3">
-          <input className="form-check-input" type="checkbox" value="" id="checkboxAutoDetect" checked />
+          <input
+            type="checkbox"
+            className="form-check-input"
+            id="checkboxAutoDetect"
+            checked={autoDetectNetworks}
+            onChange={onCheckboxAutoDetectChange}
+          />
           &nbsp;
           <label className="form-check-label checkbox-fix" htmlFor="checkboxAutoDetect">Automatically detect network</label>
         </div>
