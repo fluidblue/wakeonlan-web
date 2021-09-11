@@ -11148,10 +11148,10 @@ w3c-xmlserializer@^2.0.0:
   dependencies:
     xml-name-validator "^3.0.0"
 
-wakeonlan-utilities@latest:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/wakeonlan-utilities/-/wakeonlan-utilities-0.1.6.tgz#13ef2df25804a6677be3795d22627ec083bd51a9"
-  integrity sha512-A3rMq/9n5rU1ynZHbSI432pune4HeP7pDnzXpTIt1oN0gcKBqfuHvtyW+SdEmOa7zCwaW6UWIT+MzMHm0g7IEQ==
+wakeonlan-utilities@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/wakeonlan-utilities/-/wakeonlan-utilities-0.2.0.tgz#9cee20165b0186d0a5500a95e6a1f0e464226524"
+  integrity sha512-ymG35yFieswy158DyIbXtGR6XA/xRqmE14jzzhYC2d+T1H9w7EG/E6QvyjLWnJcGq/FSKP83rq+nQkrGdk7yrA==
 
 walker@^1.0.7, walker@~1.0.5:
   version "1.0.7"
