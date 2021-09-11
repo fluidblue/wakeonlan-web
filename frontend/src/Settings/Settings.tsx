@@ -73,13 +73,13 @@ function Settings() {
           &nbsp;
           <label className="form-check-label checkbox-fix" htmlFor="checkboxAutoDetect">Automatically detect network</label>
         </div>
-        <div className="mb-3">
+        {/* <div className="mb-3">
           <label htmlFor="selectMethod" className="form-label">Method</label>
           <select className="form-select" id="selectMethod">
             <option value="arp-scan" selected>arp-scan</option>
             <option value="arp-cache-and-ping">ARP cache and ping</option>
           </select>
-        </div>
+        </div> */}
         <h6 className="mb-3 fw-bold">Wake on LAN</h6>
         <div className="mb-3">
           <label htmlFor="inputPort" className="form-label">UDP Port</label>
