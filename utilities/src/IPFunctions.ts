@@ -1,5 +1,3 @@
-import net from "net";
-
 export type IPAddress = string;
 export type IPAddressNumerical = number;
 
@@ -13,6 +11,22 @@ export interface IPNetwork {
  */
 export class IPFunctions {
 	private constructor() {}
+
+	private static readonly RE_IPV4_BASE: RegExp = /^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/;
+
+	static isValidIPv4(ipString: string): boolean {
+		if (!this.RE_IPV4_BASE.test(ipString)) {
+			return false;
+		}
+		const ipParts = ipString.split(".");
+		for (const ipPart of ipParts) {
+			const ipPartInt = parseInt(ipPart);
+			if (ipPartInt === NaN || ipPartInt < 0 || ipPartInt > 255) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 	static getNumericalIP(ip: IPAddress): IPAddressNumerical {
 		const parts: string[] = ip.split(".");
@@ -41,7 +55,7 @@ export class IPFunctions {
 			throw new Error("Invalid IP network");
 		}
 		const ip: string = cidrIpNetworkArray[0];
-		if (!net.isIP(ip)) {
+		if (!this.isValidIPv4(ip)) {
 			throw new Error("Invalid IP network");
 		}
 		const prefix: number = parseInt(cidrIpNetworkArray[1]);
