@@ -24,10 +24,12 @@ function ipNetworksToString(ipNetworks: IPNetwork[]): string {
   return result;
 }
 
+const ipNetworksMock: IPNetwork[] = [
+  { ip: "192.168.178.0", prefix: 24 }
+];
+
 function Settings() {
-  const [ipNetworks, setIpNetworks] = useState<IPNetwork[]>([
-    { ip: "192.168.178.0", prefix: 24 }
-  ]);
+  const [ipNetworks, setIpNetworks] = useState<IPNetwork[]>(ipNetworksMock);
 
   return (
     <div className="settings">
