@@ -1,4 +1,4 @@
-import { MACFunctions, MacAddressBytes } from "../HostDiscovery/MACFunctions"
+import { MACFunctions, MacAddressBytes } from "wakeonlan-utilities"
 import { WakeOnLan, WakeOnLanOptions } from "./WakeOnLan";
 import dgram from "dgram";
 import net from "net";

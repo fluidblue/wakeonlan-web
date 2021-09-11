@@ -1,6 +1,6 @@
 import "jasmine";
 
-import { IPFunctions } from "../src/HostDiscovery/IPFunctions"
+import { IPFunctions } from "../src/IPFunctions"
 
 describe("IPFunctions", () => {
 	const tests = [

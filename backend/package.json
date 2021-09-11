@@ -2,7 +2,6 @@
   "name": "wakeonlan-web",
   "version": "0.1.2",
   "description": "wakeonlan-web",
-  "main": "build/index.js",
   "scripts": {
     "start": "npx ts-node src/index.ts",
     "test": "ts-node node_modules/jasmine/bin/jasmine"
@@ -20,6 +19,7 @@
   },
   "dependencies": {
     "express": "^4.17.1",
-    "network": "^0.5.0"
+    "network": "^0.5.0",
+    "wakeonlan-utilities": "latest"
   }
 }

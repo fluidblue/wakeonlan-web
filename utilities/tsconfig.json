@@ -1,0 +1,22 @@
+{
+	"extends": "@tsconfig/node14/tsconfig.json",
+
+	"compilerOptions": {
+		"noImplicitAny": true,
+		"strictNullChecks": true,
+		"strict": true,
+
+		"preserveConstEnums": true,
+		"sourceMap": true,
+
+		"outDir": "dist",
+
+		"typeRoots": ["./types", "./node_modules/@types"],
+
+		"declaration": true
+	},
+
+	"include": ["src/**/*"],
+	"exclude": ["node_modules", "types", "**/*.spec.ts"],
+	"compileOnSave": true
+}

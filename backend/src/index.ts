@@ -24,8 +24,7 @@ import WolNativeNode from "./WakeOnLan/WolNativeNode";
 import { HostDiscovery } from "./HostDiscovery/HostDiscovery";
 import ARPScan from "./HostDiscovery/ARPScan"
 
-import { IPFunctions, IPNetwork } from "./HostDiscovery/IPFunctions";
-import { MACFunctions } from "./HostDiscovery/MACFunctions";
+import { IPFunctions, IPNetwork, MACFunctions } from "wakeonlan-utilities";
 
 const app = express();
 const port = process.env.PORT || 8000;

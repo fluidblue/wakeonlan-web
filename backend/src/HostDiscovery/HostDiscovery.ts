@@ -1,5 +1,4 @@
-import { IPNetwork } from "./IPFunctions";
-import { MacAddressBytes } from "./MACFunctions";
+import { MacAddressBytes, IPNetwork } from "wakeonlan-utilities";
 import { ARPCacheEntry } from "./ARPCache";
 
 export interface HostDiscovery {

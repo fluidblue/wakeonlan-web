@@ -1,6 +1,5 @@
 import { HostDiscovery } from "./HostDiscovery"
-import { IPFunctions, IPNetwork } from "./IPFunctions";
-import { MACFunctions, MacAddressBytes } from "./MACFunctions";
+import { IPFunctions, IPNetwork, MACFunctions, MacAddressBytes } from "wakeonlan-utilities";
 import { ARPCacheEntry } from "./ARPCache";
 import { spawn, exec } from "child_process";
 import net from "net";

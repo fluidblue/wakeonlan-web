@@ -1,4 +1,4 @@
-import { MACFunctions, MacAddressBytes } from "../HostDiscovery/MACFunctions"
+import { MACFunctions, MacAddressBytes } from "wakeonlan-utilities"
 
 export interface WakeOnLanOptions {
 	port?: number;

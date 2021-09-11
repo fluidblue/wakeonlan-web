@@ -1,6 +1,5 @@
 import { HostDiscovery } from "./HostDiscovery"
-import { MACFunctions, MacAddressBytes } from "./MACFunctions"
-import { IPFunctions, IPNetwork, IPAddressNumerical } from "./IPFunctions";
+import { MACFunctions, MacAddressBytes, IPFunctions, IPNetwork, IPAddressNumerical } from "wakeonlan-utilities"
 import { Ping } from "./Ping";
 import { ARPCache, ARPCacheEntry } from "./ARPCache";
 
