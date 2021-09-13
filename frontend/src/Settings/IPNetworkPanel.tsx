@@ -24,8 +24,8 @@ interface IPNetworkPanelProps {
   ipNetworks: IPNetwork[];
   onIpNetworksChange: React.Dispatch<React.SetStateAction<IPNetwork[]>>;
 
-  autoDetectNetworks: boolean;
-  onAutoDetectNetworksChange: React.Dispatch<React.SetStateAction<boolean>>;
+  autoDetect: boolean;
+  onAutoDetectChange: React.Dispatch<React.SetStateAction<boolean>>;
 
   wasValidated: boolean;
 }
@@ -44,21 +44,22 @@ function IPNetworkPanel(props: IPNetworkPanelProps) {
     setAutoDetectedNetworks(ipNetworksAutoDetectedMock);
   }, []);
 
-  const { autoDetectNetworks, onIpNetworksChange } = props;
+  const { autoDetect, onIpNetworksChange } = props;
   useEffect(() => {
-    if (autoDetectNetworks) {
+    if (autoDetect) {
       onIpNetworksChange(autoDetectedNetworks);
       setInputNetwork(ipNetworksToString(autoDetectedNetworks));
+      setInputNetworkInvalid(false);
     }
-  }, [autoDetectNetworks, onIpNetworksChange, autoDetectedNetworks]);
+  }, [autoDetect, onIpNetworksChange, autoDetectedNetworks]);
 
   function setIpNetworkAutoDetection(value: boolean) {
     if (value) {
       props.onIpNetworksChange(autoDetectedNetworks);
       setInputNetwork(ipNetworksToString(autoDetectedNetworks));
-      props.onAutoDetectNetworksChange(true);
+      props.onAutoDetectChange(true);
     } else {
-      props.onAutoDetectNetworksChange(false);
+      props.onAutoDetectChange(false);
     }
   }
 
@@ -113,7 +114,7 @@ function IPNetworkPanel(props: IPNetworkPanelProps) {
           value={inputNetwork}
           placeholder="Enter network, e.g. 192.168.178.0/24"
           onChange={onInputNetworkChange}
-          disabled={props.autoDetectNetworks}
+          disabled={props.autoDetect}
           required
         />
       </div>
@@ -122,7 +123,7 @@ function IPNetworkPanel(props: IPNetworkPanelProps) {
           type="checkbox"
           className="form-check-input"
           id="checkboxAutoDetect"
-          checked={props.autoDetectNetworks}
+          checked={props.autoDetect}
           onChange={onCheckboxAutoDetectChange}
         />
         &nbsp;

@@ -43,8 +43,8 @@ function Settings() {
         <IPNetworkPanel
           ipNetworks={ipNetworks}
           onIpNetworksChange={setIpNetworks}
-          autoDetectNetworks={autoDetectNetworks}
-          onAutoDetectNetworksChange={setAutoDetectNetworks}
+          autoDetect={autoDetectNetworks}
+          onAutoDetectChange={setAutoDetectNetworks}
           wasValidated={wasValidated}
         />
         {/* <div className="mb-3">
