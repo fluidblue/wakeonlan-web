@@ -28,21 +28,6 @@ interface IPNetworkPanelProps {
   onAutoDetectNetworksChange: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-/**
- * Regular expression for multiple CIDR IP networks.
- * Must be in string format for usage with HTML element attribute 'pattern'.
- * 
- * Pattern                              Match
- * 1.2.3.4/24                           Yes
- * 1.2.3.4/                             No
- * 1.2.3                                No
- * 1.2.3.4/24,1.2.3.4/32                Yes
- * 1.2.3.4/24, 1.2.3.4/32               Yes
- * 1.2.3.4/24,  1.2.3.4/32              Yes
- * 1.2.3.4/24, 1.2.3.4/32, 1.2.3.4/24   Yes
- */
-const RE_CIDR_IP_NETWORKS: string = '^(?:[0-9]{1,3}(?:\\.[0-9]{1,3}){3}\\/[0-9]{1,2})(?:,\\s*[0-9]{1,3}(?:\\.[0-9]{1,3}){3}\\/[0-9]{1,2})*$';
-
 function IPNetworkPanel(props: IPNetworkPanelProps) {
   const [ipNetworksAutoDetected, setIpNetworksAutoDetected] = useState<IPNetwork[]>([]);
   const [ipNetworksString, setIpNetworksString] = useState<string>('');
@@ -111,7 +96,6 @@ function IPNetworkPanel(props: IPNetworkPanelProps) {
           onChange={onInputNetworkChange}
           disabled={props.autoDetectNetworks}
           required
-          pattern={RE_CIDR_IP_NETWORKS}
         />
       </div>
       <div className="mb-3">
