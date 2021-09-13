@@ -83,6 +83,15 @@ export class IPFunctions {
 		return (0xFFFFFFFF << (32 - prefix)) >>> 0;
 	}
 
+	static getPrefix(subnetMask: IPAddressNumerical): number {
+		let prefix: number = 0;
+		do {
+			subnetMask = (subnetMask << 1) >>> 0;
+			prefix++;
+		} while (((subnetMask & 0x80000000) >>> 0) !== 0)
+		return prefix;
+	}
+
 	static getCleanNetworkAddress(ip: IPAddressNumerical, subnetMask: IPAddressNumerical): IPAddressNumerical {
 		return (ip & subnetMask) >>> 0;
 	}
