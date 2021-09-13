@@ -25,6 +25,7 @@ import { HostDiscovery } from "./HostDiscovery/HostDiscovery";
 import ARPScan from "./HostDiscovery/ARPScan"
 
 import { IPFunctions, IPNetwork, MACFunctions } from "wakeonlan-utilities";
+import { IPNetworks } from "./IPNetworks/IPNetworks";
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -47,8 +48,11 @@ app.use("/", express.static(path.join(__dirname, "httpdocs")));
  */
 
 app.get("/api/ip-networks", wrap(async (req, res, next) => {
-	// Send 501: Not Implemented
-	res.sendStatus(501);
+	const networks = IPNetworks.getNetworks();
+	const networkStrings = networks.map((network) => {
+		return IPFunctions.getStringFromIPNetwork(network);
+	});
+	res.send(JSON.stringify(networkStrings));
 }));
 
 app.post("/api/device-name/host-name", wrap(async (req, res, next) => {
