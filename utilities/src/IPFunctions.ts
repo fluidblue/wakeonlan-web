@@ -59,7 +59,7 @@ export class IPFunctions {
 			throw new Error("Invalid IP network");
 		}
 		const prefix: number = parseInt(cidrIpNetworkArray[1]);
-		if (prefix === NaN) {
+		if (isNaN(prefix)) {
 			throw new Error("Invalid IP network");
 		}
 		if (prefix < 1 || prefix > 32) {
