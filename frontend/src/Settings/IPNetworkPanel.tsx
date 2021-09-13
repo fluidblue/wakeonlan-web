@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { IPFunctions, IPNetwork } from 'wakeonlan-utilities';
 
@@ -26,11 +26,14 @@ interface IPNetworkPanelProps {
 
   autoDetectNetworks: boolean;
   onAutoDetectNetworksChange: React.Dispatch<React.SetStateAction<boolean>>;
+
+  wasValidated: boolean;
 }
 
 function IPNetworkPanel(props: IPNetworkPanelProps) {
   const [ipNetworksAutoDetected, setIpNetworksAutoDetected] = useState<IPNetwork[]>([]);
   const [ipNetworksString, setIpNetworksString] = useState<string>('');
+  const [ipNetworksShowInvalid, setIpNetworksShowInvalid] = useState<boolean>(false);
 
   useEffect(() => {
     // TODO: Fetch IP networks from server
@@ -63,25 +66,41 @@ function IPNetworkPanel(props: IPNetworkPanelProps) {
     setIpNetworkAutoDetection(e.target.checked);
   }
 
-  function updateIpNetworks() {
-    let valid: boolean = true;
+  const updateIpNetworks = useCallback((value: string): boolean => {
     let ipNetworksNew: IPNetwork[] = [];
     try {
-      ipNetworksNew = stringToIpNetworks(ipNetworksString);
+      ipNetworksNew = stringToIpNetworks(value);
     } catch (err) {
-      valid = false;
+      console.log('check', value, ':', false); // TODO: Remove
+      return false;
     }
+    onIpNetworksChange(ipNetworksNew);
+    console.log('check', value, ':', true); // TODO: Remove
+    return true;
+  }, [onIpNetworksChange]);
 
-    if (valid) {
-      console.log('valid', ipNetworksNew); // TODO: Remove
+  const { wasValidated } = props;
+  const updateInputNetwork = useCallback((value: string) => {
+    setIpNetworksString(value);
+    if (wasValidated) {
+      const valid = updateIpNetworks(value);
+      console.log('valid', valid); // TODO: Remove
+      setIpNetworksShowInvalid(!valid);
     } else {
-      console.log('invalid', ipNetworksString); // TODO: Remove
+      console.log('valid', false); // TODO: Remove
+      setIpNetworksShowInvalid(false);
     }
+  }, [wasValidated, updateIpNetworks]);
+
+  function onInputNetworkChange (e: React.ChangeEvent<HTMLInputElement>) {
+    updateInputNetwork(e.target.value);
   }
 
-  function onInputNetworkChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setIpNetworksString(e.target.value);
-  }
+  useEffect(() => {
+    updateInputNetwork(ipNetworksString);
+  }, [updateInputNetwork, ipNetworksString]);
+
+  const inputNetworkClassName = ipNetworksShowInvalid ? 'form-control is-invalid' : 'form-control';
 
   return (
     <>
@@ -89,7 +108,7 @@ function IPNetworkPanel(props: IPNetworkPanelProps) {
         <label htmlFor="inputNetwork" className="form-label">IP network</label>
         <input
           type="text"
-          className="form-control"
+          className={inputNetworkClassName}
           id="inputNetwork"
           value={ipNetworksString}
           placeholder="Enter network, e.g. 192.168.178.0/24"

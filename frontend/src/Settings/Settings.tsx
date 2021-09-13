@@ -45,6 +45,7 @@ function Settings() {
           onIpNetworksChange={setIpNetworks}
           autoDetectNetworks={autoDetectNetworks}
           onAutoDetectNetworksChange={setAutoDetectNetworks}
+          wasValidated={wasValidated}
         />
         {/* <div className="mb-3">
           <label htmlFor="selectMethod" className="form-label">Method</label>
