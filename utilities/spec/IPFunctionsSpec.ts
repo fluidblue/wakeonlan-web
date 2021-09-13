@@ -1,101 +1,83 @@
 import "jasmine";
 
-import { IPFunctions } from "../src/IPFunctions"
+import { IPFunctions, IPNetwork } from "../src/IPFunctions"
 
 describe("IPFunctions", () => {
 	const tests = [
 		{
-			in: {
-				ipSubnet: {
-					ip: "192.168.188.0",
-					prefix: 24
-				}
+			ipSubnet: {
+				ip: "192.168.188.0",
+				prefix: 24
 			},
-			out: {
-				subnetMask: 0xFFFFFF00,
-				numericalIPAddress: 3232283648,
-				firstIPAddress: "192.168.188.1",
-				lastIPAddress: "192.168.188.254"
-			}
+			ipSubnetString: "192.168.188.0/24",
+			subnetMask: 0xFFFFFF00,
+			numericalIPAddress: 3232283648,
+			firstIPAddress: "192.168.188.1",
+			lastIPAddress: "192.168.188.254"
 		},
 		{
-			in: {
-				ipSubnet: {
-					ip: "192.168.188.123",
-					prefix: 32
-				}
+			ipSubnet: {
+				ip: "192.168.188.123",
+				prefix: 32
 			},
-			out: {
-				subnetMask: 0xFFFFFFFF,
-				numericalIPAddress: 3232283771,
-				firstIPAddress: "192.168.188.123",
-				lastIPAddress: "192.168.188.123"
-			}
+			ipSubnetString: "192.168.188.123/32",
+			subnetMask: 0xFFFFFFFF,
+			numericalIPAddress: 3232283771,
+			firstIPAddress: "192.168.188.123",
+			lastIPAddress: "192.168.188.123"
 		},
 		{
-			in: {
-				ipSubnet: {
-					ip: "192.168.188.0", // Faulty notation for the network part.
-					prefix: 16
-				}
+			ipSubnet: {
+				ip: "192.168.188.0", // Faulty notation for the network part
+				prefix: 16
 			},
-			out: {
-				subnetMask: 0xFFFF0000,
-				numericalIPAddress: 3232283648,
-				firstIPAddress: "192.168.0.1",
-				lastIPAddress: "192.168.255.254"
-			}
+			ipSubnetString: "192.168.188.0/16", // Faulty notation for the network part
+			subnetMask: 0xFFFF0000,
+			numericalIPAddress: 3232283648,
+			firstIPAddress: "192.168.0.1",
+			lastIPAddress: "192.168.255.254"
 		},
 		{
-			in: {
-				ipSubnet: {
-					ip: "192.168.188.0",
-					prefix: 32
-				}
+			ipSubnet: {
+				ip: "192.168.188.0",
+				prefix: 32
 			},
-			out: {
-				subnetMask: 0xFFFFFFFF,
-				numericalIPAddress: 3232283648,
-				firstIPAddress: "192.168.188.0",
-				lastIPAddress: "192.168.188.0"
-			}
+			ipSubnetString: "192.168.188.0/32",
+			subnetMask: 0xFFFFFFFF,
+			numericalIPAddress: 3232283648,
+			firstIPAddress: "192.168.188.0",
+			lastIPAddress: "192.168.188.0"
 		},
 		{
-			in: {
-				ipSubnet: {
-					ip: "192.168.0.0",
-					prefix: 16
-				}
+			ipSubnet: {
+				ip: "192.168.0.0",
+				prefix: 16
 			},
-			out: {
-				subnetMask: 0xFFFF0000,
-				numericalIPAddress: 3232235520,
-				firstIPAddress: "192.168.0.1",
-				lastIPAddress: "192.168.255.254"
-			}
+			ipSubnetString: "192.168.0.0/16",
+			subnetMask: 0xFFFF0000,
+			numericalIPAddress: 3232235520,
+			firstIPAddress: "192.168.0.1",
+			lastIPAddress: "192.168.255.254"
 		},
 		{
-			in: {
-				ipSubnet: {
-					ip: "10.0.0.0",
-					prefix: 8
-				}
+			ipSubnet: {
+				ip: "10.0.0.0",
+				prefix: 8
 			},
-			out: {
-				subnetMask: 0xFF000000,
-				numericalIPAddress: 167772160,
-				firstIPAddress: "10.0.0.1",
-				lastIPAddress: "10.255.255.254"
-			}
+			ipSubnetString: "10.0.0.0/8",
+			subnetMask: 0xFF000000,
+			numericalIPAddress: 167772160,
+			firstIPAddress: "10.0.0.1",
+			lastIPAddress: "10.255.255.254"
 		}
 	]
 
 	for (let i = 0; i < tests.length; i++) {
-		let ipSubnet = tests[i].in.ipSubnet;
-		let subnetMaskResult = tests[i].out.subnetMask;
-		let numericalIPAddress = tests[i].out.numericalIPAddress;
-		let firstAddress = tests[i].out.firstIPAddress;
-		let lastAddress = tests[i].out.lastIPAddress;
+		let ipSubnet = tests[i].ipSubnet;
+		let subnetMaskResult = tests[i].subnetMask;
+		let numericalIPAddress = tests[i].numericalIPAddress;
+		let firstAddress = tests[i].firstIPAddress;
+		let lastAddress = tests[i].lastIPAddress;
 
 		it("should calculate the subnet mask", () => {
 			expect(IPFunctions.getSubnetMask(ipSubnet.prefix)).toEqual(subnetMaskResult);
