@@ -62,6 +62,17 @@ describe("IPFunctions", () => {
 		},
 		{
 			ipSubnet: {
+				ip: "128.0.0.0",
+				prefix: 1
+			},
+			ipSubnetString: "128.0.0.0/1",
+			subnetMask: 0x80000000,
+			numericalIPAddress: 2147483648,
+			firstIPAddress: "128.0.0.1",
+			lastIPAddress: "255.255.255.254"
+		},
+		{
+			ipSubnet: {
 				ip: "192.168.0.0",
 				prefix: 16
 			},
@@ -88,13 +99,17 @@ describe("IPFunctions", () => {
 		let ipSubnet = tests[i].ipSubnet;
 		let ipSubnetString = tests[i].ipSubnetString;
 		let ipSubnetStringFaulty = tests[i].ipSubnetStringFaulty ? true : false;
-		let subnetMaskResult = tests[i].subnetMask;
+		let subnetMask = tests[i].subnetMask;
 		let numericalIPAddress = tests[i].numericalIPAddress;
 		let firstAddress = tests[i].firstIPAddress;
 		let lastAddress = tests[i].lastIPAddress;
 
 		it("should calculate the subnet mask", () => {
-			expect(IPFunctions.getSubnetMask(ipSubnet.prefix)).toEqual(subnetMaskResult);
+			expect(IPFunctions.getSubnetMask(ipSubnet.prefix)).toEqual(subnetMask);
+		});
+
+		it("should calculate the network prefix", () => {
+			expect(IPFunctions.getPrefix(subnetMask)).toEqual(ipSubnet.prefix);
 		});
 
 		it("should convert IP address strings to numbers", () => {
@@ -148,4 +163,10 @@ describe("IPFunctions", () => {
 			}
 		});
 	}
+
+	it("should calculate a minimum prefix for a weird subnet mask", () => {
+		let subnetMask = 0xFFFFFF40; // 255.255.255.64
+		let prefix = 24;
+		expect(IPFunctions.getPrefix(subnetMask)).toEqual(prefix);
+	});
 });
