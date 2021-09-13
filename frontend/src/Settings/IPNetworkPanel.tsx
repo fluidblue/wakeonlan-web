@@ -59,8 +59,9 @@ function IPNetworkPanel(props: IPNetworkPanelProps) {
 
   function setIpNetworkAutoDetection(value: boolean) {
     if (value) {
-      props.onIpNetworksChange(autoDetectedNetworks);
+      onIpNetworksChange(autoDetectedNetworks);
       setInputNetwork(ipNetworksToString(autoDetectedNetworks));
+      setInputNetworkInvalid(false);
       props.onAutoDetectChange(true);
     } else {
       props.onAutoDetectChange(false);
@@ -76,11 +77,9 @@ function IPNetworkPanel(props: IPNetworkPanelProps) {
     try {
       ipNetworksNew = stringToIpNetworks(value);
     } catch (err) {
-      console.log('check', value, ':', false); // TODO: Remove
       return false;
     }
     onIpNetworksChange(ipNetworksNew);
-    console.log('check', value, ':', true); // TODO: Remove
     return true;
   }, [onIpNetworksChange]);
 
