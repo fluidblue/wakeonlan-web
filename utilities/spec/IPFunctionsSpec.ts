@@ -140,5 +140,12 @@ describe("IPFunctions", () => {
 				}
 			}
 		});
+
+		it("should convert an IP network to a CIDR string", () => {
+			const result = IPFunctions.getStringFromIPNetwork(ipSubnet);
+			if (!ipSubnetStringFaulty) {
+				expect(result).toEqual(ipSubnetString);
+			}
+		});
 	}
 });

@@ -72,6 +72,13 @@ export class IPFunctions {
 		return ipNetwork;
 	}
 
+	static getStringFromIPNetwork(ipNetwork: IPNetwork): string {
+		if (!ipNetwork || !ipNetwork.ip || !ipNetwork.prefix) {
+			throw new Error("Invalid IP network");
+		}
+		return ipNetwork.ip + "/" + ipNetwork.prefix;
+	}
+
 	static getSubnetMask(prefix: number): IPAddressNumerical {
 		return (0xFFFFFFFF << (32 - prefix)) >>> 0;
 	}
