@@ -1,8 +1,7 @@
 import "jasmine";
 
 import ARPScan from "../src/HostDiscovery/ARPScan"
-import { IPNetwork } from "../src/HostDiscovery/IPFunctions"
-import { MACFunctions } from "../src/HostDiscovery/MACFunctions"
+import { IPNetwork, MACFunctions } from "wakeonlan-utilities"
 
 const verbose: boolean = false;
 const timeout: number = 120; // in seconds

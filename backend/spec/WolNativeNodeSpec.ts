@@ -1,7 +1,7 @@
 import "jasmine";
 
 import WolNativeNode from "../src/WakeOnLan/WolNativeNode"
-import { MACFunctions, MacAddressBytes } from "../src/HostDiscovery/MACFunctions"
+import { MACFunctions, MacAddressBytes } from "wakeonlan-utilities"
 
 describe("WolNativeNode", () => {
 	const destinationMacAddress: MacAddressBytes = Buffer.alloc(MACFunctions.MAC_ADDR_LENGTH, "001122334455", "hex");
