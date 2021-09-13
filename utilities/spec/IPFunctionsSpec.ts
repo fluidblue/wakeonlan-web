@@ -40,6 +40,18 @@ describe("IPFunctions", () => {
 		{
 			ipSubnet: {
 				ip: "192.168.188.0",
+				prefix: 24
+			},
+			ipSubnetString: "192.168.188.0/", // Faulty notation
+			ipSubnetStringFaulty: true,
+			subnetMask: 0xFFFFFF00,
+			numericalIPAddress: 3232283648,
+			firstIPAddress: "192.168.188.1",
+			lastIPAddress: "192.168.188.254"
+		},
+		{
+			ipSubnet: {
+				ip: "192.168.188.0",
 				prefix: 32
 			},
 			ipSubnetString: "192.168.188.0/32",
@@ -74,6 +86,8 @@ describe("IPFunctions", () => {
 
 	for (let i = 0; i < tests.length; i++) {
 		let ipSubnet = tests[i].ipSubnet;
+		let ipSubnetString = tests[i].ipSubnetString;
+		let ipSubnetStringFaulty = tests[i].ipSubnetStringFaulty ? true : false;
 		let subnetMaskResult = tests[i].subnetMask;
 		let numericalIPAddress = tests[i].numericalIPAddress;
 		let firstAddress = tests[i].firstIPAddress;
@@ -103,6 +117,28 @@ describe("IPFunctions", () => {
 			let ipNumerical = IPFunctions.getLastAddress(ipSubnet);
 			let ipString = IPFunctions.getStringIP(ipNumerical);
 			expect(ipString).toEqual(lastAddress);
+		});
+
+		it("should convert the CIDR IP network string to an IP network", () => {
+			let ipNetwork;
+			let thrown = false;
+			try {
+				ipNetwork = IPFunctions.getIPNetworkFromString(ipSubnetString);
+			} catch (err) {
+				if (!ipSubnetStringFaulty) {
+					throw new Error((<Error>err).toString());
+				}
+				thrown = true;
+			}
+			if (ipSubnetStringFaulty) {
+				expect(thrown).toEqual(true);
+			} else {
+				expect(ipNetwork).toBeDefined();
+				if (ipNetwork) {
+					expect(ipNetwork.ip).toEqual(ipSubnet.ip);
+					expect(ipNetwork.prefix).toEqual(ipSubnet.prefix);
+				}
+			}
 		});
 	}
 });
