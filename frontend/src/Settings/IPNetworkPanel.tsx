@@ -35,15 +35,19 @@ function IPNetworkPanel(props: IPNetworkPanelProps) {
   const [inputNetwork, setInputNetwork] = useState<string>('');
   const [inputNetworkInvalid, setInputNetworkInvalid] = useState<boolean>(false);
 
+  // Execute once on page load
   useEffect(() => {
     // TODO: Fetch IP networks from server
     const ipNetworksAutoDetectedMock: IPNetwork[] = [
       { ip: "192.168.178.0", prefix: 24 },
       { ip: "192.168.188.0", prefix: 24 }
     ];
-    setAutoDetectedNetworks(ipNetworksAutoDetectedMock);
+    window.setTimeout(() => {
+      setAutoDetectedNetworks(ipNetworksAutoDetectedMock);
+    }, 5000);
   }, []);
 
+  // Execute whenever autoDetect, autoDetectedNetworks (or onIpNetworksChange) changes.
   const { autoDetect, onIpNetworksChange } = props;
   useEffect(() => {
     if (autoDetect) {
