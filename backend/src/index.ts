@@ -48,7 +48,7 @@ app.use("/", express.static(path.join(__dirname, "httpdocs")));
  */
 
 app.get("/api/ip-networks", wrap(async (req, res, next) => {
-	const networks = IPNetworks.getNetworks();
+	const networks = await IPNetworks.getNetworks();
 	const networkStrings = networks.map((network) => {
 		return IPFunctions.getStringFromIPNetwork(network);
 	});
