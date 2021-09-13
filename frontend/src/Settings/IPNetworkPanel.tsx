@@ -88,10 +88,8 @@ function IPNetworkPanel(props: IPNetworkPanelProps) {
     setInputNetwork(value);
     if (wasValidated) {
       const valid = updateIpNetworks(value);
-      console.log('valid', valid); // TODO: Remove
       setInputNetworkInvalid(!valid);
     } else {
-      console.log('valid', false); // TODO: Remove
       setInputNetworkInvalid(false);
     }
   }, [wasValidated, updateIpNetworks]);
