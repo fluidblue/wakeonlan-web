@@ -1739,6 +1739,11 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
   integrity sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==
 
+"@tsconfig/node14@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@tsconfig/node14/-/node14-1.0.1.tgz#95f2d167ffb9b8d2068b0b235302fafd4df711f2"
+  integrity sha512-509r2+yARFfHHE7T6Puu2jjkoycftovhXRqW328PDXTVGKihlb1P8Z9mMZH04ebyajfRY7dedfGynlrFHJUQCg==
+
 "@types/aria-query@^4.2.0":
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/@types/aria-query/-/aria-query-4.2.2.tgz#ed4e0ad92306a704f9fb132a0cfcf77486dbe2bc"
@@ -11148,10 +11153,12 @@ w3c-xmlserializer@^2.0.0:
   dependencies:
     xml-name-validator "^3.0.0"
 
-wakeonlan-utilities@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/wakeonlan-utilities/-/wakeonlan-utilities-0.3.0.tgz#106d42b2b136c9af5f5e8c5da085c086f8810fc3"
-  integrity sha512-E0OGSyudsAPHndVopP6wGt/9T1WGZgFviYIvE+H2OyiFYSdoFkXwy2yjoWUlPVaTXZfIYGGiy1LS3C7CD4cX0A==
+wakeonlan-utilities@latest:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/wakeonlan-utilities/-/wakeonlan-utilities-0.3.1.tgz#f91f2919df614ed2563bc9615a8270a6282b6cff"
+  integrity sha512-qi9jJ6NnI1AhPRdM6cFm9yXy+a5Qi+8vmNQ9NoLZUU8cpb6/vzLmF8hUdQaJ7cY7xNSvhGepa3ZBY782mdQ1hw==
+  dependencies:
+    "@tsconfig/node14" "^1.0.1"
 
 walker@^1.0.7, walker@~1.0.5:
   version "1.0.7"
