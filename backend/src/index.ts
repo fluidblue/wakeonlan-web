@@ -42,7 +42,15 @@ app.use(wrap(async function (req, res, next) {
 // Serve static files
 app.use("/", express.static(path.join(__dirname, "httpdocs")));
 
-// REST API
+/**
+ * In the following, the REST API is defined.
+ */
+
+app.get("/api/ip-networks", wrap(async (req, res, next) => {
+	// Send 501: Not Implemented
+	res.sendStatus(501);
+}));
+
 app.post("/api/device-name/host-name", wrap(async (req, res, next) => {
 	const ip = req.body["ip"];
 
