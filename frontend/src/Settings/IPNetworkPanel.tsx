@@ -31,9 +31,9 @@ interface IPNetworkPanelProps {
 }
 
 function IPNetworkPanel(props: IPNetworkPanelProps) {
-  const [ipNetworksAutoDetected, setIpNetworksAutoDetected] = useState<IPNetwork[]>([]);
-  const [ipNetworksString, setIpNetworksString] = useState<string>('');
-  const [ipNetworksShowInvalid, setIpNetworksShowInvalid] = useState<boolean>(false);
+  const [autoDetectedNetworks, setAutoDetectedNetworks] = useState<IPNetwork[]>([]);
+  const [inputNetwork, setInputNetwork] = useState<string>('');
+  const [inputNetworkInvalid, setInputNetworkInvalid] = useState<boolean>(false);
 
   useEffect(() => {
     // TODO: Fetch IP networks from server
@@ -41,21 +41,21 @@ function IPNetworkPanel(props: IPNetworkPanelProps) {
       { ip: "192.168.178.0", prefix: 24 },
       { ip: "192.168.188.0", prefix: 24 }
     ];
-    setIpNetworksAutoDetected(ipNetworksAutoDetectedMock);
+    setAutoDetectedNetworks(ipNetworksAutoDetectedMock);
   }, []);
 
   const { autoDetectNetworks, onIpNetworksChange } = props;
   useEffect(() => {
     if (autoDetectNetworks) {
-      onIpNetworksChange(ipNetworksAutoDetected);
-      setIpNetworksString(ipNetworksToString(ipNetworksAutoDetected));
+      onIpNetworksChange(autoDetectedNetworks);
+      setInputNetwork(ipNetworksToString(autoDetectedNetworks));
     }
-  }, [autoDetectNetworks, onIpNetworksChange, ipNetworksAutoDetected]);
+  }, [autoDetectNetworks, onIpNetworksChange, autoDetectedNetworks]);
 
   function setIpNetworkAutoDetection(value: boolean) {
     if (value) {
-      props.onIpNetworksChange(ipNetworksAutoDetected);
-      setIpNetworksString(ipNetworksToString(ipNetworksAutoDetected));
+      props.onIpNetworksChange(autoDetectedNetworks);
+      setInputNetwork(ipNetworksToString(autoDetectedNetworks));
       props.onAutoDetectNetworksChange(true);
     } else {
       props.onAutoDetectNetworksChange(false);
@@ -81,14 +81,14 @@ function IPNetworkPanel(props: IPNetworkPanelProps) {
 
   const { wasValidated } = props;
   const updateInputNetwork = useCallback((value: string) => {
-    setIpNetworksString(value);
+    setInputNetwork(value);
     if (wasValidated) {
       const valid = updateIpNetworks(value);
       console.log('valid', valid); // TODO: Remove
-      setIpNetworksShowInvalid(!valid);
+      setInputNetworkInvalid(!valid);
     } else {
       console.log('valid', false); // TODO: Remove
-      setIpNetworksShowInvalid(false);
+      setInputNetworkInvalid(false);
     }
   }, [wasValidated, updateIpNetworks]);
 
@@ -97,10 +97,10 @@ function IPNetworkPanel(props: IPNetworkPanelProps) {
   }
 
   useEffect(() => {
-    updateInputNetwork(ipNetworksString);
-  }, [updateInputNetwork, ipNetworksString]);
+    updateInputNetwork(inputNetwork);
+  }, [updateInputNetwork, inputNetwork]);
 
-  const inputNetworkClassName = ipNetworksShowInvalid ? 'form-control is-invalid' : 'form-control';
+  const inputNetworkClassName = inputNetworkInvalid ? 'form-control is-invalid' : 'form-control';
 
   return (
     <>
@@ -110,7 +110,7 @@ function IPNetworkPanel(props: IPNetworkPanelProps) {
           type="text"
           className={inputNetworkClassName}
           id="inputNetwork"
-          value={ipNetworksString}
+          value={inputNetwork}
           placeholder="Enter network, e.g. 192.168.178.0/24"
           onChange={onInputNetworkChange}
           disabled={props.autoDetectNetworks}
