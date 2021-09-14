@@ -218,6 +218,7 @@ function EditHost(props: EditHostProps) {
               placeholder="00:11:22:33:44:55"
               required
               pattern={MACFunctions.RE_MAC.source}
+              disabled={!props.add}
             />
           </div>
           <hr />
