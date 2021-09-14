@@ -20,6 +20,12 @@ import ToastItem from './Toasts/ToastItem';
 import Host from './Host';
 
 function App() {
+  const [savedHosts, setSavedHosts] = useState<Host[]>([
+    { name: 'Hostname 1', mac: '00:11:22:33:44:55' },
+    { name: 'Hostname 2', mac: '00:11:22:33:44:66' },
+    { name: 'Hostname 3', mac: '00:11:22:33:44:77' }
+  ]);
+
   const [hostToBeAdded, setHostToBeAdded] = useState<Host | null>(null);
 
   const [scanned, setScanned] = useState(false);
@@ -43,7 +49,11 @@ function App() {
       <main>
         <Switch>
           <Route exact path={["/hosts", "/"]}>
-            <SavedHosts onHostToBeAddedChange={setHostToBeAdded} onHostWoken={onHostWoken} />
+            <SavedHosts
+              onHostToBeAddedChange={setHostToBeAdded}
+              onHostWoken={onHostWoken}
+              savedHosts={savedHosts}
+            />
           </Route>
           <Route path="/discover">
             <Discover
