@@ -22,12 +22,6 @@ function EditHost(props: EditHostProps) {
     alert('Save');
   }
 
-  useEffect(() => {
-    if (inputHostName.current) {
-      inputHostName.current.focus();
-    }
-  }, [inputHostName]);
-
   const showDeleteButton = !props.add;
   let deleteButton = null;
   if (showDeleteButton) {
@@ -37,6 +31,12 @@ function EditHost(props: EditHostProps) {
   const title = props.add ? "Save host" : "Edit host";
   const hostname = props.host ? props.host.name : '';
   const mac = props.host ? props.host.mac : '';
+
+  useEffect(() => {
+    if (inputHostName.current && hostname.length === 0) {
+      inputHostName.current.focus();
+    }
+  }, [inputHostName, hostname]);
 
   return (
     <>
