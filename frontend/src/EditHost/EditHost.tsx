@@ -36,6 +36,24 @@ function EditHost(props: EditHostProps) {
     history.goBack();
   }
 
+  function addCurrentHost(hosts: Host[]): Host[] {
+    const hostsNew = hosts.slice();
+    hostsNew.push({
+      name: hostname,
+      mac: mac
+    });
+    return hostsNew;
+  }
+
+  function removeCurrentHost(hosts: Host[]): Host[] {
+    return hosts.filter((item) => {
+      if (item.mac === mac) {
+        return false;
+      }
+      return true;
+    });
+  }
+
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -58,12 +76,8 @@ function EditHost(props: EditHostProps) {
       return;
     }
 
-    // Add host
-    const savedHostsNew = props.savedHosts.slice();
-    savedHostsNew.push({
-      name: hostname,
-      mac: mac
-    });
+    // Add host and update prop
+    const savedHostsNew = addCurrentHost(props.savedHosts);
     props.onSavedHostsChange(savedHostsNew);
 
     leavePage();
@@ -71,19 +85,12 @@ function EditHost(props: EditHostProps) {
 
   function onModalReplaceYesClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     // Remove old host
-    const savedHostsNew = props.savedHosts.filter((item) => {
-      if (item.mac === mac) {
-        return false;
-      }
-      return true;
-    });
+    let savedHostsNew = removeCurrentHost(props.savedHosts);
 
     // Add host
-    savedHostsNew.push({
-      name: hostname,
-      mac: mac
-    });
+    savedHostsNew = addCurrentHost(savedHostsNew);
 
+    // Update prop
     props.onSavedHostsChange(savedHostsNew);
 
     leavePage();
