@@ -7,8 +7,11 @@ export class MACFunctions {
 
 	private constructor() {}
 
-	static isValidMac(mac: string): boolean {
-		return mac.match(this.RE_MAC) ? true : false;
+	static isValidMac(mac: string | null | undefined): boolean {
+		if (!mac) {
+			return false;
+		}
+		return this.RE_MAC.test(mac);
 	}
 
 	static getByteArrayFromMacAddress(mac: MacAddress): MacAddressBytes {
