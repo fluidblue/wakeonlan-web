@@ -3,6 +3,7 @@ import { IPFunctions, IPNetwork, MACFunctions, MacAddressBytes } from "wakeonlan
 import { ARPCacheEntry } from "./ARPCache";
 import { spawn, exec } from "child_process";
 import net from "net";
+import network, { Interface } from "network";
 
 const delimeter: string = "\n";
 
@@ -31,6 +32,28 @@ export default class ARPScan implements HostDiscovery {
 		const hosts: ARPCacheEntry[] = [];
 		let failed: boolean = false;
 
+		function addHost(ip: string, mac: string) {
+			hosts.push({
+				ip: ip,
+				mac: mac
+			});
+			if (callbackHostFound) {
+				callbackHostFound(ip, MACFunctions.getByteArrayFromMacAddress(mac));
+			}
+		}
+
+		// Retrieve own IP and MAC
+		const iface = await new Promise<Interface>((resolve, reject) => {
+			network.get_active_interface((err, obj) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				resolve(obj!);
+			});
+		});
+		addHost(iface.ip_address, iface.mac_address);
+
 		const promise = new Promise<void>((resolve, reject) => {
 			const childProcess = spawn("arp-scan", ["-q", "-x", "-g", `${ip}/${ipSubnet.prefix}`]);
 
@@ -48,13 +71,7 @@ export default class ARPScan implements HostDiscovery {
 				}
 				const ip = result![1];
 				const mac = result![2];
-				hosts.push({
-					ip: ip,
-					mac: mac
-				});
-				if (callbackHostFound) {
-					callbackHostFound(ip, MACFunctions.getByteArrayFromMacAddress(mac));
-				}
+				addHost(ip, mac);
 			}));
 
 			childProcess.stderr.on("data", this.createChunkAssembler((line) => {
