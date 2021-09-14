@@ -77,6 +77,12 @@ function EditHost(props: EditHostProps) {
     });
   }
 
+  function replaceCurrentHost(hosts: Host[]): Host[] {
+    hosts = removeCurrentHost(hosts);
+    hosts = addCurrentHost(hosts);
+    return hosts;
+  }
+
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -107,23 +113,16 @@ function EditHost(props: EditHostProps) {
   }
 
   function onModalReplaceYesClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    // Remove old host
-    let savedHostsNew = removeCurrentHost(props.savedHosts);
-
-    // Add host
-    savedHostsNew = addCurrentHost(savedHostsNew);
-
-    // Update prop
+    // Replace host and update prop
+    let savedHostsNew = replaceCurrentHost(props.savedHosts);
     props.onSavedHostsChange(savedHostsNew);
 
     leavePage();
   }
 
   function onModalDeleteConfirm(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    // Remove old host
+    // Remove old host and update prop
     let savedHostsNew = removeCurrentHost(props.savedHosts);
-
-    // Update prop
     props.onSavedHostsChange(savedHostsNew);
 
     leavePage();
