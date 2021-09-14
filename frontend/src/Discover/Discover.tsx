@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import './Discover.css';
 
 import HostItem from './HostItem';
 import Host from '../Host';
+import { API } from '../API';
 
 const hostsMock: Host[] = [
   { name: 'Hostname 1', mac: '00:11:22:33:44:55' },
@@ -24,6 +25,7 @@ interface DiscoverProps {
 function Discover(props: DiscoverProps) {
   const [scanning, setScanning] = useState(false);
   const history = useHistory();
+  const api = useContext(API);
 
   function handleItemClick(host: Host) {
     props.onHostToBeAddedChange(host);
@@ -40,29 +42,58 @@ function Discover(props: DiscoverProps) {
   }
 
   // Destructure props for useEffect
-  const { onDiscoveredHostsChange, onScannedChange } = props;
+  const { scanned, onDiscoveredHostsChange, onScannedChange } = props;
 
   // Start scanning when the activity is entered.
   useEffect(() => {
     let ignore = false;
 
-    if (!props.scanned) {
-      onDiscoveredHostsChange([]);
-      setScanning(true);
+    async function fetchData() {
+      if (!scanned) {
+        onDiscoveredHostsChange([]);
+        setScanning(true);
 
-      window.setTimeout(() => {
+        const response = await fetch(api + '/host-discovery/arp-scan', {
+          method: 'POST',
+          keepalive: true,
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            'ip-network': '192.168.188.0/24' // TODO
+          })
+        });
+        const rawData = await response.text();
+        let data: any[] = [];
+        for (let line of rawData.split('\n')) {
+          line = line.trim();
+          if (line.length === 0) {
+            continue;
+          }
+          data.push(JSON.parse(line));
+        }
+        data = data.map((item) => {
+          return {
+            name: item.ip,
+            mac: item.mac
+          };
+        });
+        console.log(data);
+
         if (ignore) {
           return;
         }
         setScanning(false);
         onScannedChange(true);
-        onDiscoveredHostsChange(hostsMock);
-      }, 3000);
+        onDiscoveredHostsChange(data);
+      }
     }
+    fetchData();
+
     return () => {
       ignore = true;
     };
-  }, [props.scanned, onDiscoveredHostsChange, onScannedChange]);
+  }, [scanned, api, onDiscoveredHostsChange, onScannedChange]);
 
   let spinner = null;
   if (scanning) {
