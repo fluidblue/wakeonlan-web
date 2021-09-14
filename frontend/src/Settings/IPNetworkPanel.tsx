@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 
 import { IPFunctions, IPNetwork } from 'wakeonlan-utilities';
+import { API } from '../API';
 
 function ipNetworksToString(ipNetworks: IPNetwork[]): string {
   const ipNetworkStrings = ipNetworks.map((value) => {
@@ -35,17 +36,34 @@ function IPNetworkPanel(props: IPNetworkPanelProps) {
   const [inputNetwork, setInputNetwork] = useState<string>('');
   const [inputNetworkInvalid, setInputNetworkInvalid] = useState<boolean>(false);
 
+  const api = useContext(API);
+
   // Execute once on page load
   useEffect(() => {
-    // TODO: Fetch IP networks from server
-    const ipNetworksAutoDetectedMock: IPNetwork[] = [
-      { ip: "192.168.178.0", prefix: 24 },
-      { ip: "192.168.188.0", prefix: 24 }
-    ];
-    window.setTimeout(() => {
-      setAutoDetectedNetworks(ipNetworksAutoDetectedMock);
-    }, 5000);
-  }, []);
+    const fetchData = async () => {
+      const uri = api + '/ip-networks';
+      const response = await fetch(uri, {
+        method: 'GET',
+        keepalive: true
+      });
+      if (!response.ok || !response.body) {
+        console.error('Could not fetch ' + uri + ' (HTTP ' + response.status + ')');
+        return;
+      }
+      const rawData: string[] = await response.json();
+      let data: IPNetwork[] = [];
+      try {
+        data = rawData.map((network) => {
+          return IPFunctions.getIPNetworkFromString(network);
+        });
+      } catch (err) {
+        console.error('Could not parse data of ' + uri + ' (' + err + ')');
+        return;
+      }
+      setAutoDetectedNetworks(data);
+    };
+    fetchData();
+  }, [api]);
 
   // Execute whenever autoDetect, autoDetectedNetworks (or onIpNetworksChange) changes.
   const { autoDetect, onIpNetworksChange } = props;
