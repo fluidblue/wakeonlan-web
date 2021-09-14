@@ -24,6 +24,7 @@ function EditHost(props: EditHostProps) {
 
   const inputHostName = createRef<HTMLInputElement>();
   const modalReplace = createRef<HTMLDivElement>();
+  const modalDelete = createRef<HTMLDivElement>();
 
   const title = props.add ? "Save host" : "Edit host";
   const currentHost = props.add ? props.host : getHostById(id);
@@ -49,6 +50,10 @@ function EditHost(props: EditHostProps) {
   function leavePage() {
     if (modalReplace.current) {
       const modal = Modal.getOrCreateInstance(modalReplace.current);
+      modal.hide();
+    }
+    if (modalDelete.current) {
+      const modal = Modal.getOrCreateInstance(modalDelete.current);
       modal.hide();
     }
     history.goBack();
@@ -147,7 +152,7 @@ function EditHost(props: EditHostProps) {
 
   return (
     <>
-      <div className="modal fade" id="modalDelete" tabIndex={-1} aria-labelledby="modalDeleteLabel" aria-hidden="true">
+      <div className="modal fade" id="modalDelete" tabIndex={-1} aria-labelledby="modalDeleteLabel" aria-hidden="true" ref={modalDelete}>
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
