@@ -2,6 +2,8 @@ import React, { createRef, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import './EditHost.css';
 
+import { Modal } from 'bootstrap';
+
 import Host from '../Host';
 import { MACFunctions } from 'wakeonlan-utilities';
 
@@ -15,6 +17,7 @@ interface EditHostProps {
 function EditHost(props: EditHostProps) {
   const history = useHistory();
   const inputHostName = createRef<HTMLInputElement>();
+  const modalReplace = createRef<HTMLDivElement>();
 
   const [hostname, setHostname] = useState(props.host ? props.host.name : '');
   const [mac, setMac] = useState(props.host ? props.host.mac : '');
@@ -22,6 +25,32 @@ function EditHost(props: EditHostProps) {
   const title = props.add ? "Save host" : "Edit host";
 
   function onCancelClick() {
+    history.goBack();
+  }
+
+  function saveHost() {
+    props.savedHosts.push({
+      name: hostname,
+      mac: mac
+    });
+    props.onSavedHostsChange(props.savedHosts);
+  }
+
+  function deleteHost(mac: string) {
+    const savedHostsNew = props.savedHosts.filter((item) => {
+      if (item.mac === mac) {
+        return false;
+      }
+      return true;
+    });
+    props.onSavedHostsChange(savedHostsNew);
+  }
+
+  function leavePage() {
+    if (modalReplace.current) {
+      const modal = Modal.getOrCreateInstance(modalReplace.current);
+      modal.hide();
+    }
     history.goBack();
   }
 
@@ -38,20 +67,23 @@ function EditHost(props: EditHostProps) {
       return;
     }
 
+    // Check for duplicate item
     if (props.savedHosts.find((item) => {
       return (item.mac === mac);
     })) {
-      // Duplicate item
-      alert('Duplicate'); // TODO
+      const modal = Modal.getOrCreateInstance(modalReplace.current!);
+      modal.show();
       return;
     }
 
-    props.savedHosts.push({
-      name: hostname,
-      mac: mac
-    });
-    props.onSavedHostsChange(props.savedHosts);
-    history.goBack();
+    saveHost();
+    leavePage();
+  }
+
+  function onModalReplaceYesClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    deleteHost(mac);
+    saveHost();
+    leavePage();
   }
 
   const showDeleteButton = !props.add;
@@ -95,7 +127,7 @@ function EditHost(props: EditHostProps) {
         </div>
       </div>
 
-      <div className="modal fade" id="modalReplace" tabIndex={-1} aria-labelledby="modalReplaceLabel" aria-hidden="true">
+      <div className="modal fade" id="modalReplace" tabIndex={-1} aria-labelledby="modalReplaceLabel" aria-hidden="true" ref={modalReplace}>
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
@@ -108,7 +140,7 @@ function EditHost(props: EditHostProps) {
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">No</button>
-              <button type="button" className="btn btn-primary">Yes</button>
+              <button type="button" className="btn btn-primary" onClick={onModalReplaceYesClick}>Yes</button>
             </div>
           </div>
         </div>
