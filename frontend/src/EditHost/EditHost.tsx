@@ -114,6 +114,16 @@ function EditHost(props: EditHostProps) {
     leavePage();
   }
 
+  function onModalDeleteConfirm(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    // Remove old host
+    let savedHostsNew = removeCurrentHost(props.savedHosts);
+
+    // Update prop
+    props.onSavedHostsChange(savedHostsNew);
+
+    leavePage();
+  }
+
   const showDeleteButton = !props.add;
   let deleteButton = null;
   if (showDeleteButton) {
@@ -149,7 +159,7 @@ function EditHost(props: EditHostProps) {
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" className="btn btn-danger">Delete</button>
+              <button type="button" className="btn btn-danger" onClick={onModalDeleteConfirm}>Delete</button>
             </div>
           </div>
         </div>
