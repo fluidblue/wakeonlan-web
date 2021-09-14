@@ -6,11 +6,10 @@ import HostItem from './HostItem';
 import Host from '../Host';
 import { API } from '../API';
 
-const hostsMock: Host[] = [
-  { name: 'Hostname 1', mac: '00:11:22:33:44:55' },
-  { name: 'Hostname 2', mac: '00:11:22:33:44:66' },
-  { name: 'Hostname 3', mac: '00:11:22:33:44:77' }
-];
+interface HostMacIP {
+  ip: string;
+  mac: string;
+}
 
 interface DiscoverProps {
   onHostToBeAddedChange: React.Dispatch<React.SetStateAction<Host | null>>;
@@ -41,6 +40,24 @@ function Discover(props: DiscoverProps) {
     props.onScannedChange(false);
   }
 
+  async function fetchHostname(ip: string) {
+    const response = await fetch(api + '/device-name/host-name', {
+      method: 'POST',
+      keepalive: true,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        ip: ip
+      })
+    });
+    if (response.ok) {
+      return response.text();
+    } else {
+      return ip;
+    }
+  }
+
   // Destructure props for useEffect
   const { scanned, onDiscoveredHostsChange, onScannedChange } = props;
 
@@ -64,21 +81,20 @@ function Discover(props: DiscoverProps) {
           })
         });
         const rawData = await response.text();
-        let data: any[] = [];
+        let data: Host[] = [];
         for (let line of rawData.split('\n')) {
           line = line.trim();
           if (line.length === 0) {
             continue;
           }
-          data.push(JSON.parse(line));
-        }
-        data = data.map((item) => {
-          return {
-            name: item.ip,
-            mac: item.mac
+          const hostMacIp: HostMacIP = JSON.parse(line);
+
+          const host: Host = {
+            name: await fetchHostname(hostMacIp.ip),
+            mac: hostMacIp.mac
           };
-        });
-        console.log(data);
+          data.push(host);
+        }
 
         if (ignore) {
           return;
