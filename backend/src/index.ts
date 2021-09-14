@@ -12,6 +12,7 @@
  */
  
 import express from "express";
+import cors from "cors";
 import path from "path";
 import net from "net";
 
@@ -39,6 +40,10 @@ app.use(wrap(async function (req, res, next) {
 	console.log("[" + getDate() + "] " + req.method + " " + req.url);
 	next();
 }));
+
+// Allow all cross origin requests (controlled by CORS).
+// https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+app.use(cors());
 
 // Serve static files
 app.use("/", express.static(path.join(__dirname, "httpdocs")));
