@@ -67,43 +67,44 @@ function Discover(props: DiscoverProps) {
     let ignore = false;
 
     async function fetchData() {
-      if (!scanned) {
-        onDiscoveredHostsChange([]);
-        setScanning(true);
-
-        const response = await fetch(api + '/host-discovery/arp-scan', {
-          method: 'POST',
-          keepalive: true,
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            'ip-network': '192.168.188.0/24' // TODO
-          })
-        });
-        const rawData = await response.text();
-        let data: Host[] = [];
-        for (let line of rawData.split('\n')) {
-          line = line.trim();
-          if (line.length === 0) {
-            continue;
-          }
-          const hostMacIp: HostMacIP = JSON.parse(line);
-
-          const host: Host = {
-            name: await fetchHostname(hostMacIp.ip),
-            mac: hostMacIp.mac
-          };
-          data.push(host);
-        }
-
-        if (ignore) {
-          return;
-        }
-        setScanning(false);
-        onScannedChange(true);
-        onDiscoveredHostsChange(data);
+      if (scanned) {
+        return;
       }
+      onDiscoveredHostsChange([]);
+      setScanning(true);
+
+      const response = await fetch(api + '/host-discovery/arp-scan', {
+        method: 'POST',
+        keepalive: true,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          'ip-network': '192.168.188.0/24' // TODO
+        })
+      });
+      const rawData = await response.text();
+      let data: Host[] = [];
+      for (let line of rawData.split('\n')) {
+        line = line.trim();
+        if (line.length === 0) {
+          continue;
+        }
+        const hostMacIp: HostMacIP = JSON.parse(line);
+
+        const host: Host = {
+          name: await fetchHostname(hostMacIp.ip),
+          mac: hostMacIp.mac
+        };
+        data.push(host);
+      }
+
+      if (ignore) {
+        return;
+      }
+      setScanning(false);
+      onScannedChange(true);
+      onDiscoveredHostsChange(data);
     }
     fetchData();
 
