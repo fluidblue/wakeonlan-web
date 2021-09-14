@@ -11153,10 +11153,10 @@ w3c-xmlserializer@^2.0.0:
   dependencies:
     xml-name-validator "^3.0.0"
 
-wakeonlan-utilities@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/wakeonlan-utilities/-/wakeonlan-utilities-0.5.0.tgz#d63f39b6196617f904b16b023de703920bf704db"
-  integrity sha512-rGMjf4KPTb3y2hOHCWW3hxpzvX8L5aCocKfQwoHCyAD8M0gvKMo2MAEuu/+HnWQKY2x1H8ml1YnRV0tp2gjNDw==
+wakeonlan-utilities@latest:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/wakeonlan-utilities/-/wakeonlan-utilities-0.5.1.tgz#dc51ccfdd67fde16b9264df1a0599d890692ee95"
+  integrity sha512-l/QrCgx2NhEgFRAVv+k4fFS8ARwC/cZofOpmN73G7B0J53fgowqm2wWmz4GBtVGSeOfHZMp3AZkrG6Z0zD1AOA==
   dependencies:
     "@tsconfig/node14" "^1.0.1"
 

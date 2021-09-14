@@ -3,7 +3,7 @@ export type MacAddressBytes = Uint8Array;
 
 export class MACFunctions {
 	static readonly MAC_ADDR_LENGTH: number = 6;
-	static readonly RE_MAC: RegExp = /^[0-9a-fA-F]{1,2}(?::[0-9A-F]{1,2}){5}$/;
+	static readonly RE_MAC: RegExp = /^[0-9a-fA-F]{1,2}(?::[0-9a-fA-F]{1,2}){5}$/;
 
 	private constructor() {}
 
