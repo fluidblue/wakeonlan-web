@@ -27,11 +27,6 @@ function App() {
 
   const [toastItems, setToastItems] = useState<React.ReactNode[]>([]);
 
-  let api = '/api';
-  if (process.env.NODE_ENV === 'development') {
-    api = 'http://localhost:8000' + api;
-  }
-
   function onHostWoken(hostname: string, mac: string) {
     setToastItems(toastItems.concat(
       <ToastItem key={Date.now()}>
