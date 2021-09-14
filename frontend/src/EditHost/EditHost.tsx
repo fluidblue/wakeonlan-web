@@ -28,24 +28,6 @@ function EditHost(props: EditHostProps) {
     history.goBack();
   }
 
-  function saveHost() {
-    props.savedHosts.push({
-      name: hostname,
-      mac: mac
-    });
-    props.onSavedHostsChange(props.savedHosts);
-  }
-
-  function deleteHost(mac: string) {
-    const savedHostsNew = props.savedHosts.filter((item) => {
-      if (item.mac === mac) {
-        return false;
-      }
-      return true;
-    });
-    props.onSavedHostsChange(savedHostsNew);
-  }
-
   function leavePage() {
     if (modalReplace.current) {
       const modal = Modal.getOrCreateInstance(modalReplace.current);
@@ -76,13 +58,34 @@ function EditHost(props: EditHostProps) {
       return;
     }
 
-    saveHost();
+    // Add host
+    const savedHostsNew = props.savedHosts.slice();
+    savedHostsNew.push({
+      name: hostname,
+      mac: mac
+    });
+    props.onSavedHostsChange(savedHostsNew);
+
     leavePage();
   }
 
   function onModalReplaceYesClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    deleteHost(mac);
-    saveHost();
+    // Remove old host
+    const savedHostsNew = props.savedHosts.filter((item) => {
+      if (item.mac === mac) {
+        return false;
+      }
+      return true;
+    });
+
+    // Add host
+    savedHostsNew.push({
+      name: hostname,
+      mac: mac
+    });
+
+    props.onSavedHostsChange(savedHostsNew);
+
     leavePage();
   }
 
