@@ -141,7 +141,7 @@ function Discover(props: DiscoverProps) {
   }
 
   const hostItems = props.discoveredHosts.map((host) => {
-    return <HostItem host={host} onClick={handleItemClick} />;
+    return <HostItem host={host} onClick={handleItemClick} key={host.name + host.mac} />;
   });
   let hostItemsParent = null;
   if (hostItems && hostItems.length > 0) {
