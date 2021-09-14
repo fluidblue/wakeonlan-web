@@ -36,6 +36,10 @@ export class DNSNaming implements HostNaming {
 	async getFQDNByIP(ip: string): Promise<string | null> {
 		return new Promise<string | null>((resolve, reject) => {
 			dns.reverse(ip, function(err, hostnames) {
+				if (err && err.message.startsWith("getHostByAddr ENOTFOUND")) {
+					resolve(null);
+					return;
+				}
 				if (err) {
 					reject(new Error(err.toString()));
 					return;

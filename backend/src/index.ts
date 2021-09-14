@@ -75,7 +75,10 @@ app.post("/api/device-name/host-name", wrap(async (req, res, next) => {
 	}
 
 	const hostNaming: HostNaming = new DNSNaming();
-	const hostname = await hostNaming.getHostNameByIP(ip);
+	let hostname = await hostNaming.getHostNameByIP(ip);
+	if (!hostname) {
+		hostname = ip;
+	}
 
 	res.set("Content-Type", "text/plain; charset=utf-8");
 	res.send(hostname);
