@@ -1,5 +1,5 @@
 import React, { createRef, useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import './EditHost.css';
 
 import { Modal } from 'bootstrap';
@@ -14,15 +14,33 @@ interface EditHostProps {
   onSavedHostsChange: React.Dispatch<React.SetStateAction<Host[]>>;
 }
 
+interface Params {
+  id: string;
+}
+
 function EditHost(props: EditHostProps) {
   const history = useHistory();
+  const { id } = useParams<Params>();
+
   const inputHostName = createRef<HTMLInputElement>();
   const modalReplace = createRef<HTMLDivElement>();
 
-  const [hostname, setHostname] = useState(props.host ? props.host.name : '');
-  const [mac, setMac] = useState(props.host ? props.host.mac : '');
-
   const title = props.add ? "Save host" : "Edit host";
+  const currentHost = props.add ? props.host : getHostById(id);
+
+  const [hostname, setHostname] = useState(currentHost ? currentHost.name : '');
+  const [mac, setMac] = useState(currentHost ? currentHost.mac : '');
+
+  function getHostById(id: string) {
+    const mac = id.replaceAll('-', ':');
+    const host = props.savedHosts.find((item) => {
+      return item.mac === mac;
+    });
+    if (!host) {
+      return null;
+    }
+    return host;
+  }
 
   function onCancelClick() {
     history.goBack();
