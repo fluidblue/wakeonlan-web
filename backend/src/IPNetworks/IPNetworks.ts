@@ -29,7 +29,13 @@ export class IPNetworks {
 				ip: IPFunctions.getStringIP(cleanNetworkAddress),
 				prefix: IPFunctions.getPrefix(numericalSubnetMask)
 			};
-			result.push(network);
+
+			const duplicate: boolean = result.find((item) => {
+				return (item.ip === network.ip && item.prefix === network.prefix);
+			}) ? true : false;
+			if (!duplicate) {
+				result.push(network);
+			}
 		}
 		return result;
 	}
