@@ -2,24 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 
 import { IPFunctions, IPNetwork } from 'wakeonlan-utilities';
 import { API } from '../API';
-
-function ipNetworksToString(ipNetworks: IPNetwork[]): string {
-  const ipNetworkStrings = ipNetworks.map((value) => {
-    return IPFunctions.getStringFromIPNetwork(value);
-  });
-  return ipNetworkStrings.join(', ');
-}
-
-function stringToIpNetworks(value: string): IPNetwork[] {
-  const ipNetworkStrings: string[] = value.split(',');
-  const result: IPNetwork[] = [];
-  for (let ipNetworkString of ipNetworkStrings) {
-    ipNetworkString = ipNetworkString.trim();
-    const ipNetwork = IPFunctions.getIPNetworkFromString(ipNetworkString);
-    result.push(ipNetwork);
-  }
-  return result;
-}
+import { ipNetworksToString, stringToIpNetworks } from './IPUtilities'
 
 interface IPNetworkPanelProps {
   ipNetworks: IPNetwork[];
