@@ -95,6 +95,25 @@ function EditHost(props: EditHostProps) {
         </div>
       </div>
 
+      <div className="modal fade" id="modalReplace" tabIndex={-1} aria-labelledby="modalReplaceLabel" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="modalReplaceLabel">Replace?</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div className="modal-body">
+              A host with this MAC address has already been saved.<br />
+              Should wakeonlan-web replace the existing entry?
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">No</button>
+              <button type="button" className="btn btn-primary">Yes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="edithost">
         <h6 className="mb-3 fw-bold">{title}</h6>
         <form onSubmit={onSubmit}>
