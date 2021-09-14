@@ -96,18 +96,26 @@ function EditHost(props: EditHostProps) {
       return;
     }
 
-    // Check for duplicate item
-    if (props.savedHosts.find((item) => {
-      return (item.mac === mac);
-    })) {
-      const modal = Modal.getOrCreateInstance(modalReplace.current!);
-      modal.show();
-      return;
-    }
+    if (props.add) {
+      // Check for duplicate item
+      if (props.savedHosts.find((item) => {
+        return (item.mac === mac);
+      })) {
+        const modal = Modal.getOrCreateInstance(modalReplace.current!);
+        modal.show();
+        return;
+      }
 
-    // Add host and update prop
-    const savedHostsNew = addCurrentHost(props.savedHosts);
-    props.onSavedHostsChange(savedHostsNew);
+      // Add host and update prop
+      const savedHostsNew = addCurrentHost(props.savedHosts);
+      props.onSavedHostsChange(savedHostsNew);
+    } else {
+      // Replace without asking in edit mode.
+
+      // Replace host and update prop
+      let savedHostsNew = replaceCurrentHost(props.savedHosts);
+      props.onSavedHostsChange(savedHostsNew);
+    }
 
     leavePage();
   }
