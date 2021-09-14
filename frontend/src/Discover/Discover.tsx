@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import './Discover.css';
 
@@ -40,7 +40,7 @@ function Discover(props: DiscoverProps) {
     props.onScannedChange(false);
   }
 
-  async function fetchHostname(ip: string) {
+  const fetchHostname = useCallback(async (ip: string) => {
     const response = await fetch(api + '/device-name/host-name', {
       method: 'POST',
       keepalive: true,
@@ -56,7 +56,8 @@ function Discover(props: DiscoverProps) {
     } else {
       return ip;
     }
-  }
+  }, [api]);
+  
 
   // Destructure props for useEffect
   const { scanned, onDiscoveredHostsChange, onScannedChange } = props;
@@ -109,7 +110,7 @@ function Discover(props: DiscoverProps) {
     return () => {
       ignore = true;
     };
-  }, [scanned, api, onDiscoveredHostsChange, onScannedChange]);
+  }, [scanned, api, onDiscoveredHostsChange, onScannedChange, fetchHostname]);
 
   let spinner = null;
   if (scanning) {
