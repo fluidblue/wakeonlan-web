@@ -86,13 +86,15 @@ function EditHost(props: EditHostProps) {
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (!hostname || hostname.length === 0) {
-      alert('Invalid hostname'); // TODO
+    if (!hostname || !hostname.length || hostname.length < 1) {
+      // Should not happen (due to constraints on html input element).
+      // Ignore request silently.
       return;
     }
 
-    if (!mac || mac.length === 0 || !MACFunctions.isValidMac(mac)) {
-      alert('Invalid MAC'); // TODO
+    if (!mac || !MACFunctions.isValidMac(mac)) {
+      // Should not happen (due to constraints on html input element).
+      // Ignore request silently.
       return;
     }
 
