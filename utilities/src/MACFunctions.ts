@@ -3,15 +3,12 @@ export type MacAddressBytes = Uint8Array;
 
 export class MACFunctions {
 	static readonly MAC_ADDR_LENGTH: number = 6;
+	static readonly RE_MAC: RegExp = /^[0-9a-fA-F]{1,2}(?::[0-9A-F]{1,2}){5}$/;
 
 	private constructor() {}
 
 	static isValidMac(mac: string): boolean {
-		// TODO: Use regular expression for MACs
-		if (mac && mac.length && mac.length === 17) {
-			return true;
-		}
-		return false;
+		return mac.match(this.RE_MAC) ? true : false;
 	}
 
 	static getByteArrayFromMacAddress(mac: MacAddress): MacAddressBytes {
