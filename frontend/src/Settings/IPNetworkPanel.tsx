@@ -21,7 +21,8 @@ function IPNetworkPanel(props: IPNetworkPanelProps) {
 
   const api = useContext(API);
 
-  // Execute once on page load
+  // Execute once on page load.
+  // Fetch data for autoDetectedNetworks.
   useEffect(() => {
     const fetchData = async () => {
       const uri = api + '/ip-networks';
