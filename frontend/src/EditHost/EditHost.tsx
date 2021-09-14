@@ -1,36 +1,73 @@
-import React, { createRef, useEffect } from 'react';
+import React, { createRef, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import './EditHost.css';
 
 import Host from '../Host';
+import { MACFunctions } from 'wakeonlan-utilities';
 
 interface EditHostProps {
   add?: boolean;
   host?: Host | null;
+  savedHosts: Host[];
+  onSavedHostsChange: React.Dispatch<React.SetStateAction<Host[]>>;
 }
 
 function EditHost(props: EditHostProps) {
   const history = useHistory();
   const inputHostName = createRef<HTMLInputElement>();
 
-  function handleCancelClick() {
+  const [hostname, setHostname] = useState(props.host ? props.host.name : '');
+  const [mac, setMac] = useState(props.host ? props.host.mac : '');
+
+  const title = props.add ? "Save host" : "Edit host";
+
+  function onCancelClick() {
     history.goBack();
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    alert('Save');
+
+    if (!hostname || hostname.length === 0) {
+      alert('Invalid hostname'); // TODO
+      return;
+    }
+
+    if (!mac || mac.length === 0 || !MACFunctions.isValidMac(mac)) {
+      alert('Invalid MAC'); // TODO
+      return;
+    }
+
+    if (props.savedHosts.find((item) => {
+      return (item.mac === mac);
+    })) {
+      // Duplicate item
+      alert('Duplicate'); // TODO
+      return;
+    }
+
+    props.savedHosts.push({
+      name: hostname,
+      mac: mac
+    });
+    props.onSavedHostsChange(props.savedHosts);
+    history.goBack();
   }
 
   const showDeleteButton = !props.add;
   let deleteButton = null;
   if (showDeleteButton) {
-    deleteButton = <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete">Delete</button>;
+    deleteButton = (
+      <button
+        type="button"
+        className="btn btn-danger"
+        data-bs-toggle="modal"
+        data-bs-target="#modalDelete"
+      >
+        Delete
+      </button>
+    );
   }
-
-  const title = props.add ? "Save host" : "Edit host";
-  const hostname = props.host ? props.host.name : '';
-  const mac = props.host ? props.host.mac : '';
 
   useEffect(() => {
     if (inputHostName.current && hostname.length === 0) {
@@ -60,18 +97,38 @@ function EditHost(props: EditHostProps) {
 
       <div className="edithost">
         <h6 className="mb-3 fw-bold">{title}</h6>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={onSubmit}>
           <div className="mb-3">
             <label htmlFor="inputHostName" className="form-label">Hostname</label>
-            <input type="text" className="form-control" id="inputHostName" ref={inputHostName} defaultValue={hostname} placeholder="Enter hostname" required />
+            <input
+              type="text"
+              className="form-control"
+              id="inputHostName"
+              ref={inputHostName}
+              value={hostname}
+              onChange={(e) => { setHostname(e.target.value); }}
+              placeholder="Enter hostname"
+              required
+              minLength={1}
+              maxLength={255}
+            />
           </div>
           <div className="mb-3">
             <label htmlFor="inputMacAddress" className="form-label">MAC address</label>
-            <input type="text" className="form-control" id="inputMacAddress" defaultValue={mac} placeholder="00:11:22:33:44:55" required />
+            <input
+              type="text"
+              className="form-control"
+              id="inputMacAddress"
+              value={mac}
+              onChange={(e) => { setMac(e.target.value); }}
+              placeholder="00:11:22:33:44:55"
+              required
+              pattern={MACFunctions.RE_MAC.source}
+            />
           </div>
           <hr />
           <div className="mb-3">
-            <button type="button" className="btn btn-secondary" onClick={handleCancelClick}>Cancel</button>
+            <button type="button" className="btn btn-secondary" onClick={onCancelClick}>Cancel</button>
             <button type="submit" className="btn btn-primary">Save</button>
           </div>
           {deleteButton}

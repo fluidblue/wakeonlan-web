@@ -68,10 +68,19 @@ function App() {
             <Settings />
           </Route>
           <Route path="/add">
-            <EditHost host={hostToBeAdded} add={true} />
+            <EditHost
+              host={hostToBeAdded}
+              add={true}
+              savedHosts={savedHosts}
+              onSavedHostsChange={setSavedHosts}
+            />
           </Route>
           <Route path="/edit/:id">
-            <EditHost host={hostToBeAdded} />
+            <EditHost
+              host={hostToBeAdded}
+              savedHosts={savedHosts}
+              onSavedHostsChange={setSavedHosts}
+            />
           </Route>
           <Route path="*">
             <NotFound />
