@@ -4,6 +4,8 @@ import './EditHost.css';
 
 import { Modal } from 'bootstrap';
 
+import NotFound from '../NotFound';
+
 import Host from '../Host';
 import { MACFunctions } from 'wakeonlan-utilities';
 
@@ -158,6 +160,10 @@ function EditHost(props: EditHostProps) {
       inputHostName.current.focus();
     }
   }, [inputHostName, hostname]);
+
+  if (!props.add && !currentHost) {
+    return <NotFound />;
+  }
 
   return (
     <>
