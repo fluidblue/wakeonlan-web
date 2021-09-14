@@ -25,6 +25,9 @@ import WolNativeNode from "./WakeOnLan/WolNativeNode";
 import { HostDiscovery } from "./HostDiscovery/HostDiscovery";
 import ARPScan from "./HostDiscovery/ARPScan"
 
+import { HostNaming } from "./HostNaming/HostNaming";
+import { DNSNaming } from "./HostNaming/DNSNaming";
+
 import { IPFunctions, IPNetwork, MACFunctions } from "wakeonlan-utilities";
 import { IPNetworks } from "./IPNetworks/IPNetworks";
 
@@ -57,14 +60,25 @@ app.get("/api/ip-networks", wrap(async (req, res, next) => {
 	const networkStrings = networks.map((network) => {
 		return IPFunctions.getStringFromIPNetwork(network);
 	});
+
+	res.set("Content-Type", "application/json");
 	res.send(JSON.stringify(networkStrings));
 }));
 
 app.post("/api/device-name/host-name", wrap(async (req, res, next) => {
 	const ip = req.body["ip"];
+	if (!net.isIP(ip)) {
+		// Invalid input
+		// Send 400: Bad Request
+		res.sendStatus(400);
+		return;
+	}
 
-	// Send 501: Not Implemented
-	res.sendStatus(501);
+	const hostNaming: HostNaming = new DNSNaming();
+	const hostname = await hostNaming.getHostNameByIP(ip);
+
+	res.set("Content-Type", "text/plain; charset=utf-8");
+	res.send(hostname);
 }));
 
 app.post("/api/device-name/vendor-name", wrap(async (req, res, next) => {
