@@ -17,8 +17,7 @@ function SettingsPreLoad(props: SettingsPreLoadProps) {
     const fetchData = async () => {
       const uri = api + '/ip-networks';
       const response = await fetch(uri, {
-        method: 'GET',
-        keepalive: true
+        method: 'GET'
       });
       if (!response.ok || !response.body) {
         console.error('Could not fetch ' + uri + ' (HTTP ' + response.status + ')');

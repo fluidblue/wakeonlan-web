@@ -75,7 +75,6 @@ function Discover(props: DiscoverProps) {
 
       const response = await fetch(api + '/host-discovery/arp-scan', {
         method: 'POST',
-        keepalive: true,
         headers: {
           'Content-Type': 'application/json'
         },
