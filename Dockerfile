@@ -21,6 +21,6 @@ RUN npm install
 COPY ./backend .
 COPY --from=build-frontend /frontend/build ./src/httpdocs
 
-RUN apt-get update && apt-get install -y arp-scan
+RUN apt-get update && apt-get install -y net-tools arp-scan
 
 CMD ["npm", "start"]
