@@ -6,10 +6,11 @@ import { IPNetwork } from 'wakeonlan-utilities';
 
 const WAKEONLAN_DEFAULT_PORT: number = 9;
 
-function Settings() {
-  const [ipNetworks, setIpNetworks] = useState<IPNetwork[]>([]);
-  const [autoDetectNetworks, setAutoDetectNetworks] = useState<boolean>(true);
+interface SettingsProps {
+  autoDetectedNetworks: IPNetwork[];
+}
 
+function Settings(props: SettingsProps) {
   const [wolPort, setWolPort] = useState<number>(WAKEONLAN_DEFAULT_PORT);
 
   const [wasValidated, setWasValidated] = useState(false);
@@ -30,7 +31,7 @@ function Settings() {
   function onReset() {
     setWasValidated(false);
 
-    setAutoDetectNetworks(true);
+    // setAutoDetectNetworks(true); // TODO
     setWolPort(WAKEONLAN_DEFAULT_PORT);
   }
 
@@ -41,11 +42,7 @@ function Settings() {
       <form className={formClassName}>
         <h6 className="mb-3 fw-bold">Host discovery</h6>
         <IPNetworkPanel
-          ipNetworks={ipNetworks}
-          onIpNetworksChange={setIpNetworks}
-          autoDetect={autoDetectNetworks}
-          onAutoDetectChange={setAutoDetectNetworks}
-          wasValidated={wasValidated}
+          autoDetectedNetworks={props.autoDetectedNetworks}
         />
         {/* <div className="mb-3">
           <label htmlFor="selectMethod" className="form-label">Method</label>

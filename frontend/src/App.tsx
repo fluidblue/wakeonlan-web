@@ -11,6 +11,7 @@ import Navbar from './Navbar/Navbar';
 import SavedHosts from './SavedHosts/SavedHosts';
 import Discover from './Discover/Discover';
 import Settings from './Settings/Settings';
+import SettingsPreLoad from './Settings/SettingsPreLoad';
 import EditHost from './EditHost/EditHost';
 import NotFound from './NotFound';
 
@@ -18,6 +19,7 @@ import ToastContainer from './Toasts/ToastContainer';
 import ToastItem from './Toasts/ToastItem';
 
 import Host from './Host';
+import { IPNetwork } from 'wakeonlan-utilities';
 
 function App() {
   const [savedHosts, setSavedHosts] = useState<Host[]>([
@@ -30,6 +32,8 @@ function App() {
 
   const [scanned, setScanned] = useState(false);
   const [discoveredHosts, setDiscoveredHosts] = useState<Host[]>([]);
+
+  const [autoDetectedNetworks, setAutoDetectedNetworks] = useState<IPNetwork[]>([]);
 
   const [toastItems, setToastItems] = useState<React.ReactNode[]>([]);
 
@@ -44,6 +48,9 @@ function App() {
 
   return (
     <Router>
+      <SettingsPreLoad
+        onAutoDetectedNetworksChange={setAutoDetectedNetworks}
+      />
       <Navbar />
       <hr className="header-separator" />
       <main>
@@ -65,7 +72,9 @@ function App() {
             />
           </Route>
           <Route path="/settings">
-            <Settings />
+            <Settings
+              autoDetectedNetworks={autoDetectedNetworks}
+            />
           </Route>
           <Route path="/add">
             <EditHost
