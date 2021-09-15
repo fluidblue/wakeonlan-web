@@ -35,7 +35,7 @@ function EditHost(props: EditHostProps) {
   const [mac, setMac] = useState(currentHost ? currentHost.mac : '');
 
   function getHostById(id: string) {
-    const mac = id.replaceAll('-', ':');
+    const mac = id.replace(/-/g, ':');
     const host = props.savedHosts.find((item) => {
       return item.mac === mac;
     });
