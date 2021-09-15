@@ -37,7 +37,9 @@ function App() {
 
   const [toastItems, setToastItems] = useState<React.ReactNode[]>([]);
 
-  function onHostWoken(hostname: string, mac: string) {
+  function onHostWoken(hostname: string, mac: string, result: boolean) {
+    // TODO: Use result
+
     setToastItems(toastItems.concat(
       <ToastItem key={Date.now()}>
         Wake-on-LAN packet sent to:<br />

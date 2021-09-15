@@ -8,7 +8,7 @@ import SavedHost from './SavedHost';
 
 interface SavedHostsProps {
   onHostToBeAddedChange: React.Dispatch<React.SetStateAction<Host | null>>;
-  onHostWoken: (hostname: string, mac: string) => void;
+  onHostWoken: (hostname: string, mac: string, result: boolean) => void;
   savedHosts: Host[];
 }
 

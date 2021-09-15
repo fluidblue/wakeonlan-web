@@ -1,24 +1,48 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import './SavedHost.css';
 
 import { useHistory } from 'react-router-dom';
+
+import { API } from '../API';
 
 interface SavedHostProps {
   hostname: string;
   mac: string;
 
-  onWoken?: (hostname: string, mac: string) => void;
+  onWoken?: (hostname: string, mac: string, result: boolean) => void;
 }
 
 function SavedHost(props: SavedHostProps) {
   const history = useHistory();
+  const api = useContext(API);
+
+  async function wakeonlan(mac: string): Promise<boolean> {
+    const response = await fetch(api + '/wakeonlan', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        mac: mac
+        // TODO: Add port (and possibly address)
+      })
+    });
+    if (!response.ok) {
+      return false;
+    }
+    const responseObject = await response.json();
+    if (!responseObject || !responseObject.result || responseObject.result !== true) {
+      return false;
+    }
+    return true;
+  }
 
   function handleHostItemClick(e: React.MouseEvent<HTMLLIElement, MouseEvent>) {
-    console.log('wol ' + props.mac);
-
-    if (props.onWoken) {
-      props.onWoken(props.hostname, props.mac);
-    }
+    wakeonlan(props.mac).then((result) => {
+      if (props.onWoken) {
+        props.onWoken(props.hostname, props.mac, result);
+      }
+    });
   }
 
   const editLink = '/edit/' + props.mac.replace(/:/g, '-');
