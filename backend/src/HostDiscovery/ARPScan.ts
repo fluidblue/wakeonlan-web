@@ -75,9 +75,8 @@ export default class ARPScan implements HostDiscovery {
 			}));
 
 			childProcess.stderr.on("data", this.createChunkAssembler((line) => {
-				failed = true;
-				childProcess.kill();
-				reject(new Error(line));
+				// Ignore error, but print on stderr
+				console.error("Error arp-scan: " + line);
 			}));
 
 			childProcess.on("close", (code) => {
