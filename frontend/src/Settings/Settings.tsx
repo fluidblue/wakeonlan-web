@@ -3,8 +3,11 @@ import './Settings.css';
 
 import IPNetworkPanel from './IPNetworkPanel';
 import { IPNetwork } from 'wakeonlan-utilities';
+import { stringToIpNetworks } from './IPUtilities';
 
 const WAKEONLAN_DEFAULT_PORT: number = 9;
+const PORT_MIN: number = 0;
+const PORT_MAX: number = 65535;
 
 interface SettingsProps {
   autoDetectedNetworks: IPNetwork[];
@@ -13,6 +16,7 @@ interface SettingsProps {
 function Settings(props: SettingsProps) {
   const [wolPort, setWolPort] = useState<number>(WAKEONLAN_DEFAULT_PORT);
   const [autoDetectNetworks, setAutoDetectNetworks] = useState<boolean>(true);
+  const [networksString, setNetworksString] = useState<string>('');
 
   const [wasValidated, setWasValidated] = useState(false);
 
@@ -21,12 +25,34 @@ function Settings(props: SettingsProps) {
     setWolPort(value);
   }
 
+  function save(wolPort: number, autoDetectNetworks: boolean, ipNetworks: IPNetwork[]) {
+    // TODO: Save to server
+    console.log('wolPort', wolPort);
+    console.log('autoDetectNetworks', autoDetectNetworks);
+    console.log('ipNetworks', ipNetworks);
+  }
+
   function onSave(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
 
-    setWasValidated(true);
+    if (wolPort < PORT_MIN || wolPort > PORT_MAX) {
+      setWasValidated(true);
+      return;
+    }
 
-    // TODO
+    let ipNetworks: IPNetwork[] | null = null;
+    if (autoDetectNetworks) {
+      ipNetworks = props.autoDetectedNetworks;
+    } else {
+      try {
+        ipNetworks = stringToIpNetworks(networksString);
+      } catch (err) {
+        setWasValidated(true);
+        return;
+      }
+    }
+
+    save(wolPort, autoDetectNetworks, ipNetworks);
   }
 
   function onReset() {
@@ -46,6 +72,8 @@ function Settings(props: SettingsProps) {
           autoDetectedNetworks={props.autoDetectedNetworks}
           autoDetect={autoDetectNetworks}
           onAutoDetectChange={setAutoDetectNetworks}
+          networks={networksString}
+          onNetworksChange={setNetworksString}
         />
         {/* <div className="mb-3">
           <label htmlFor="selectMethod" className="form-label">Method</label>
@@ -64,8 +92,8 @@ function Settings(props: SettingsProps) {
             placeholder="Enter port number"
             value={wolPort}
             onChange={onInputPortChange}
-            min={0}
-            max={65535}
+            min={PORT_MIN}
+            max={PORT_MAX}
             required
           />
         </div>
