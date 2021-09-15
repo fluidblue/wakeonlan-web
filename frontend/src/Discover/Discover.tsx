@@ -72,7 +72,7 @@ function Discover(props: DiscoverProps) {
       onDiscoveredHostsChange([]);
       setScanning(true);
 
-      const response = await fetch(api + '/host-discovery/arp-scan', {
+      const response = await fetch(api + '/host-discovery/arp-cache-and-ping', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
