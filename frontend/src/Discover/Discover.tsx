@@ -43,7 +43,6 @@ function Discover(props: DiscoverProps) {
   const fetchHostname = useCallback(async (ip: string) => {
     const response = await fetch(api + '/device-name/host-name', {
       method: 'POST',
-      keepalive: true,
       headers: {
         'Content-Type': 'application/json'
       },
