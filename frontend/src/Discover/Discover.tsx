@@ -88,7 +88,12 @@ function Discover(props: DiscoverProps) {
         if (line.length === 0) {
           continue;
         }
-        const hostMacIp: HostMacIP = JSON.parse(line);
+        const resultObject = JSON.parse(line);
+        if (!resultObject.result) {
+          data = [];
+          break;
+        }
+        const hostMacIp: HostMacIP = resultObject;
 
         const host: Host = {
           name: await fetchHostname(hostMacIp.ip),
