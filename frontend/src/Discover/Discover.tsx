@@ -89,7 +89,7 @@ function Discover(props: DiscoverProps) {
           continue;
         }
         const resultObject = JSON.parse(line);
-        if (!resultObject.result) {
+        if (resultObject.result === false) {
           data = [];
           break;
         }
