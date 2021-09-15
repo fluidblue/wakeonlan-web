@@ -5,27 +5,29 @@ import { ipNetworksToString } from './IPUtilities'
 
 interface IPNetworkPanelProps {
   autoDetectedNetworks: IPNetwork[];
+
+  autoDetect: boolean;
+  onAutoDetectChange: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function IPNetworkPanel(props: IPNetworkPanelProps) {
   const [inputNetworks, setInputNetworks] = useState<string>('');
-  const [inputAutoDetect, setInputAutoDetect] = useState<boolean>(true);
 
   // When the component is mounted, every time autoDetectedNetworks or inputAutoDetect changes,
   // update inputNetworks to match autoDetectedNetworks (but only if inputAutoDetect is true).
-  const { autoDetectedNetworks } = props;
+  const { autoDetectedNetworks, autoDetect } = props;
   useEffect(() => {
-    if (inputAutoDetect) {
+    if (autoDetect) {
       setInputNetworks(ipNetworksToString(autoDetectedNetworks));
     }
-  }, [autoDetectedNetworks, inputAutoDetect]);
+  }, [autoDetectedNetworks, autoDetect]);
 
   function onInputNetworkChange (e: React.ChangeEvent<HTMLInputElement>) {
     setInputNetworks(e.target.value);
   }
 
   function onCheckboxAutoDetectChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setInputAutoDetect(e.target.checked);
+    props.onAutoDetectChange(e.target.checked);
   }
 
   const inputNetworkInvalid: boolean = false;
@@ -42,7 +44,7 @@ function IPNetworkPanel(props: IPNetworkPanelProps) {
           value={inputNetworks}
           placeholder="Enter network, e.g. 192.168.178.0/24"
           onChange={onInputNetworkChange}
-          disabled={inputAutoDetect}
+          disabled={props.autoDetect}
           required
         />
       </div>
@@ -51,7 +53,7 @@ function IPNetworkPanel(props: IPNetworkPanelProps) {
           type="checkbox"
           className="form-check-input"
           id="checkboxAutoDetect"
-          checked={inputAutoDetect}
+          checked={props.autoDetect}
           onChange={onCheckboxAutoDetectChange}
         />
         &nbsp;

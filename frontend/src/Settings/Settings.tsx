@@ -12,6 +12,7 @@ interface SettingsProps {
 
 function Settings(props: SettingsProps) {
   const [wolPort, setWolPort] = useState<number>(WAKEONLAN_DEFAULT_PORT);
+  const [autoDetectNetworks, setAutoDetectNetworks] = useState<boolean>(true);
 
   const [wasValidated, setWasValidated] = useState(false);
 
@@ -31,7 +32,7 @@ function Settings(props: SettingsProps) {
   function onReset() {
     setWasValidated(false);
 
-    // setAutoDetectNetworks(true); // TODO
+    setAutoDetectNetworks(true);
     setWolPort(WAKEONLAN_DEFAULT_PORT);
   }
 
@@ -43,6 +44,8 @@ function Settings(props: SettingsProps) {
         <h6 className="mb-3 fw-bold">Host discovery</h6>
         <IPNetworkPanel
           autoDetectedNetworks={props.autoDetectedNetworks}
+          autoDetect={autoDetectNetworks}
+          onAutoDetectChange={setAutoDetectNetworks}
         />
         {/* <div className="mb-3">
           <label htmlFor="selectMethod" className="form-label">Method</label>
