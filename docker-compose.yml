@@ -9,8 +9,7 @@ services:
             context: .
             dockerfile: Dockerfile
         init: true
-        ports:
-            - 8000:8000
+        network_mode: "host"
         logging:
             driver: "json-file"
             options:
