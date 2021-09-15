@@ -3,7 +3,7 @@ import React from 'react';
 function getAPIUri() {
   let uri = '/api';
   if (process.env.NODE_ENV === 'development') {
-    uri = 'http://localhost:8000' + uri;
+    uri = window.location.protocol + '//' + window.location.hostname + ':8000' + uri;
   }
   return uri;
 }
