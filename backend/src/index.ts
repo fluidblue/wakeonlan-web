@@ -11,7 +11,7 @@
  * ==================================================================
  */
  
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import path from "path";
 import net from "net";
@@ -24,6 +24,7 @@ import WolNativeNode from "./WakeOnLan/WolNativeNode";
 
 import { HostDiscovery } from "./HostDiscovery/HostDiscovery";
 import ARPScan from "./HostDiscovery/ARPScan"
+import ARPCacheAndPing from "./HostDiscovery/ARPCacheAndPing";
 
 import { HostNaming } from "./HostNaming/HostNaming";
 import { DNSNaming } from "./HostNaming/DNSNaming";
@@ -91,7 +92,7 @@ app.post("/api/device-name/vendor-name", wrap(async (req, res, next) => {
 	res.sendStatus(501);
 }));
 
-app.post("/api/host-discovery/arp-scan", wrap(async (req, res, next) => {
+async function hostDiscovery(method: HostDiscovery, req: Request, res: Response, next: NextFunction) {
 	const cidrIpNetwork = req.body["ip-network"];
 	let ipNetwork: IPNetwork;
 	try {
@@ -108,8 +109,7 @@ app.post("/api/host-discovery/arp-scan", wrap(async (req, res, next) => {
 	res.set("Transfer-Encoding", "chunked");
 
 	try {
-		const hostDiscovery: HostDiscovery = new ARPScan();
-		await hostDiscovery.discover(ipNetwork, undefined, (ip, mac) => {
+		await method.discover(ipNetwork, undefined, (ip, mac) => {
 			// Host discovered
 			const host = {
 				ip: ip,
@@ -129,13 +129,14 @@ app.post("/api/host-discovery/arp-scan", wrap(async (req, res, next) => {
 		res.end();
 	}
 	next();
+}
+
+app.post("/api/host-discovery/arp-scan", wrap(async (req, res, next) => {
+	await hostDiscovery(new ARPScan(), req, res, next);
 }));
 
 app.post("/api/host-discovery/arp-cache-and-ping", wrap(async (req, res, next) => {
-	const cidrIpNetwork = req.body["ip-network"];
-
-	// Send 501: Not Implemented
-	res.sendStatus(501);
+	await hostDiscovery(new ARPCacheAndPing(), req, res, next);
 }));
 
 app.post("/api/wakeonlan", wrap(async (req, res, next) => {
