@@ -78,7 +78,7 @@ function Discover(props: DiscoverProps) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          'ip-network': '192.168.188.0/24' // TODO
+          'ip-network': '192.168.188.0/24' // TODO: Specify nets configured in settings
         })
       });
       const rawData = await response.text();
