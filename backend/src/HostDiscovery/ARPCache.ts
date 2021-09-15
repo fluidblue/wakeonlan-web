@@ -53,14 +53,13 @@ export class ARPCache {
 	static async getARPCache(): Promise<ARPCacheEntry[]> {
 		const rawARPCache = await this.getRawARPCache();
 
-		let arpCache: ARPCacheEntry[] = [];
-		let rawEntry;
-		while ((rawEntry = this.RE_ARP_CACHE_ENTRY.exec(rawARPCache)) !== null) {
-			arpCache.push({
+		const rawEntries = [...rawARPCache.matchAll(this.RE_ARP_CACHE_ENTRY)];
+		const arpCache: ARPCacheEntry[] = rawEntries.map((rawEntry) => {
+			return {
 				ip: rawEntry[1],
 				mac: rawEntry[2]
-			});
-		}
+			};
+		});
 
 		return arpCache;
 	}
