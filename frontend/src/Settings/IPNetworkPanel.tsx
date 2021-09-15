@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 import { IPNetwork } from 'wakeonlan-utilities';
-import { ipNetworksToString } from './IPUtilities'
+import { ipNetworksToString, isIpNetworksStringValid } from './IPUtilities'
 
 interface IPNetworkPanelProps {
   autoDetectedNetworks: IPNetwork[];
@@ -11,6 +11,8 @@ interface IPNetworkPanelProps {
 
   networks: string;
   onNetworksChange: React.Dispatch<React.SetStateAction<string>>;
+
+  wasValidated: boolean;
 }
 
 function IPNetworkPanel(props: IPNetworkPanelProps) {
@@ -32,8 +34,13 @@ function IPNetworkPanel(props: IPNetworkPanelProps) {
     props.onAutoDetectChange(e.target.checked);
   }
 
-  const inputNetworkInvalid: boolean = false;
-  const inputNetworkClassName = inputNetworkInvalid ? 'form-control is-invalid' : 'form-control';
+  let inputNetworksClassName = 'form-control';
+  if (props.wasValidated) {
+    const inputNetworksValid = isIpNetworksStringValid(props.networks);
+    if (!inputNetworksValid) {
+      inputNetworksClassName += ' is-invalid';
+    }
+  }
 
   return (
     <>
@@ -41,8 +48,8 @@ function IPNetworkPanel(props: IPNetworkPanelProps) {
         <label htmlFor="inputNetwork" className="form-label">IP network</label>
         <input
           type="text"
-          className={inputNetworkClassName}
-          id="inputNetwork"
+          className={inputNetworksClassName}
+          id="inputNetworks"
           value={props.networks}
           placeholder="Enter network, e.g. 192.168.178.0/24"
           onChange={onInputNetworkChange}

@@ -17,3 +17,12 @@ export function stringToIpNetworks(value: string): IPNetwork[] {
   }
   return result;
 }
+
+export function isIpNetworksStringValid(networks: string): boolean {
+  try {
+    stringToIpNetworks(networks);
+  } catch (err) {
+    return false;
+  }
+  return true;
+}

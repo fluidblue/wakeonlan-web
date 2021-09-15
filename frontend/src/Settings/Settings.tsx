@@ -3,7 +3,7 @@ import './Settings.css';
 
 import IPNetworkPanel from './IPNetworkPanel';
 import { IPNetwork } from 'wakeonlan-utilities';
-import { stringToIpNetworks } from './IPUtilities';
+import { isIpNetworksStringValid, stringToIpNetworks } from './IPUtilities';
 
 const WAKEONLAN_DEFAULT_PORT: number = 9;
 const PORT_MIN: number = 0;
@@ -44,14 +44,14 @@ function Settings(props: SettingsProps) {
     if (autoDetectNetworks) {
       ipNetworks = props.autoDetectedNetworks;
     } else {
-      try {
-        ipNetworks = stringToIpNetworks(networksString);
-      } catch (err) {
+      if (!isIpNetworksStringValid(networksString)) {
         setWasValidated(true);
         return;
       }
+      ipNetworks = stringToIpNetworks(networksString);
     }
 
+    setWasValidated(false);
     save(wolPort, autoDetectNetworks, ipNetworks);
   }
 
@@ -74,6 +74,7 @@ function Settings(props: SettingsProps) {
           onAutoDetectChange={setAutoDetectNetworks}
           networks={networksString}
           onNetworksChange={setNetworksString}
+          wasValidated={wasValidated}
         />
         {/* <div className="mb-3">
           <label htmlFor="selectMethod" className="form-label">Method</label>
