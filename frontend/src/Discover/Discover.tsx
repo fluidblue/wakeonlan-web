@@ -12,6 +12,23 @@ interface HostMacIP {
   mac: string;
 }
 
+async function fetchHostname(ip: string) {
+  const response = await fetch(apiUri + '/device-name/host-name', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      ip: ip
+    })
+  });
+  if (response.ok) {
+    return response.text();
+  } else {
+    return ip;
+  }
+}
+
 interface DiscoverProps {
   onHostToBeAddedChange: React.Dispatch<React.SetStateAction<Host | null>>;
 
@@ -41,23 +58,6 @@ function Discover(props: DiscoverProps) {
   function handleRescanClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     props.onScannedChange(false);
   }
-
-  const fetchHostname = useCallback(async (ip: string) => {
-    const response = await fetch(apiUri + '/device-name/host-name', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        ip: ip
-      })
-    });
-    if (response.ok) {
-      return response.text();
-    } else {
-      return ip;
-    }
-  }, []);
 
   // Destructure props for useEffect
   const { scanned, onDiscoveredHostsChange, onScannedChange } = props;
@@ -115,7 +115,7 @@ function Discover(props: DiscoverProps) {
     return () => {
       ignore = true;
     };
-  }, [scanned, onDiscoveredHostsChange, onScannedChange, fetchHostname]);
+  }, [scanned, onDiscoveredHostsChange, onScannedChange]);
 
   let spinner = null;
   if (scanning) {
