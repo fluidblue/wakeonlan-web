@@ -6,6 +6,7 @@ import HostItem from './HostItem';
 import Host from '../Host';
 import { apiUri } from '../API';
 import { IPFunctions, IPNetwork } from 'wakeonlan-utilities';
+import { ipNetworksToString } from '../IPUtilities';
 
 interface HostMacIP {
   ip: string;
@@ -130,9 +131,10 @@ function Discover(props: DiscoverProps) {
 
   let spinner = null;
   if (scanning) {
+    const ipNetworksString = ipNetworksToString(ipNetworks);
     spinner = (
       <div className="d-flex align-items-center mx-2 spinner">
-        <span className="fw-bold">Scanning 192.168.188.0/24</span>
+        <span className="fw-bold">Scanning {ipNetworksString}</span>
         <div className="spinner-border ms-auto" role="status" aria-hidden="true"></div>
       </div>
     );

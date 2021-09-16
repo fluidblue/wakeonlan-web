@@ -3,7 +3,7 @@ import './Settings.css';
 
 import IPNetworkPanel from './IPNetworkPanel';
 import { IPNetwork } from 'wakeonlan-utilities';
-import { isIpNetworksStringValid, stringToIpNetworks } from './IPUtilities';
+import { isIpNetworksStringValid, stringToIpNetworks } from '../IPUtilities';
 
 const WAKEONLAN_DEFAULT_PORT: number = 9;
 const PORT_MIN: number = 0;

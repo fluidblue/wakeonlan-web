@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 import { IPNetwork } from 'wakeonlan-utilities';
-import { ipNetworksToString, isIpNetworksStringValid } from './IPUtilities'
+import { ipNetworksToString, isIpNetworksStringValid } from '../IPUtilities'
 
 interface IPNetworkPanelProps {
   autoDetectedNetworks: IPNetwork[];
