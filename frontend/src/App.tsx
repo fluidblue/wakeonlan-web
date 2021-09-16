@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 
 import {
@@ -34,6 +34,8 @@ function App() {
   const [discoveredHosts, setDiscoveredHosts] = useState<Host[]>([]);
 
   const [autoDetectedNetworks, setAutoDetectedNetworks] = useState<IPNetwork[]>([]);
+  const [autoDetectNetworks, setAutoDetectNetworks] = useState<boolean>(true);
+  const [ipNetworks, setIpNetworks] = useState<IPNetwork[]>([]);
 
   const [toastItems, setToastItems] = useState<React.ReactNode[]>([]);
 
@@ -55,6 +57,12 @@ function App() {
       </ToastItem>
     ));
   }
+
+  useEffect(() => {
+    if (autoDetectNetworks) {
+      setIpNetworks(autoDetectedNetworks);
+    }
+  }, [autoDetectedNetworks]);
 
   return (
     <Router>
@@ -79,11 +87,16 @@ function App() {
               discoveredHosts={discoveredHosts}
               onScannedChange={setScanned}
               scanned={scanned}
+              ipNetworks={ipNetworks}
             />
           </Route>
           <Route path="/settings">
             <Settings
               autoDetectedNetworks={autoDetectedNetworks}
+              autoDetectNetworks={autoDetectNetworks}
+              onAutoDetectNetworksChange={setAutoDetectNetworks}
+              ipNetworks={ipNetworks}
+              onIpNetworksChange={setIpNetworks}
             />
           </Route>
           <Route path="/add">

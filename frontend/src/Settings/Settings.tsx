@@ -11,11 +11,16 @@ const PORT_MAX: number = 65535;
 
 interface SettingsProps {
   autoDetectedNetworks: IPNetwork[];
+
+  ipNetworks: IPNetwork[];
+  onIpNetworksChange: React.Dispatch<React.SetStateAction<IPNetwork[]>>;
+
+  autoDetectNetworks: boolean;
+  onAutoDetectNetworksChange: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function Settings(props: SettingsProps) {
   const [wolPort, setWolPort] = useState<number>(WAKEONLAN_DEFAULT_PORT);
-  const [autoDetectNetworks, setAutoDetectNetworks] = useState<boolean>(true);
   const [networksString, setNetworksString] = useState<string>('');
 
   const [wasValidated, setWasValidated] = useState(false);
@@ -25,7 +30,7 @@ function Settings(props: SettingsProps) {
     setWolPort(value);
   }
 
-  function save(wolPort: number, autoDetectNetworks: boolean, ipNetworks: IPNetwork[]) {
+  function saveToServer(wolPort: number, autoDetectNetworks: boolean, ipNetworks: IPNetwork[]) {
     // TODO: Save to server
     console.log('wolPort', wolPort);
     console.log('autoDetectNetworks', autoDetectNetworks);
@@ -41,7 +46,7 @@ function Settings(props: SettingsProps) {
     }
 
     let ipNetworks: IPNetwork[] | null = null;
-    if (autoDetectNetworks) {
+    if (props.autoDetectNetworks) {
       ipNetworks = props.autoDetectedNetworks;
     } else {
       if (!isIpNetworksStringValid(networksString)) {
@@ -52,13 +57,14 @@ function Settings(props: SettingsProps) {
     }
 
     setWasValidated(false);
-    save(wolPort, autoDetectNetworks, ipNetworks);
+    props.onIpNetworksChange(ipNetworks);
+    saveToServer(wolPort, props.autoDetectNetworks, ipNetworks);
   }
 
   function onReset() {
     setWasValidated(false);
 
-    setAutoDetectNetworks(true);
+    props.onAutoDetectNetworksChange(true);
     setWolPort(WAKEONLAN_DEFAULT_PORT);
   }
 
@@ -70,8 +76,8 @@ function Settings(props: SettingsProps) {
         <h6 className="mb-3 fw-bold">Host discovery</h6>
         <IPNetworkPanel
           autoDetectedNetworks={props.autoDetectedNetworks}
-          autoDetect={autoDetectNetworks}
-          onAutoDetectChange={setAutoDetectNetworks}
+          autoDetect={props.autoDetectNetworks}
+          onAutoDetectChange={props.onAutoDetectNetworksChange}
           networks={networksString}
           onNetworksChange={setNetworksString}
           wasValidated={wasValidated}

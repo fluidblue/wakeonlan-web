@@ -5,6 +5,7 @@ import './Discover.css';
 import HostItem from './HostItem';
 import Host from '../Host';
 import { API } from '../API';
+import { IPNetwork } from 'wakeonlan-utilities';
 
 interface HostMacIP {
   ip: string;
@@ -19,6 +20,8 @@ interface DiscoverProps {
 
   onScannedChange: React.Dispatch<React.SetStateAction<boolean>>;
   scanned: boolean;
+
+  ipNetworks: IPNetwork[];
 }
 
 function Discover(props: DiscoverProps) {
