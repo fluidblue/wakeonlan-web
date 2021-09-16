@@ -98,13 +98,12 @@ function Discover(props: DiscoverProps) {
   // Start scanning when the activity is entered.
   useEffect(() => {
     async function fetchData() {
-      if (scanned) {
+      if (scanned || ipNetworks.length === 0) {
         return;
       }
       onDiscoveredHostsChange([]);
       setScanning(true);
 
-      console.log(ipNetworks); // TODO: Remove
       const hostDiscoveryPromises: Promise<Host[]>[] = [];
       for (const ipNetwork of ipNetworks) {
         const hostDiscoveryPromise = hostDiscovery(ipNetwork);
