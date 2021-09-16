@@ -19,7 +19,7 @@ services:
     mariadb:
         image: mariadb:10.6
         environment:
-            MARIADB_ROOT_PASSWORD: test_password
+            MARIADB_ROOT_PASSWORD: "test_password"
         network_mode: "host"
         volumes:
             - mariadb-data:/var/lib/mysql
