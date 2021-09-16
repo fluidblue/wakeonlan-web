@@ -62,7 +62,7 @@ function App() {
     if (autoDetectNetworks) {
       setIpNetworks(autoDetectedNetworks);
     }
-  }, [autoDetectedNetworks]);
+  }, [autoDetectNetworks, autoDetectedNetworks]);
 
   return (
     <Router>
