@@ -1,18 +1,18 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import './Discover.css';
 
 import HostItem from './HostItem';
 import Host from '../Host';
 import { apiUri } from '../API';
-import { IPNetwork } from 'wakeonlan-utilities';
+import { IPFunctions, IPNetwork } from 'wakeonlan-utilities';
 
 interface HostMacIP {
   ip: string;
   mac: string;
 }
 
-async function fetchHostname(ip: string) {
+async function fetchHostname(ip: string): Promise<string> {
   const response = await fetch(apiUri + '/device-name/host-name', {
     method: 'POST',
     headers: {
@@ -27,6 +27,39 @@ async function fetchHostname(ip: string) {
   } else {
     return ip;
   }
+}
+
+async function hostDiscovery(ipNetwork: IPNetwork): Promise<Host[]> {
+  const response = await fetch(apiUri + '/host-discovery/arp-scan', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      'ip-network': IPFunctions.getStringFromIPNetwork(ipNetwork)
+    })
+  });
+  const rawData = await response.text();
+  let data: Host[] = [];
+  for (let line of rawData.split('\n')) {
+    line = line.trim();
+    if (line.length === 0) {
+      continue;
+    }
+    const resultObject = JSON.parse(line);
+    if (resultObject.result === false) {
+      data = [];
+      break;
+    }
+    const hostMacIp: HostMacIP = resultObject;
+
+    const host: Host = {
+      name: await fetchHostname(hostMacIp.ip),
+      mac: hostMacIp.mac
+    };
+    data.push(host);
+  }
+  return data;
 }
 
 interface DiscoverProps {
@@ -60,12 +93,10 @@ function Discover(props: DiscoverProps) {
   }
 
   // Destructure props for useEffect
-  const { scanned, onDiscoveredHostsChange, onScannedChange } = props;
+  const { scanned, ipNetworks, onDiscoveredHostsChange, onScannedChange } = props;
 
   // Start scanning when the activity is entered.
   useEffect(() => {
-    let ignore = false;
-
     async function fetchData() {
       if (scanned) {
         return;
@@ -73,49 +104,23 @@ function Discover(props: DiscoverProps) {
       onDiscoveredHostsChange([]);
       setScanning(true);
 
-      const response = await fetch(apiUri + '/host-discovery/arp-scan', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          'ip-network': '192.168.188.0/24' // TODO: Specify nets configured in settings
-        })
-      });
-      const rawData = await response.text();
-      let data: Host[] = [];
-      for (let line of rawData.split('\n')) {
-        line = line.trim();
-        if (line.length === 0) {
-          continue;
-        }
-        const resultObject = JSON.parse(line);
-        if (resultObject.result === false) {
-          data = [];
-          break;
-        }
-        const hostMacIp: HostMacIP = resultObject;
-
-        const host: Host = {
-          name: await fetchHostname(hostMacIp.ip),
-          mac: hostMacIp.mac
-        };
-        data.push(host);
+      console.log(ipNetworks); // TODO: Remove
+      const hostDiscoveryPromises: Promise<Host[]>[] = [];
+      for (const ipNetwork of ipNetworks) {
+        const hostDiscoveryPromise = hostDiscovery(ipNetwork);
+        hostDiscoveryPromises.push(hostDiscoveryPromise);
       }
+      const hostDiscoveryResults: Host[][] = await Promise.all(hostDiscoveryPromises);
+      const hosts: Host[] = hostDiscoveryResults.reduce((previousValue, currentValue) => {
+        return previousValue.concat(currentValue);
+      }, []);
 
-      if (ignore) {
-        return;
-      }
       setScanning(false);
       onScannedChange(true);
-      onDiscoveredHostsChange(data);
+      onDiscoveredHostsChange(hosts);
     }
     fetchData();
-
-    return () => {
-      ignore = true;
-    };
-  }, [scanned, onDiscoveredHostsChange, onScannedChange]);
+  }, [scanned, ipNetworks, onDiscoveredHostsChange, onScannedChange]);
 
   let spinner = null;
   if (scanning) {
