@@ -51,18 +51,18 @@ export default class WolNativeNode extends WakeOnLan {
 				reject(err);
 			});
 
-			socket.connect(options!.port!, options!.address, () => {
+			socket.on("listening", () => {
 				// Set SO_BROADCAST socket option to allow sending to a broadcast address
 				socket.setBroadcast(true);
+			});
 
-				socket.send(magicPacket, 0, magicPacket.length, (err) => {
-					socket.close();
-					if (err) {
-						reject(err);
-						return;
-					}
-					resolve();
-				});
+			socket.send(magicPacket, 0, magicPacket.length, options!.port!, options!.address, (err) => {
+				socket.close();
+				if (err) {
+					reject(err);
+					return;
+				}
+				resolve();
 			});
 		});
 		await promise;
