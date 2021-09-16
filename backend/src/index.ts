@@ -14,6 +14,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import path from "path";
+import fs from "fs";
 import net from "net";
 
 import wrap from "./wrap";
@@ -33,7 +34,16 @@ import { IPFunctions, IPNetwork, MACFunctions } from "wakeonlan-utilities";
 import { IPNetworks } from "./IPNetworks/IPNetworks";
 
 const app = express();
+
 const port = process.env.PORT || 8000;
+const httpdocs = "httpdocs";
+const indexRewrites = [
+	"/hosts",
+	"/discover",
+	"/settings",
+	"/add",
+	"/edit/?*"
+];
 
 // Parse application/json and application/x-www-form-urlencoded in POST requests.
 app.use(express.json());
@@ -50,7 +60,24 @@ app.use(wrap(async function (req, res, next) {
 app.use(cors());
 
 // Serve static files
-app.use("/", express.static(path.join(__dirname, "httpdocs")));
+app.use("/", express.static(path.join(__dirname, httpdocs)));
+
+// Rewrites to index.html
+app.use(indexRewrites, wrap(async (req, res, next) => {
+	const indexFile = path.join(__dirname, httpdocs, "index.html");
+
+	// Check if file exists
+	fs.stat(indexFile, (err, stats) => {
+		if (err) {
+			// File does not exist or is not accessible
+			next();
+			return;
+		}
+
+		// Send file
+		res.sendFile(indexFile);
+	});
+}));
 
 /**
  * In the following, the REST API is defined.
