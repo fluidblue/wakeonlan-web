@@ -111,9 +111,16 @@ function Discover(props: DiscoverProps) {
         hostDiscoveryPromises.push(hostDiscoveryPromise);
       }
       const hostDiscoveryResults: Host[][] = await Promise.all(hostDiscoveryPromises);
-      const hosts: Host[] = hostDiscoveryResults.reduce((previousValue, currentValue) => {
+      let hosts: Host[] = hostDiscoveryResults.reduce((previousValue, currentValue) => {
         return previousValue.concat(currentValue);
       }, []);
+
+      // Filter out duplicates
+      hosts = hosts.filter((host, index) => {
+        return index === hosts.findIndex((item) => {
+          return item.name === host.name && item.mac === host.mac;
+        });
+      });
 
       setScanning(false);
       onScannedChange(true);
