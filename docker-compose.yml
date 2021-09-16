@@ -20,8 +20,7 @@ services:
         image: mariadb:10.6
         environment:
             MARIADB_ROOT_PASSWORD: test_password
-        ports:
-            - 127.0.0.1:3306:3306
+        network_mode: "host"
         volumes:
             - mariadb-data:/var/lib/mysql
         logging:
@@ -33,8 +32,7 @@ services:
     adminer:
         image: adminer
         restart: always
-        ports:
-            - 8080:8080
+        network_mode: "host"
 
 volumes:
     mariadb-data:
