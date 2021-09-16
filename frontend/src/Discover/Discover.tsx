@@ -1,10 +1,10 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import './Discover.css';
 
 import HostItem from './HostItem';
 import Host from '../Host';
-import { API } from '../API';
+import { apiUri } from '../API';
 import { IPNetwork } from 'wakeonlan-utilities';
 
 interface HostMacIP {
@@ -27,7 +27,6 @@ interface DiscoverProps {
 function Discover(props: DiscoverProps) {
   const [scanning, setScanning] = useState(false);
   const history = useHistory();
-  const api = useContext(API);
 
   function handleItemClick(host: Host) {
     props.onHostToBeAddedChange(host);
@@ -44,7 +43,7 @@ function Discover(props: DiscoverProps) {
   }
 
   const fetchHostname = useCallback(async (ip: string) => {
-    const response = await fetch(api + '/device-name/host-name', {
+    const response = await fetch(apiUri + '/device-name/host-name', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -58,8 +57,7 @@ function Discover(props: DiscoverProps) {
     } else {
       return ip;
     }
-  }, [api]);
-  
+  }, []);
 
   // Destructure props for useEffect
   const { scanned, onDiscoveredHostsChange, onScannedChange } = props;
@@ -75,7 +73,7 @@ function Discover(props: DiscoverProps) {
       onDiscoveredHostsChange([]);
       setScanning(true);
 
-      const response = await fetch(api + '/host-discovery/arp-scan', {
+      const response = await fetch(apiUri + '/host-discovery/arp-scan', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -117,7 +115,7 @@ function Discover(props: DiscoverProps) {
     return () => {
       ignore = true;
     };
-  }, [scanned, api, onDiscoveredHostsChange, onScannedChange, fetchHostname]);
+  }, [scanned, onDiscoveredHostsChange, onScannedChange, fetchHostname]);
 
   let spinner = null;
   if (scanning) {

@@ -1,5 +1,3 @@
-import React from 'react';
-
 function getAPIUri() {
   let uri = '/api';
   if (process.env.NODE_ENV === 'development') {
@@ -8,4 +6,4 @@ function getAPIUri() {
   return uri;
 }
 
-export const API = React.createContext(getAPIUri());
+export const apiUri = getAPIUri();

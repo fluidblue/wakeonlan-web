@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import './SavedHost.css';
 
 import { useHistory } from 'react-router-dom';
 
-import { API } from '../API';
+import { apiUri } from '../API';
 
 interface SavedHostProps {
   hostname: string;
@@ -14,10 +14,9 @@ interface SavedHostProps {
 
 function SavedHost(props: SavedHostProps) {
   const history = useHistory();
-  const api = useContext(API);
 
   async function wakeonlan(mac: string): Promise<boolean> {
-    const response = await fetch(api + '/wakeonlan', {
+    const response = await fetch(apiUri + '/wakeonlan', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

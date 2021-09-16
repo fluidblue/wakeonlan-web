@@ -1,21 +1,19 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 import { IPFunctions, IPNetwork } from 'wakeonlan-utilities';
-import { API } from '../API';
+import { apiUri } from '../API';
 
 interface SettingsPreLoadProps {
   onAutoDetectedNetworksChange: React.Dispatch<React.SetStateAction<IPNetwork[]>>
 }
 
 function SettingsPreLoad(props: SettingsPreLoadProps) {
-  const api = useContext(API);
-
   // Execute once on component load.
   // Fetch data for autoDetectedNetworks.
   const { onAutoDetectedNetworksChange } = props;
   useEffect(() => {
     const fetchData = async () => {
-      const uri = api + '/ip-networks';
+      const uri = apiUri + '/ip-networks';
       const response = await fetch(uri, {
         method: 'GET'
       });
@@ -36,7 +34,7 @@ function SettingsPreLoad(props: SettingsPreLoadProps) {
       onAutoDetectedNetworksChange(data);
     };
     fetchData();
-  }, [api, onAutoDetectedNetworksChange]);
+  }, [onAutoDetectedNetworksChange]);
 
   return <></>;
 }
