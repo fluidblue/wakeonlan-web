@@ -198,10 +198,10 @@ app.post("/api/wakeonlan", wrap(async (req, res, next) => {
 }));
 
 const database: Database = new Database();
-database.getSettings().then((value) => {
+database.settingsGet().then((value) => {
 	console.log(value); // TODO: Remove
 });
-database.getSavedHosts().then((value) => {
+database.savedHostsGet().then((value) => {
 	console.log(value); // TODO: Remove
 });
 

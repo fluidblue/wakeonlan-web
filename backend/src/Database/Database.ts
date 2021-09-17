@@ -34,7 +34,7 @@ export default class Database {
 		});
 	}
 
-	async getSettings(): Promise<SettingsData | null> {
+	async settingsGet(): Promise<SettingsData | null> {
 		const settingsData: SettingsData = { ...settingsDataDefault };
 
 		let conn: mariadb.PoolConnection | null = null;
@@ -63,7 +63,7 @@ export default class Database {
 		return settingsData;
 	}
 
-	async getSavedHosts(): Promise<Host[]> {
+	async savedHostsGet(): Promise<Host[]> {
 		const savedHosts: Host[] = [];
 
 		let conn: mariadb.PoolConnection | null = null;
