@@ -104,4 +104,21 @@ export default class Database {
 		}
 		return false;
 	}
+
+	async savedHostsDelete(mac: string): Promise<boolean> {
+		let conn: mariadb.PoolConnection | null = null;
+		try {
+			conn = await this.pool.getConnection();
+
+			let res = await conn.query("DELETE FROM `SavedHosts` WHERE `mac` = ?", [mac]);
+			return res && res.affectedRows >= 1;
+		} catch (err) {
+			console.error("Error:", err); // TODO: Use a logger here
+		} finally {
+			if (conn) {
+				conn.end();
+			}
+		}
+		return false;
+	}
 }
