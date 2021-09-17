@@ -3,7 +3,7 @@ import './SavedHosts.css';
 
 import { Link, useHistory } from 'react-router-dom';
 
-import Host from '../Host';
+import { Host } from 'wakeonlan-utilities';
 import SavedHost from './SavedHost';
 
 interface SavedHostsProps {

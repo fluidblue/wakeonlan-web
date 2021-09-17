@@ -3,9 +3,8 @@ import { useHistory } from 'react-router';
 import './Discover.css';
 
 import HostItem from './HostItem';
-import Host from '../Host';
 import { apiUri } from '../API';
-import { IPFunctions, IPNetwork } from 'wakeonlan-utilities';
+import { Host, IPFunctions, IPNetwork } from 'wakeonlan-utilities';
 import { ipNetworksToString } from '../IPUtilities';
 
 interface HostMacIP {

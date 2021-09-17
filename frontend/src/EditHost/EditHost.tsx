@@ -6,8 +6,7 @@ import { Modal } from 'bootstrap';
 
 import NotFound from '../NotFound';
 
-import Host from '../Host';
-import { MACFunctions } from 'wakeonlan-utilities';
+import { MACFunctions, Host } from 'wakeonlan-utilities';
 
 interface EditHostProps {
   add?: boolean;

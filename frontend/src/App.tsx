@@ -18,8 +18,7 @@ import NotFound from './NotFound';
 import ToastContainer from './Toasts/ToastContainer';
 import ToastItem from './Toasts/ToastItem';
 
-import Host from './Host';
-import { IPNetwork } from 'wakeonlan-utilities';
+import { Host, IPNetwork } from 'wakeonlan-utilities';
 
 function App() {
   const [savedHosts, setSavedHosts] = useState<Host[]>([

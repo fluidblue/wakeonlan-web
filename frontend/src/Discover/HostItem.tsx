@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Host from '../Host';
+import { Host } from 'wakeonlan-utilities';
 
 interface HostProps {
   host: Host;
