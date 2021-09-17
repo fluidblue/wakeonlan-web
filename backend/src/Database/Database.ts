@@ -87,15 +87,18 @@ export default class Database {
 				"INSERT INTO `Settings` (`autoDetectNetworks`, `port`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `autoDetectNetworks` = ?, `port` = ?",
 				[settingsData.autoDetectNetworks, settingsData.wolPort, settingsData.autoDetectNetworks, settingsData.wolPort]
 			);
-			return res && res.affectedRows >= 1;
+			if (!res || res.affectedRows < 1) {
+				return false;
+			}
 		} catch (err) {
 			console.error("Error:", err); // TODO: Use a logger here
+			return false;
 		} finally {
 			if (conn) {
 				conn.end();
 			}
 		}
-		return false;
+		return true;
 	}
 
 	async savedHostsGet(): Promise<Host[]> {
@@ -129,15 +132,18 @@ export default class Database {
 			conn = await this.pool.getConnection();
 
 			let res = await conn.query("INSERT INTO `SavedHosts` (`mac`, `hostname`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `hostname` = ?", [host.mac, host.name, host.name]);
-			return res && res.affectedRows >= 1;
+			if (!res || res.affectedRows < 1) {
+				return false;
+			}
 		} catch (err) {
 			console.error("Error:", err); // TODO: Use a logger here
+			return false;
 		} finally {
 			if (conn) {
 				conn.end();
 			}
 		}
-		return false;
+		return true;
 	}
 
 	async savedHostsDelete(mac: string): Promise<boolean> {
@@ -146,14 +152,17 @@ export default class Database {
 			conn = await this.pool.getConnection();
 
 			let res = await conn.query("DELETE FROM `SavedHosts` WHERE `mac` = ?", [mac]);
-			return res && res.affectedRows >= 1;
+			if (!res || res.affectedRows < 1) {
+				return false;
+			}
 		} catch (err) {
 			console.error("Error:", err); // TODO: Use a logger here
+			return false;
 		} finally {
 			if (conn) {
 				conn.end();
 			}
 		}
-		return false;
+		return true;
 	}
 }
