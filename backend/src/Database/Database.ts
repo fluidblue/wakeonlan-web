@@ -70,7 +70,7 @@ export default class Database {
 		try {
 			conn = await this.pool.getConnection();
 
-			let rows = await conn.query("SELECT * FROM `SavedHosts`");
+			let rows = await conn.query("SELECT * FROM `SavedHosts` ORDER BY `hostname`");
 			for (const row of rows) {
 				savedHosts.push({
 					mac: row.mac,
