@@ -46,11 +46,15 @@ docker-compose up -d
     npm install
 
     # Update DATABASE_HOST to match your configuration. If you installed MariaDB locally, enter 127.0.0.1 as host.
-    nano start_development.sh 
+    nano development_start.sh
 
-    ./start_development.sh
+    ./development_start.sh
 
 **Test**
 
     cd backend
-    npm test
+
+    # Update DATABASE_HOST to match your configuration. If you installed MariaDB locally, enter 127.0.0.1 as host.
+    nano development_test.sh
+
+    ./development_test.sh
