@@ -205,6 +205,15 @@ app.get("/api/settings", wrap(async (req, res, next) => {
 	res.send(JSON.stringify(settingsData));
 }));
 
+app.put("/api/settings", wrap(async (req, res, next) => {
+	const result = await database.settingsPut(req.body);
+
+	res.set("Content-Type", "application/json");
+	res.send(JSON.stringify({
+		result: result
+	}));
+}));
+
 app.listen(port, () => {
 	console.log(`wakeonlan-web listening at http://localhost:${port}`);
 });
