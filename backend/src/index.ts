@@ -197,20 +197,6 @@ app.post("/api/wakeonlan", wrap(async (req, res, next) => {
 	next();
 }));
 
-const database: Database = new Database();
-database.settingsGet().then((value) => {
-	console.log(value); // TODO: Remove
-});
-database.savedHostsGet().then((value) => {
-	console.log(value); // TODO: Remove
-});
-database.savedHostsAdd({
-	name: "Hostname 8",
-	mac: "00:11:22:33:44:88"
-}).then((value) => {
-	console.log(value); // TODO: Remove
-});
-
 app.listen(port, () => {
 	console.log(`wakeonlan-web listening at http://localhost:${port}`);
 });

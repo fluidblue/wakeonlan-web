@@ -34,7 +34,7 @@ export default class Database {
 		});
 	}
 
-	async settingsGet(): Promise<SettingsData | null> {
+	async settingsGet(): Promise<SettingsData> {
 		const settingsData: SettingsData = { ...settingsDataDefault };
 
 		let conn: mariadb.PoolConnection | null = null;
