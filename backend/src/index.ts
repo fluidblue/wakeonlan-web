@@ -33,6 +33,8 @@ import { DNSNaming } from "./HostNaming/DNSNaming";
 import { IPFunctions, IPNetwork, MACFunctions } from "wakeonlan-utilities";
 import { IPNetworks } from "./IPNetworks/IPNetworks";
 
+import Database from "./Database/Database";
+
 const app = express();
 
 const port = process.env.PORT || 8000;
@@ -194,6 +196,8 @@ app.post("/api/wakeonlan", wrap(async (req, res, next) => {
 	}));
 	next();
 }));
+
+const database: Database = new Database();
 
 app.listen(port, () => {
 	console.log(`wakeonlan-web listening at http://localhost:${port}`);
