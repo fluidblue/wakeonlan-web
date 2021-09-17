@@ -125,7 +125,10 @@ export default class Database {
 		try {
 			conn = await this.pool.getConnection();
 
-			let res = await conn.query("INSERT INTO `SavedHosts` (`mac`, `hostname`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `hostname` = ?", [host.mac, host.name, host.name]);
+			let res = await conn.query(
+				"INSERT INTO `SavedHosts` (`mac`, `hostname`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `hostname` = ?",
+				[host.mac, host.name, host.name]
+			);
 			if (!res || res.affectedRows < 1) {
 				return false;
 			}
