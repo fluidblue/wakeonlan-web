@@ -87,4 +87,21 @@ export default class Database {
 
 		return savedHosts;
 	}
+
+	async savedHostsAdd(host: Host): Promise<boolean> {
+		let conn: mariadb.PoolConnection | null = null;
+		try {
+			conn = await this.pool.getConnection();
+
+			let res = await conn.query("INSERT INTO `SavedHosts` (`mac`, `hostname`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `hostname` = ?", [host.mac, host.name, host.name]);
+			return res && res.affectedRows >= 1;
+		} catch (err) {
+			console.error("Error:", err); // TODO: Use a logger here
+		} finally {
+			if (conn) {
+				conn.end();
+			}
+		}
+		return false;
+	}
 }

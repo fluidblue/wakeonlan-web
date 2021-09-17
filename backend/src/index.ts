@@ -204,6 +204,12 @@ database.settingsGet().then((value) => {
 database.savedHostsGet().then((value) => {
 	console.log(value); // TODO: Remove
 });
+database.savedHostsAdd({
+	name: "Hostname 8",
+	mac: "00:11:22:33:44:88"
+}).then((value) => {
+	console.log(value); // TODO: Remove
+});
 
 app.listen(port, () => {
 	console.log(`wakeonlan-web listening at http://localhost:${port}`);
