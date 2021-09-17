@@ -77,9 +77,14 @@ export default class Database {
 				}
 			}
 
+			res = await conn.query("DELETE FROM `Settings`");
+			if (res.warningStatus) {
+				return false;
+			}
+
 			res = await conn.query(
-				"INSERT INTO `Settings` (`autoDetectNetworks`, `port`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `autoDetectNetworks` = ?, `port` = ?",
-				[settingsData.autoDetectNetworks, settingsData.wolPort, settingsData.autoDetectNetworks, settingsData.wolPort]
+				"INSERT INTO `Settings` (`autoDetectNetworks`, `port`) VALUES (?, ?)",
+				[settingsData.autoDetectNetworks, settingsData.wolPort]
 			);
 			if (!res || res.affectedRows < 1) {
 				return false;
