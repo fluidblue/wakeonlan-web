@@ -33,7 +33,7 @@ import { DNSNaming } from "./HostNaming/DNSNaming";
 import { IPFunctions, IPNetwork, MACFunctions } from "wakeonlan-utilities";
 import { IPNetworks } from "./IPNetworks/IPNetworks";
 
-import Database from "./Database/Database";
+import Database, { SettingsData } from "./Database/Database";
 
 const app = express();
 
@@ -46,6 +46,9 @@ const indexRewrites = [
 	"/add",
 	"/edit/?*"
 ];
+
+// Connect to database
+const database: Database = new Database();
 
 // Parse application/json and application/x-www-form-urlencoded in POST requests.
 app.use(express.json());
@@ -195,6 +198,13 @@ app.post("/api/wakeonlan", wrap(async (req, res, next) => {
 		result: true
 	}));
 	next();
+}));
+
+app.get("/api/settings", wrap(async (req, res, next) => {
+	const settingsData: SettingsData = await database.settingsGet();
+
+	res.set("Content-Type", "application/json");
+	res.send(JSON.stringify(settingsData));
 }));
 
 app.listen(port, () => {
