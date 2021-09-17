@@ -160,7 +160,6 @@ async function hostDiscovery(method: HostDiscovery, req: Request, res: Response,
 		// Finish streaming
 		res.end();
 	}
-	next();
 }
 
 app.post("/api/host-discovery/arp-scan", wrap(async (req, res, next) => {
@@ -197,7 +196,6 @@ app.post("/api/wakeonlan", wrap(async (req, res, next) => {
 	res.send(JSON.stringify({
 		result: true
 	}));
-	next();
 }));
 
 app.get("/api/settings", wrap(async (req, res, next) => {
