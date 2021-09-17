@@ -1,13 +1,7 @@
 import mariadb from "mariadb";
 import fs from "fs";
 
-import { IPNetwork } from "wakeonlan-utilities";
-
-// TODO: Replace with interface Host from frontend
-export interface Host {
-	mac: string;
-	name: string;
-}
+import { IPNetwork, Host } from "wakeonlan-utilities";
 
 export interface SettingsData {
 	autoDetectNetworks: boolean;
