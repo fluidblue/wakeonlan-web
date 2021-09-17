@@ -9,12 +9,26 @@ describe("Database", () => {
 		database = new Database();
 	});
 
-	it("should get the settings", async () => {
-		const settingsData: SettingsData = await database.settingsGet();
-		expect(settingsData.wolPort).toBeDefined();
-		expect(settingsData.autoDetectNetworks).toBeDefined();
-		expect(settingsData.ipNetworks).toBeDefined();
-		expect(settingsData.ipNetworks.length).toBeDefined();
+	it("should put and get the settings", async () => {
+		const settingsData: SettingsData = {
+			autoDetectNetworks: true,
+			ipNetworks: [
+				{ ip: "192.168.178.0", prefix: 24 },
+				{ ip: "192.168.188.0", prefix: 24 }
+			],
+			wolPort: 9
+		};
+		const result = await database.settingsPut(settingsData);
+		expect(result).toBeTrue();
+
+		const settingsDataLoaded: SettingsData = await database.settingsGet();
+		expect(settingsDataLoaded.wolPort).toEqual(settingsData.wolPort);
+		expect(settingsDataLoaded.autoDetectNetworks).toEqual(settingsData.autoDetectNetworks);
+		expect(settingsDataLoaded.ipNetworks.length).toEqual(settingsData.ipNetworks.length);
+		for (let i = 0; i < settingsDataLoaded.ipNetworks.length; i++) {
+			expect(settingsDataLoaded.ipNetworks[i].ip).toEqual(settingsData.ipNetworks[i].ip);
+			expect(settingsDataLoaded.ipNetworks[i].prefix).toEqual(settingsData.ipNetworks[i].prefix);
+		}
 	});
 
 	it("should get saved hosts", async () => {

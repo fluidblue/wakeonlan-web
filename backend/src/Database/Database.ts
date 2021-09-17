@@ -63,6 +63,41 @@ export default class Database {
 		return settingsData;
 	}
 
+	async settingsPut(settingsData: SettingsData): Promise<boolean> {
+		let conn: mariadb.PoolConnection | null = null;
+		try {
+			conn = await this.pool.getConnection();
+
+			let res = await conn.query("DELETE FROM `Settings_IPNetworks`");
+			if (res.warningStatus) {
+				return false;
+			}
+
+			for (const ipNetwork of settingsData.ipNetworks) {
+				res = await conn.query(
+					"INSERT INTO `Settings_IPNetworks` (`ip`, `prefix`) VALUES (?, ?)",
+					[ipNetwork.ip, ipNetwork.prefix]
+				);
+				if (!res || res.affectedRows !== 1) {
+					return false;
+				}
+			}
+
+			res = await conn.query(
+				"INSERT INTO `Settings` (`autoDetectNetworks`, `port`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `autoDetectNetworks` = ?, `port` = ?",
+				[settingsData.autoDetectNetworks, settingsData.wolPort, settingsData.autoDetectNetworks, settingsData.wolPort]
+			);
+			return res && res.affectedRows >= 1;
+		} catch (err) {
+			console.error("Error:", err); // TODO: Use a logger here
+		} finally {
+			if (conn) {
+				conn.end();
+			}
+		}
+		return false;
+	}
+
 	async savedHostsGet(): Promise<Host[]> {
 		const savedHosts: Host[] = [];
 
