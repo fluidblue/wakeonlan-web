@@ -29,7 +29,8 @@ export default class Database {
 	}
 
 	async settingsGet(): Promise<SettingsData> {
-		const settingsData: SettingsData = { ...settingsDataDefault };
+		// Note: JSON.parse(JSON.stringify(...)) is not efficient, but does the job (of deep cloning).
+		const settingsData: SettingsData = JSON.parse(JSON.stringify(settingsDataDefault));
 
 		let conn: mariadb.PoolConnection | null = null;
 		try {
