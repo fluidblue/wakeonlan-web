@@ -201,6 +201,9 @@ const database: Database = new Database();
 database.getSettings().then((value) => {
 	console.log(value); // TODO: Remove
 });
+database.getSavedHosts().then((value) => {
+	console.log(value); // TODO: Remove
+});
 
 app.listen(port, () => {
 	console.log(`wakeonlan-web listening at http://localhost:${port}`);

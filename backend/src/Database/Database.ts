@@ -3,6 +3,12 @@ import fs from "fs";
 
 import { IPNetwork } from "wakeonlan-utilities";
 
+// TODO: Replace with interface Host from frontend
+export interface Host {
+	mac: string;
+	name: string;
+}
+
 export interface SettingsData {
 	autoDetectNetworks: boolean;
 	ipNetworks: IPNetwork[];
@@ -55,5 +61,30 @@ export default class Database {
 		}
 
 		return settingsData;
+	}
+
+	async getSavedHosts(): Promise<Host[]> {
+		const savedHosts: Host[] = [];
+
+		let conn: mariadb.PoolConnection | null = null;
+		try {
+			conn = await this.pool.getConnection();
+
+			let rows = await conn.query("SELECT * FROM `SavedHosts`");
+			for (const row of rows) {
+				savedHosts.push({
+					mac: row.mac,
+					name: row.hostname
+				});
+			}
+		} catch (err) {
+			console.error("Error:", err); // TODO: Use a logger here
+		} finally {
+			if (conn) {
+				conn.end();
+			}
+		}
+
+		return savedHosts;
 	}
 }
