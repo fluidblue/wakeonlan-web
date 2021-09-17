@@ -1,7 +1,5 @@
 version: "3.8"
 
-# Hint: Versions and tags are set in the file ".env"
-
 services:
     wakeonlan-web:
         image: fluidblue/wakeonlan-web:latest
@@ -9,7 +7,14 @@ services:
             context: .
             dockerfile: Dockerfile
         init: true
+        environment:
+            DATABASE_HOST: "127.0.0.1"
+            DATABASE_DB: "${DATABASE_DB}"
+            DATABASE_USER: "${DATABASE_USER}"
+            DATABASE_PASSWORD_FILE: "${DATABASE_PASSWORD_FILE_CONTAINER}"
         network_mode: "host"
+        volumes:
+            - ${DATABASE_PASSWORD_FILE_LOCAL}:${DATABASE_PASSWORD_FILE_CONTAINER}
         logging:
             driver: "json-file"
             options:
@@ -19,10 +24,15 @@ services:
     mariadb:
         image: mariadb:10.6
         environment:
-            MARIADB_ROOT_PASSWORD: "test_password"
+            MARIADB_RANDOM_ROOT_PASSWORD: "yes"
+            MARIADB_DATABASE: "${DATABASE_DB}"
+            MARIADB_USER: "${DATABASE_USER}"
+            MARIADB_PASSWORD_FILE: "${DATABASE_PASSWORD_FILE_CONTAINER}"
         network_mode: "host"
         volumes:
             - mariadb-data:/var/lib/mysql
+            - ${DATABASE_PASSWORD_FILE_LOCAL}:${DATABASE_PASSWORD_FILE_CONTAINER}
+            - ./db.sql:/docker-entrypoint-initdb.d/db.sql
         logging:
             driver: "json-file"
             options:

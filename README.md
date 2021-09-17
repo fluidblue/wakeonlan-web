@@ -5,13 +5,15 @@ wakeonlan-web.
 
 ## Installation using Docker Compose
 
-1. Open docker-compose.yml and set MariaDB root password.
+1. In the root directory of this repository, create a file `database_password.txt` and save a new password for the database in it.
 
-2. In the root directory of the repository:
+2. Then, still in the root directory of the repository, execute the following commands:
 ```
 docker-compose build
 docker-compose up -d
 ```
+
+3. After starting up, you can navigate with your browser to http://localhost:8000
 
 
 ## Installation using Docker
