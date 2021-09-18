@@ -47,19 +47,17 @@ function Settings(props: SettingsProps) {
       return;
     }
 
-    let ipNetworks: IPNetwork[] | null = null;
-    if (props.autoDetectNetworks) {
-      ipNetworks = props.autoDetectedNetworks;
-    } else {
+    let ipNetworks: IPNetwork[] = [];
+    if (!props.autoDetectNetworks) {
       if (!isIpNetworksStringValid(networksString)) {
         setWasValidated(true);
         return;
       }
       ipNetworks = stringToIpNetworks(networksString);
+      props.onIpNetworksChange(ipNetworks);
     }
 
     setWasValidated(false);
-    props.onIpNetworksChange(ipNetworks);
     saveToServer(props.wolPort, props.autoDetectNetworks, ipNetworks);
   }
 
@@ -78,6 +76,7 @@ function Settings(props: SettingsProps) {
         <h6 className="mb-3 fw-bold">Host discovery</h6>
         <IPNetworkPanel
           autoDetectedNetworks={props.autoDetectedNetworks}
+          ipNetworks={props.ipNetworks}
           autoDetect={props.autoDetectNetworks}
           onAutoDetectChange={props.onAutoDetectNetworksChange}
           networks={networksString}

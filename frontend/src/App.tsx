@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
 import {
@@ -60,11 +60,19 @@ function App() {
     ));
   }
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   if (autoDetectNetworks) {
+  //     setIpNetworks(autoDetectedNetworks);
+  //   }
+  // }, [autoDetectNetworks, autoDetectedNetworks]);
+
+  function getIpNetworks(): IPNetwork[] {
     if (autoDetectNetworks) {
-      setIpNetworks(autoDetectedNetworks);
+      return autoDetectedNetworks;
+    } else {
+      return ipNetworks;
     }
-  }, [autoDetectNetworks, autoDetectedNetworks]);
+  }
 
   return (
     <Router>
@@ -92,7 +100,7 @@ function App() {
               discoveredHosts={discoveredHosts}
               onScannedChange={setScanned}
               scanned={scanned}
-              ipNetworks={ipNetworks}
+              ipNetworks={getIpNetworks()}
             />
           </Route>
           <Route path="/settings">

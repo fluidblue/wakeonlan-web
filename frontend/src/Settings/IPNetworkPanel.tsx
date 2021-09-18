@@ -5,6 +5,7 @@ import { ipNetworksToString, isIpNetworksStringValid } from '../IPUtilities'
 
 interface IPNetworkPanelProps {
   autoDetectedNetworks: IPNetwork[];
+  ipNetworks: IPNetwork[];
 
   autoDetect: boolean;
   onAutoDetectChange: React.Dispatch<React.SetStateAction<boolean>>;
@@ -16,15 +17,14 @@ interface IPNetworkPanelProps {
 }
 
 function IPNetworkPanel(props: IPNetworkPanelProps) {
-  // When the component is mounted, every time autoDetectedNetworks or inputAutoDetect changes,
-  // update inputNetworks to match autoDetectedNetworks (but only if inputAutoDetect is true).
-  // (Also, the update is done when onNetworksChange changes.)
-  const { autoDetectedNetworks, autoDetect, onNetworksChange } = props;
+  const { ipNetworks, autoDetectedNetworks, autoDetect, onNetworksChange } = props;
   useEffect(() => {
     if (autoDetect) {
       onNetworksChange(ipNetworksToString(autoDetectedNetworks));
+    } else {
+      onNetworksChange(ipNetworksToString(ipNetworks));
     }
-  }, [autoDetectedNetworks, autoDetect, onNetworksChange]);
+  }, [ipNetworks, autoDetectedNetworks, autoDetect, onNetworksChange]);
 
   function onInputNetworkChange (e: React.ChangeEvent<HTMLInputElement>) {
     props.onNetworksChange(e.target.value);
