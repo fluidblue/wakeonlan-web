@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { IPFunctions, IPNetwork } from 'wakeonlan-utilities';
 import { apiUri } from '../API';
 
-const fetchIpNetworks = async () => {
+async function fetchIpNetworks() {
   const uri = apiUri + '/ip-networks';
   const response = await fetch(uri, {
     method: 'GET'
