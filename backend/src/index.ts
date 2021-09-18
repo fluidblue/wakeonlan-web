@@ -30,7 +30,7 @@ import ARPCacheAndPing from "./HostDiscovery/ARPCacheAndPing";
 import { HostNaming } from "./HostNaming/HostNaming";
 import { DNSNaming } from "./HostNaming/DNSNaming";
 
-import { IPFunctions, IPNetwork, MACFunctions } from "wakeonlan-utilities";
+import { Host, IPFunctions, IPNetwork, MACFunctions } from "wakeonlan-utilities";
 import { IPNetworks } from "./IPNetworks/IPNetworks";
 
 import Database, { SettingsData } from "./Database/Database";
@@ -212,6 +212,13 @@ app.put("/api/settings", wrap(async (req, res, next) => {
 	res.send(JSON.stringify({
 		result: result
 	}));
+}));
+
+app.get("/api/savedhosts", wrap(async (req, res, next) => {
+	const savedHosts: Host[] = await database.savedHostsGet();
+
+	res.set("Content-Type", "application/json");
+	res.send(JSON.stringify(savedHosts));
 }));
 
 app.listen(port, () => {
