@@ -18,7 +18,6 @@ import fs from "fs";
 import net from "net";
 
 import wrap from "./wrap";
-import getDate from "./date";
 
 import { WakeOnLan } from "./WakeOnLan/WakeOnLan";
 import WolNativeNode from "./WakeOnLan/WolNativeNode";
@@ -34,6 +33,7 @@ import { Host, IPFunctions, IPNetwork, MACFunctions } from "wakeonlan-utilities"
 import { IPNetworks } from "./IPNetworks/IPNetworks";
 
 import Database, { SettingsData } from "./Database/Database";
+import Log from "./Log/Log";
 
 const app = express();
 
@@ -56,7 +56,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Basic logging
 app.use(wrap(async function (req, res, next) {
-	console.log("[" + getDate() + "] " + req.method + " " + req.url);
+	Log.info(req.method + " " + req.url);
 	next();
 }));
 
