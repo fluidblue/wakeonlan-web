@@ -206,7 +206,8 @@ app.get("/api/settings", wrap(async (req, res, next) => {
 }));
 
 app.put("/api/settings", wrap(async (req, res, next) => {
-	const result = await database.settingsPut(req.body);
+	const settingsData: SettingsData = req.body;
+	const result = await database.settingsPut(settingsData);
 
 	res.set("Content-Type", "application/json");
 	res.send(JSON.stringify({
