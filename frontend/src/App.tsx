@@ -20,6 +20,8 @@ import ToastItem from './Toasts/ToastItem';
 
 import { Host, IPNetwork } from 'wakeonlan-utilities';
 
+export const WAKEONLAN_DEFAULT_PORT: number = 9;
+
 function App() {
   const [savedHosts, setSavedHosts] = useState<Host[]>([
     { name: 'Hostname 1', mac: '00:11:22:33:44:55' },
@@ -35,6 +37,7 @@ function App() {
   const [autoDetectedNetworks, setAutoDetectedNetworks] = useState<IPNetwork[]>([]);
   const [autoDetectNetworks, setAutoDetectNetworks] = useState<boolean>(true);
   const [ipNetworks, setIpNetworks] = useState<IPNetwork[]>([]);
+  const [wolPort, setWolPort] = useState<number>(WAKEONLAN_DEFAULT_PORT);
 
   const [toastItems, setToastItems] = useState<React.ReactNode[]>([]);
 
@@ -96,6 +99,8 @@ function App() {
               onAutoDetectNetworksChange={setAutoDetectNetworks}
               ipNetworks={ipNetworks}
               onIpNetworksChange={setIpNetworks}
+              wolPort={wolPort}
+              onWolPortChange={setWolPort}
             />
           </Route>
           <Route path="/add">

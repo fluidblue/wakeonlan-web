@@ -4,8 +4,8 @@ import './Settings.css';
 import IPNetworkPanel from './IPNetworkPanel';
 import { IPNetwork } from 'wakeonlan-utilities';
 import { isIpNetworksStringValid, stringToIpNetworks } from '../IPUtilities';
+import { WAKEONLAN_DEFAULT_PORT } from '../App';
 
-const WAKEONLAN_DEFAULT_PORT: number = 9;
 const PORT_MIN: number = 0;
 const PORT_MAX: number = 65535;
 
@@ -17,17 +17,19 @@ interface SettingsProps {
 
   autoDetectNetworks: boolean;
   onAutoDetectNetworksChange: React.Dispatch<React.SetStateAction<boolean>>;
+
+  wolPort: number;
+  onWolPortChange: React.Dispatch<React.SetStateAction<number>>;
 }
 
 function Settings(props: SettingsProps) {
-  const [wolPort, setWolPort] = useState<number>(WAKEONLAN_DEFAULT_PORT);
   const [networksString, setNetworksString] = useState<string>('');
 
   const [wasValidated, setWasValidated] = useState(false);
 
   function onInputPortChange(e: React.ChangeEvent<HTMLInputElement>) {
     const value = parseInt(e.target.value);
-    setWolPort(value);
+    props.onWolPortChange(value);
   }
 
   function saveToServer(wolPort: number, autoDetectNetworks: boolean, ipNetworks: IPNetwork[]) {
@@ -40,7 +42,7 @@ function Settings(props: SettingsProps) {
   function onSave(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
 
-    if (wolPort < PORT_MIN || wolPort > PORT_MAX) {
+    if (props.wolPort < PORT_MIN || props.wolPort > PORT_MAX) {
       setWasValidated(true);
       return;
     }
@@ -58,14 +60,14 @@ function Settings(props: SettingsProps) {
 
     setWasValidated(false);
     props.onIpNetworksChange(ipNetworks);
-    saveToServer(wolPort, props.autoDetectNetworks, ipNetworks);
+    saveToServer(props.wolPort, props.autoDetectNetworks, ipNetworks);
   }
 
   function onReset() {
     setWasValidated(false);
 
     props.onAutoDetectNetworksChange(true);
-    setWolPort(WAKEONLAN_DEFAULT_PORT);
+    props.onWolPortChange(WAKEONLAN_DEFAULT_PORT);
   }
 
   const formClassName = wasValidated ? 'was-validated' : '';
@@ -97,7 +99,7 @@ function Settings(props: SettingsProps) {
             className="form-control"
             id="inputPort"
             placeholder="Enter port number"
-            value={wolPort}
+            value={props.wolPort}
             onChange={onInputPortChange}
             min={PORT_MIN}
             max={PORT_MAX}
