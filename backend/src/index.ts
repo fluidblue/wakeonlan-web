@@ -232,6 +232,16 @@ app.post("/api/savedhosts", wrap(async (req, res, next) => {
 	}));
 }));
 
+app.delete("/api/savedhosts", wrap(async (req, res, next) => {
+	const mac: string = req.body.mac;
+	const result: boolean = await database.savedHostsDelete(mac);
+
+	res.set("Content-Type", "application/json");
+	res.send(JSON.stringify({
+		result: result
+	}));
+}));
+
 app.listen(port, () => {
 	console.log(`wakeonlan-web listening at http://localhost:${port}`);
 });
