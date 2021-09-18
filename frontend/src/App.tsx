@@ -60,12 +60,6 @@ function App() {
     ));
   }
 
-  // useEffect(() => {
-  //   if (autoDetectNetworks) {
-  //     setIpNetworks(autoDetectedNetworks);
-  //   }
-  // }, [autoDetectNetworks, autoDetectedNetworks]);
-
   function getIpNetworks(): IPNetwork[] {
     if (autoDetectNetworks) {
       return autoDetectedNetworks;
