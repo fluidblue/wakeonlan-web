@@ -2,6 +2,7 @@ import mariadb from "mariadb";
 import fs from "fs";
 
 import { IPNetwork, Host } from "wakeonlan-utilities";
+import Log from "../Log/Log";
 
 export interface SettingsData {
 	autoDetectNetworks: boolean;
@@ -48,7 +49,7 @@ export default class Database {
 				settingsData.wolPort = settings.port;
 			}
 		} catch (err) {
-			console.error("Error:", err); // TODO: Use a logger here
+			Log.error(err);
 		} finally {
 			if (conn) {
 				conn.end();
@@ -91,7 +92,7 @@ export default class Database {
 				return false;
 			}
 		} catch (err) {
-			console.error("Error:", err); // TODO: Use a logger here
+			Log.error(err);
 			return false;
 		} finally {
 			if (conn) {
@@ -116,7 +117,7 @@ export default class Database {
 				});
 			}
 		} catch (err) {
-			console.error("Error:", err); // TODO: Use a logger here
+			Log.error(err);
 		} finally {
 			if (conn) {
 				conn.end();
@@ -139,7 +140,7 @@ export default class Database {
 				return false;
 			}
 		} catch (err) {
-			console.error("Error:", err); // TODO: Use a logger here
+			Log.error(err);
 			return false;
 		} finally {
 			if (conn) {
@@ -159,7 +160,7 @@ export default class Database {
 				return false;
 			}
 		} catch (err) {
-			console.error("Error:", err); // TODO: Use a logger here
+			Log.error(err);
 			return false;
 		} finally {
 			if (conn) {
