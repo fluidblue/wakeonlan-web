@@ -70,6 +70,9 @@ function App() {
     <Router>
       <SettingsPreLoad
         onAutoDetectedNetworksChange={setAutoDetectedNetworks}
+        onAutoDetectNetworksChange={setAutoDetectNetworks}
+        onIpNetworksChange={setIpNetworks}
+        onWolPortChange={setWolPort}
       />
       <Navbar />
       <hr className="header-separator" />
