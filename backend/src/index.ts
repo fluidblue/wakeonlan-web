@@ -221,6 +221,16 @@ app.get("/api/savedhosts", wrap(async (req, res, next) => {
 	res.send(JSON.stringify(savedHosts));
 }));
 
+app.post("/api/savedhosts", wrap(async (req, res, next) => {
+	const host: Host = req.body;
+	const result: boolean = await database.savedHostsAdd(host);
+
+	res.set("Content-Type", "application/json");
+	res.send(JSON.stringify({
+		result: result
+	}));
+}));
+
 app.listen(port, () => {
 	console.log(`wakeonlan-web listening at http://localhost:${port}`);
 });
