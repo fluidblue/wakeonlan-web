@@ -77,6 +77,7 @@ function Settings(props: SettingsProps) {
         <IPNetworkPanel
           autoDetectedNetworks={props.autoDetectedNetworks}
           ipNetworks={props.ipNetworks}
+          onIpNetworksChange={props.onIpNetworksChange}
           autoDetect={props.autoDetectNetworks}
           onAutoDetectChange={props.onAutoDetectNetworksChange}
           networks={networksString}
