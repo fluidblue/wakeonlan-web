@@ -43,8 +43,7 @@ interface SettingsPreLoadProps {
 }
 
 function SettingsPreLoad(props: SettingsPreLoadProps) {
-  // Execute once on component load.
-  // Fetch data for autoDetectedNetworks.
+  // Execute once on component load
   const {
     onAutoDetectedNetworksChange,
     onAutoDetectNetworksChange,
