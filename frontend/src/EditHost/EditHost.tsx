@@ -190,11 +190,12 @@ function EditHost(props: EditHostProps) {
     );
   }
 
+  const inputHostNameCurrent = inputHostName.current;
   useEffect(() => {
-    if (inputHostName.current && hostname.length === 0) {
-      inputHostName.current.focus();
+    if (inputHostNameCurrent && hostname.length === 0) {
+      inputHostNameCurrent.focus();
     }
-  }, [inputHostName, hostname]);
+  }, [inputHostNameCurrent, hostname]);
 
   if (!props.add && !currentHost) {
     return <NotFound />;
