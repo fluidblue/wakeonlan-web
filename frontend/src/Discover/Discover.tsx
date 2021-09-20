@@ -3,64 +3,9 @@ import { useHistory } from 'react-router';
 import './Discover.css';
 
 import HostItem from './HostItem';
-import { apiUri } from '../API';
-import { Host, IPFunctions, IPNetwork } from 'wakeonlan-utilities';
+import API from '../API';
+import { Host, IPNetwork } from 'wakeonlan-utilities';
 import { ipNetworksToString } from '../IPUtilities';
-
-interface HostMacIP {
-  ip: string;
-  mac: string;
-}
-
-async function fetchHostname(ip: string): Promise<string> {
-  const response = await fetch(apiUri + '/device-name/host-name', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      ip: ip
-    })
-  });
-  if (response.ok) {
-    return await response.text();
-  } else {
-    return ip;
-  }
-}
-
-async function hostDiscovery(ipNetwork: IPNetwork): Promise<Host[]> {
-  const response = await fetch(apiUri + '/host-discovery/arp-scan', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      'ip-network': IPFunctions.getStringFromIPNetwork(ipNetwork)
-    })
-  });
-  const rawData = await response.text();
-  let data: Host[] = [];
-  for (let line of rawData.split('\n')) {
-    line = line.trim();
-    if (line.length === 0) {
-      continue;
-    }
-    const resultObject = JSON.parse(line);
-    if (resultObject.result === false) {
-      data = [];
-      break;
-    }
-    const hostMacIp: HostMacIP = resultObject;
-
-    const host: Host = {
-      name: await fetchHostname(hostMacIp.ip),
-      mac: hostMacIp.mac
-    };
-    data.push(host);
-  }
-  return data;
-}
 
 interface DiscoverProps {
   onHostToBeAddedChange: React.Dispatch<React.SetStateAction<Host | null>>;
@@ -106,7 +51,7 @@ function Discover(props: DiscoverProps) {
 
       const hostDiscoveryPromises: Promise<Host[]>[] = [];
       for (const ipNetwork of ipNetworks) {
-        const hostDiscoveryPromise = hostDiscovery(ipNetwork);
+        const hostDiscoveryPromise = API.hostDiscovery(ipNetwork);
         hostDiscoveryPromises.push(hostDiscoveryPromise);
       }
       const hostDiscoveryResults: Host[][] = await Promise.all(hostDiscoveryPromises);

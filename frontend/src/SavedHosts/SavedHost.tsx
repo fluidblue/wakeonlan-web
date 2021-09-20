@@ -3,34 +3,8 @@ import './SavedHost.css';
 
 import { useHistory } from 'react-router-dom';
 
-import { apiUri } from '../API';
+import API from '../API';
 import { SettingsData } from 'wakeonlan-utilities';
-
-async function wakeonlan(mac: string, port: number): Promise<boolean> {
-  let response;
-  try {
-    response = await fetch(apiUri + '/wakeonlan', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        mac: mac,
-        port: port
-      })
-    });
-  } catch (err) {
-    return false;
-  }
-  if (!response.ok) {
-    return false;
-  }
-  const responseObject = await response.json();
-  if (!responseObject || !responseObject.result || responseObject.result !== true) {
-    return false;
-  }
-  return true;
-}
 
 interface SavedHostProps {
   hostname: string;
@@ -45,7 +19,7 @@ function SavedHost(props: SavedHostProps) {
   const history = useHistory();
 
   function handleHostItemClick(e: React.MouseEvent<HTMLLIElement, MouseEvent>) {
-    wakeonlan(props.mac, props.settings.wolPort).then((result) => {
+    API.wakeonlan(props.mac, props.settings.wolPort).then((result) => {
       onHostWoken(props.hostname, props.mac, result);
     });
   }

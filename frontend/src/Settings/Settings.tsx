@@ -4,34 +4,10 @@ import './Settings.css';
 import IPNetworkPanel from './IPNetworkPanel';
 import { IPNetwork, SettingsData, settingsDataDefault } from 'wakeonlan-utilities';
 import { isIpNetworksStringValid, stringToIpNetworks } from '../IPUtilities';
-import { apiUri } from '../API';
+import API from '../API';
 
 const PORT_MIN: number = 0;
 const PORT_MAX: number = 65535;
-
-async function save(settings: SettingsData) {
-  const uri = apiUri + '/settings';
-  let response;
-  try {
-    response = await fetch(uri, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(settings)
-    });
-  } catch (err) {
-    return false;
-  }
-  if (!response.ok || !response.body) {
-    throw new Error('Could not fetch ' + uri + ' (HTTP ' + response.status + ')');
-  }
-  const res = await response.json();
-  if (!res || res.result !== true) {
-    return false;
-  }
-  return true;
-}
 
 interface SettingsProps {
   autoDetectedNetworks: IPNetwork[];
@@ -90,7 +66,7 @@ function Settings(props: SettingsProps) {
     }
     props.onSettingsChange(settingsNew);
     async function saveSettings() {
-      const result = await save(settingsNew);
+      const result = await API.settingsSave(settingsNew);
       onSettingsSaved(result);
     }
     saveSettings();

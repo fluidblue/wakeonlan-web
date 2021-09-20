@@ -7,30 +7,7 @@ import { Modal } from 'bootstrap';
 import NotFound from '../NotFound';
 
 import { MACFunctions, Host } from 'wakeonlan-utilities';
-import { apiUri } from '../API';
-
-async function addHost(host: Host) {
-  let response;
-  try {
-    response = await fetch(apiUri + '/savedhosts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(host)
-    });
-  } catch (err) {
-    return false;
-  }
-  if (!response.ok) {
-    return false;
-  }
-  const result = await response.json();
-  if (!result || result.result !== true) {
-    return false;
-  }
-  return true;
-}
+import API from '../API';
 
 interface EditHostProps {
   add?: boolean;
@@ -150,8 +127,8 @@ function EditHost(props: EditHostProps) {
       name: hostname,
       mac: mac
     };
-    if (!await addHost(host)) {
-      props.onHostSaved(false);
+    if (!await API.addHost(host)) {
+      onHostSaved(false);
       return;
     }
 

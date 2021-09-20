@@ -1,38 +1,7 @@
 import React, { useEffect } from 'react';
 
-import { IPFunctions, IPNetwork, SettingsData } from 'wakeonlan-utilities';
-import { apiUri } from '../API';
-
-async function fetchIpNetworks() {
-  const uri = apiUri + '/ip-networks';
-  const response = await fetch(uri, {
-    method: 'GET'
-  });
-  if (!response.ok || !response.body) {
-    throw new Error('Could not fetch ' + uri + ' (HTTP ' + response.status + ')');
-  }
-  const rawData: string[] = await response.json();
-  let data: IPNetwork[] = [];
-  try {
-    data = rawData.map((network) => {
-      return IPFunctions.getIPNetworkFromString(network);
-    });
-  } catch (err) {
-    throw new Error('Could not parse data of ' + uri + ' (' + err + ')');
-  }
-  return data;
-};
-
-async function fetchSettings() {
-  const uri = apiUri + '/settings';
-  const response = await fetch(uri, {
-    method: 'GET'
-  });
-  if (!response.ok || !response.body) {
-    throw new Error('Could not fetch ' + uri + ' (HTTP ' + response.status + ')');
-  }
-  return await response.json();
-}
+import { IPNetwork, SettingsData } from 'wakeonlan-utilities';
+import API from '../API';
 
 interface SettingsPreLoadProps {
   onAutoDetectedNetworksChange: React.Dispatch<React.SetStateAction<IPNetwork[]>>
@@ -47,10 +16,10 @@ function SettingsPreLoad(props: SettingsPreLoadProps) {
   } = props;
   useEffect(() => {
     async function fetchData() {
-      const ipNetworks: IPNetwork[] = await fetchIpNetworks();
+      const ipNetworks: IPNetwork[] = await API.fetchIpNetworks();
       onAutoDetectedNetworksChange(ipNetworks);
 
-      const settings = await fetchSettings();
+      const settings = await API.fetchSettings();
       onSettingsChange(settings);
     };
     fetchData();
