@@ -27,7 +27,7 @@ function Settings(props: SettingsProps) {
 
   const [autoDetectNetworks, setAutoDetectNetworks] = useState<boolean>(settingsDataDefault.autoDetectNetworks);
   const [ipNetworks, setIpNetworks] = useState<IPNetwork[]>(settingsDataDefault.ipNetworks);
-  const [wolPort, setWolPort] = useState<number>(settingsDataDefault.wolPort);
+  const [wolPort, setWolPort] = useState<string>(settingsDataDefault.wolPort.toString());
 
   const [wasValidated, setWasValidated] = useState(false);
 
@@ -35,18 +35,18 @@ function Settings(props: SettingsProps) {
   useEffect(() => {
     setAutoDetectNetworks(settings.autoDetectNetworks);
     setIpNetworks(settings.ipNetworks);
-    setWolPort(settings.wolPort);
+    setWolPort(settings.wolPort.toString());
   }, [settings]);
 
   function onInputPortChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const value = parseInt(e.target.value);
-    setWolPort(value);
+    setWolPort(e.target.value);
   }
 
   function onSave(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
 
-    if (wolPort < PORT_MIN || wolPort > PORT_MAX) {
+    const port = parseInt(wolPort);
+    if (isNaN(port) || port < PORT_MIN || port > PORT_MAX) {
       setWasValidated(true);
       return;
     }
@@ -66,7 +66,7 @@ function Settings(props: SettingsProps) {
     const settingsNew: SettingsData = {
       autoDetectNetworks: autoDetectNetworks,
       ipNetworks: ipNetworksNew,
-      wolPort: wolPort
+      wolPort: port
     }
     props.onSettingsChange(settingsNew);
     save(settingsNew);
@@ -76,7 +76,7 @@ function Settings(props: SettingsProps) {
     setWasValidated(false);
 
     setAutoDetectNetworks(settingsDataDefault.autoDetectNetworks);
-    setWolPort(settingsDataDefault.wolPort);
+    setWolPort(settingsDataDefault.wolPort.toString());
   }
 
   const formClassName = wasValidated ? 'was-validated' : '';
