@@ -37,6 +37,14 @@ function App() {
 
   const [toastItems, setToastItems] = useState<React.ReactNode[]>([]);
 
+  function toastMessage(message: React.ReactNode) {
+    setToastItems(toastItems.concat(
+      <ToastItem key={Date.now()}>
+        {message}
+      </ToastItem>
+    ));
+  }
+
   function onHostWoken(hostname: string, mac: string, result: boolean) {
     let message = null;
     if (result) {
@@ -52,20 +60,12 @@ function App() {
         {hostname}
       </>;
     }
-    setToastItems(toastItems.concat(
-      <ToastItem key={Date.now()}>
-        {message}
-      </ToastItem>
-    ));
+    toastMessage(message);
   }
 
   function onSettingsSaved(result: boolean) {
     const text = result ? 'The settings have been saved.' : 'Failed to save settings.';
-    setToastItems(toastItems.concat(
-      <ToastItem key={Date.now()}>
-        {text}
-      </ToastItem>
-    ));
+    toastMessage(text);
   }
 
   function getIpNetworks(): IPNetwork[] {
