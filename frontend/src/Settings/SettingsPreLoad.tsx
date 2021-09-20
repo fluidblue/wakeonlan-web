@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 
-import { IPFunctions, IPNetwork } from 'wakeonlan-utilities';
+import { IPFunctions, IPNetwork, SettingsData } from 'wakeonlan-utilities';
 import { apiUri } from '../API';
-import { SettingsData } from './Settings';
 
 async function fetchIpNetworks() {
   const uri = apiUri + '/ip-networks';

@@ -2,24 +2,11 @@ import React, { useEffect, useState } from 'react';
 import './Settings.css';
 
 import IPNetworkPanel from './IPNetworkPanel';
-import { IPNetwork } from 'wakeonlan-utilities';
+import { IPNetwork, SettingsData, settingsDataDefault } from 'wakeonlan-utilities';
 import { isIpNetworksStringValid, stringToIpNetworks } from '../IPUtilities';
 
-const WAKEONLAN_DEFAULT_PORT: number = 9;
 const PORT_MIN: number = 0;
 const PORT_MAX: number = 65535;
-
-export interface SettingsData {
-	autoDetectNetworks: boolean;
-	ipNetworks: IPNetwork[];
-	wolPort: number;
-}
-
-export const settingsDataDefault: SettingsData = {
-	autoDetectNetworks: true,
-	ipNetworks: [],
-	wolPort: WAKEONLAN_DEFAULT_PORT
-};
 
 function save(settings: SettingsData) {
   // TODO: Save to server

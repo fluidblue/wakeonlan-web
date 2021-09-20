@@ -1,7 +1,7 @@
 import "jasmine";
 
-import Database, { SettingsData } from "../src/Database/Database"
-import { Host } from "wakeonlan-utilities";
+import Database from "../src/Database/Database"
+import { Host, SettingsData } from "wakeonlan-utilities";
 
 describe("Database", () => {
 	let database: Database;

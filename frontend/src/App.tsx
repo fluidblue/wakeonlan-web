@@ -10,7 +10,7 @@ import {
 import Navbar from './Navbar/Navbar';
 import SavedHosts from './SavedHosts/SavedHosts';
 import Discover from './Discover/Discover';
-import Settings, { SettingsData, settingsDataDefault } from './Settings/Settings';
+import Settings from './Settings/Settings';
 import SettingsPreLoad from './Settings/SettingsPreLoad';
 import EditHost from './EditHost/EditHost';
 import NotFound from './NotFound';
@@ -18,7 +18,7 @@ import NotFound from './NotFound';
 import ToastContainer from './Toasts/ToastContainer';
 import ToastItem from './Toasts/ToastItem';
 
-import { Host, IPNetwork } from 'wakeonlan-utilities';
+import { Host, IPNetwork, SettingsData, settingsDataDefault } from 'wakeonlan-utilities';
 
 function App() {
   const [savedHosts, setSavedHosts] = useState<Host[]>([

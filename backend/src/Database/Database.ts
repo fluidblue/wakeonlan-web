@@ -1,20 +1,8 @@
 import mariadb from "mariadb";
 import fs from "fs";
 
-import { IPNetwork, Host } from "wakeonlan-utilities";
+import { Host, SettingsData, settingsDataDefault } from "wakeonlan-utilities";
 import Log from "../Log/Log";
-
-export interface SettingsData {
-	autoDetectNetworks: boolean;
-	ipNetworks: IPNetwork[];
-	wolPort: number;
-}
-
-const settingsDataDefault: SettingsData = {
-	autoDetectNetworks: true,
-	ipNetworks: [],
-	wolPort: 9
-};
 
 export default class Database {
 	private pool: mariadb.Pool;

@@ -29,10 +29,10 @@ import ARPCacheAndPing from "./HostDiscovery/ARPCacheAndPing";
 import { HostNaming } from "./HostNaming/HostNaming";
 import { DNSNaming } from "./HostNaming/DNSNaming";
 
-import { Host, IPFunctions, IPNetwork, MACFunctions } from "wakeonlan-utilities";
+import { Host, IPFunctions, IPNetwork, MACFunctions, SettingsData } from "wakeonlan-utilities";
 import { IPNetworks } from "./IPNetworks/IPNetworks";
 
-import Database, { SettingsData } from "./Database/Database";
+import Database from "./Database/Database";
 import Log from "./Log/Log";
 
 const app = express();
