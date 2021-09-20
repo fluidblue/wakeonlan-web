@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './App.css';
 
 import {
@@ -19,13 +19,11 @@ import ToastContainer from './Toasts/ToastContainer';
 import ToastItem from './Toasts/ToastItem';
 
 import { Host, IPNetwork, SettingsData, settingsDataDefault } from 'wakeonlan-utilities';
+import API from './API';
 
 function App() {
-  const [savedHosts, setSavedHosts] = useState<Host[]>([
-    { name: 'Hostname 1', mac: '00:11:22:33:44:55' },
-    { name: 'Hostname 2', mac: '00:11:22:33:44:66' },
-    { name: 'Hostname 3', mac: '00:11:22:33:44:77' }
-  ]);
+  const [savedHosts, setSavedHosts] = useState<Host[]>([]);
+  const [savedHostsLoaded, setSavedHostsLoaded] = useState<boolean>(false);
 
   const [hostToBeAdded, setHostToBeAdded] = useState<Host | null>(null);
 
@@ -37,13 +35,13 @@ function App() {
 
   const [toastItems, setToastItems] = useState<React.ReactNode[]>([]);
 
-  function onNewToastMessage(message: React.ReactNode) {
+  const onNewToastMessage = useCallback((message: React.ReactNode) => {
     setToastItems(toastItems.concat(
       <ToastItem key={Date.now()}>
         {message}
       </ToastItem>
     ));
-  }
+  }, [toastItems]);
 
   function getIpNetworks(): IPNetwork[] {
     if (settings.autoDetectNetworks) {
@@ -52,6 +50,25 @@ function App() {
       return settings.ipNetworks;
     }
   }
+
+  useEffect(() => {
+    async function loadHosts() {
+      if (savedHostsLoaded) {
+        return;
+      }
+
+      let hosts;
+      try {
+        hosts = await API.savedHostsLoad();
+      } catch (err) {
+        onNewToastMessage('Failed to load saved hosts.');
+        return;
+      }
+      setSavedHosts(hosts);
+      setSavedHostsLoaded(true);
+    }
+    loadHosts();
+  }, [onNewToastMessage]);
 
   return (
     <Router>

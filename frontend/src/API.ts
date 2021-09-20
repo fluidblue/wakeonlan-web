@@ -68,6 +68,17 @@ export default class API {
     return data;
   }
 
+  static async savedHostsLoad(): Promise<Host[]> {
+    const uri = API.apiUri + '/savedhosts';
+    const response = await fetch(uri, {
+      method: 'GET'
+    });
+    if (!response.ok || !response.body) {
+      throw new Error('Could not fetch ' + uri + ' (HTTP ' + response.status + ')');
+    }
+    return await response.json();
+  };
+
   static async addHost(host: Host): Promise<boolean> {
     let response;
     try {
