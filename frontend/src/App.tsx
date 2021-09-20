@@ -68,6 +68,11 @@ function App() {
     toastMessage(text);
   }
 
+  function onHostSaved(result: boolean) {
+    const text = result ? 'The host has been saved.' : 'The host could not be saved.';
+    toastMessage(text);
+  }
+
   function getIpNetworks(): IPNetwork[] {
     if (settings.autoDetectNetworks) {
       return autoDetectedNetworks;
@@ -118,6 +123,7 @@ function App() {
               add={true}
               savedHosts={savedHosts}
               onSavedHostsChange={setSavedHosts}
+              onHostSaved={onHostSaved}
             />
           </Route>
           <Route path="/edit/:id">
@@ -125,6 +131,7 @@ function App() {
               host={hostToBeAdded}
               savedHosts={savedHosts}
               onSavedHostsChange={setSavedHosts}
+              onHostSaved={onHostSaved}
             />
           </Route>
           <Route path="*">

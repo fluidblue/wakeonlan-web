@@ -7,12 +7,34 @@ import { Modal } from 'bootstrap';
 import NotFound from '../NotFound';
 
 import { MACFunctions, Host } from 'wakeonlan-utilities';
+import { apiUri } from '../API';
+
+async function addHost(host: Host) {
+  const response = await fetch(apiUri + '/savedhosts', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(host)
+  });
+  if (!response.ok) {
+    return false;
+  }
+  const result = await response.json();
+  if (!result || result.result !== true) {
+    return false;
+  }
+  return true;
+}
 
 interface EditHostProps {
   add?: boolean;
   host?: Host | null;
+
   savedHosts: Host[];
   onSavedHostsChange: React.Dispatch<React.SetStateAction<Host[]>>;
+
+  onHostSaved: (result: boolean) => void;
 }
 
 interface Params {
@@ -84,6 +106,12 @@ function EditHost(props: EditHostProps) {
     return hosts;
   }
 
+  function hostSaved(mac: string): boolean {
+    return props.savedHosts.find((item) => {
+      return (item.mac === mac);
+    }) ? true : false;
+  }
+
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -101,34 +129,42 @@ function EditHost(props: EditHostProps) {
 
     if (props.add) {
       // Check for duplicate item
-      if (props.savedHosts.find((item) => {
-        return (item.mac === mac);
-      })) {
+      if (hostSaved(mac)) {
         const modal = Modal.getOrCreateInstance(modalReplace.current!);
         modal.show();
         return;
       }
-
-      // Add host and update prop
-      const savedHostsNew = addCurrentHost(props.savedHosts);
-      props.onSavedHostsChange(savedHostsNew);
-    } else {
-      // Replace without asking in edit mode.
-
-      // Replace host and update prop
-      let savedHostsNew = replaceCurrentHost(props.savedHosts);
-      props.onSavedHostsChange(savedHostsNew);
     }
 
-    leavePage();
+    onSubmitContinued();
   }
 
-  function onModalReplaceYesClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    // Replace host and update prop
-    let savedHostsNew = replaceCurrentHost(props.savedHosts);
+  function onSubmitContinued() {
+    // Add (or replace) host on server
+    const host: Host = {
+      name: hostname,
+      mac: mac
+    };
+    if (!addHost(host)) {
+      props.onHostSaved(false);
+      return;
+    }
+
+    // Add or replace host in array and save to prop
+    let savedHostsNew;
+    if (hostSaved(mac)) {
+      savedHostsNew = replaceCurrentHost(props.savedHosts);
+    } else {
+      savedHostsNew = addCurrentHost(props.savedHosts);
+    }
     props.onSavedHostsChange(savedHostsNew);
 
     leavePage();
+    props.onHostSaved(true);
+  }
+
+  function onModalReplaceYesClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    onSubmitContinued();
   }
 
   function onModalDeleteConfirm(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
