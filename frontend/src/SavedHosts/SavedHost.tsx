@@ -4,10 +4,34 @@ import './SavedHost.css';
 import { useHistory } from 'react-router-dom';
 
 import { apiUri } from '../API';
+import { SettingsData } from 'wakeonlan-utilities';
+
+async function wakeonlan(mac: string, port: number): Promise<boolean> {
+  const response = await fetch(apiUri + '/wakeonlan', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      mac: mac,
+      port: port
+    })
+  });
+  if (!response.ok) {
+    return false;
+  }
+  const responseObject = await response.json();
+  if (!responseObject || !responseObject.result || responseObject.result !== true) {
+    return false;
+  }
+  return true;
+}
 
 interface SavedHostProps {
   hostname: string;
   mac: string;
+
+  settings: SettingsData;
 
   onWoken?: (hostname: string, mac: string, result: boolean) => void;
 }
@@ -15,29 +39,8 @@ interface SavedHostProps {
 function SavedHost(props: SavedHostProps) {
   const history = useHistory();
 
-  async function wakeonlan(mac: string): Promise<boolean> {
-    const response = await fetch(apiUri + '/wakeonlan', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        mac: mac
-        // TODO: Add port (and possibly address)
-      })
-    });
-    if (!response.ok) {
-      return false;
-    }
-    const responseObject = await response.json();
-    if (!responseObject || !responseObject.result || responseObject.result !== true) {
-      return false;
-    }
-    return true;
-  }
-
   function handleHostItemClick(e: React.MouseEvent<HTMLLIElement, MouseEvent>) {
-    wakeonlan(props.mac).then((result) => {
+    wakeonlan(props.mac, props.settings.wolPort).then((result) => {
       if (props.onWoken) {
         props.onWoken(props.hostname, props.mac, result);
       }

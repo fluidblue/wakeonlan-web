@@ -3,13 +3,14 @@ import './SavedHosts.css';
 
 import { Link, useHistory } from 'react-router-dom';
 
-import { Host } from 'wakeonlan-utilities';
+import { Host, SettingsData } from 'wakeonlan-utilities';
 import SavedHost from './SavedHost';
 
 interface SavedHostsProps {
   onHostToBeAddedChange: React.Dispatch<React.SetStateAction<Host | null>>;
   onHostWoken: (hostname: string, mac: string, result: boolean) => void;
   savedHosts: Host[];
+  settings: SettingsData;
 }
 
 function SavedHosts(props: SavedHostsProps) {
@@ -28,6 +29,7 @@ function SavedHosts(props: SavedHostsProps) {
         hostname={savedHost.name}
         mac={savedHost.mac}
         onWoken={props.onHostWoken}
+        settings={props.settings}
         key={savedHost.mac}
       />
     );

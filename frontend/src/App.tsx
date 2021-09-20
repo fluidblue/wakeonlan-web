@@ -79,6 +79,7 @@ function App() {
               onHostToBeAddedChange={setHostToBeAdded}
               onHostWoken={onHostWoken}
               savedHosts={savedHosts}
+              settings={settings}
             />
           </Route>
           <Route path="/discover">
