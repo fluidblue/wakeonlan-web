@@ -10,7 +10,7 @@ export default class API {
 
   private constructor() {}
 
-  private static getAPIUri() {
+  private static getAPIUri(): string {
     let uri = '/api';
     if (process.env.NODE_ENV === 'development') {
       uri = window.location.protocol + '//' + window.location.hostname + ':8000' + uri;
@@ -68,7 +68,7 @@ export default class API {
     return data;
   }
 
-  static async addHost(host: Host) {
+  static async addHost(host: Host): Promise<boolean> {
     let response;
     try {
       response = await fetch(API.apiUri + '/savedhosts', {
@@ -142,7 +142,7 @@ export default class API {
     return true;
   }
 
-  static async settingsSave(settings: SettingsData) {
+  static async settingsSave(settings: SettingsData): Promise<boolean> {
     const uri = API.apiUri + '/settings';
     let response;
     try {
@@ -166,7 +166,7 @@ export default class API {
     return true;
   }
 
-  static async ipNetworksLoad() {
+  static async ipNetworksLoad(): Promise<IPNetwork[]> {
     const uri = API.apiUri + '/ip-networks';
     const response = await fetch(uri, {
       method: 'GET'
@@ -186,7 +186,7 @@ export default class API {
     return data;
   };
 
-  static async settingsLoad() {
+  static async settingsLoad(): Promise<SettingsData> {
     const uri = API.apiUri + '/settings';
     const response = await fetch(uri, {
       method: 'GET'
