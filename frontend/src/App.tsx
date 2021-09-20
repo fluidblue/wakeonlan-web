@@ -56,6 +56,15 @@ function App() {
     ));
   }
 
+  function onSettingsSaved(result: boolean) {
+    const text = result ? 'The settings have been saved.' : 'Failed to save settings.';
+    setToastItems(toastItems.concat(
+      <ToastItem key={Date.now()}>
+        {text}
+      </ToastItem>
+    ));
+  }
+
   function getIpNetworks(): IPNetwork[] {
     if (settings.autoDetectNetworks) {
       return autoDetectedNetworks;
@@ -97,6 +106,7 @@ function App() {
               autoDetectedNetworks={autoDetectedNetworks}
               settings={settings}
               onSettingsChange={setSettings}
+              onSettingsSaved={onSettingsSaved}
             />
           </Route>
           <Route path="/add">

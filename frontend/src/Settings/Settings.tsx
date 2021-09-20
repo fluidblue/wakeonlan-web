@@ -11,13 +11,18 @@ const PORT_MAX: number = 65535;
 
 async function save(settings: SettingsData) {
   const uri = apiUri + '/settings';
-  const response = await fetch(uri, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(settings)
-  });
+  let response;
+  try {
+    response = await fetch(uri, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(settings)
+    });
+  } catch (err) {
+    return false;
+  }
   if (!response.ok || !response.body) {
     throw new Error('Could not fetch ' + uri + ' (HTTP ' + response.status + ')');
   }
@@ -33,6 +38,8 @@ interface SettingsProps {
 
   settings: SettingsData;
   onSettingsChange: React.Dispatch<React.SetStateAction<SettingsData>>;
+
+  onSettingsSaved: (result: boolean) => void;
 }
 
 function Settings(props: SettingsProps) {
@@ -82,7 +89,11 @@ function Settings(props: SettingsProps) {
       wolPort: port
     }
     props.onSettingsChange(settingsNew);
-    save(settingsNew);
+    async function saveSettings() {
+      const result = await save(settingsNew);
+      props.onSettingsSaved(result);
+    }
+    saveSettings();
   }
 
   function onReset() {
