@@ -1,71 +1,95 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Settings.css';
 
 import IPNetworkPanel from './IPNetworkPanel';
 import { IPNetwork } from 'wakeonlan-utilities';
 import { isIpNetworksStringValid, stringToIpNetworks } from '../IPUtilities';
-import { WAKEONLAN_DEFAULT_PORT } from '../App';
 
+const WAKEONLAN_DEFAULT_PORT: number = 9;
 const PORT_MIN: number = 0;
 const PORT_MAX: number = 65535;
+
+export interface SettingsData {
+	autoDetectNetworks: boolean;
+	ipNetworks: IPNetwork[];
+	wolPort: number;
+}
+
+export const settingsDataDefault: SettingsData = {
+	autoDetectNetworks: true,
+	ipNetworks: [],
+	wolPort: 9
+};
+
+function save(settings: SettingsData) {
+  // TODO: Save to server
+  console.log('wolPort', settings.wolPort);
+  console.log('autoDetectNetworks', settings.autoDetectNetworks);
+  console.log('ipNetworks', settings.ipNetworks);
+}
 
 interface SettingsProps {
   autoDetectedNetworks: IPNetwork[];
 
-  ipNetworks: IPNetwork[];
-  onIpNetworksChange: React.Dispatch<React.SetStateAction<IPNetwork[]>>;
-
-  autoDetectNetworks: boolean;
-  onAutoDetectNetworksChange: React.Dispatch<React.SetStateAction<boolean>>;
-
-  wolPort: number;
-  onWolPortChange: React.Dispatch<React.SetStateAction<number>>;
+  settings: SettingsData;
+  onSettingsChange: React.Dispatch<React.SetStateAction<SettingsData>>;
 }
 
 function Settings(props: SettingsProps) {
   const [networksString, setNetworksString] = useState<string>('');
 
+  const [autoDetectNetworks, setAutoDetectNetworks] = useState<boolean>(true);
+  const [ipNetworks, setIpNetworks] = useState<IPNetwork[]>([]);
+  const [wolPort, setWolPort] = useState<number>(WAKEONLAN_DEFAULT_PORT);
+
   const [wasValidated, setWasValidated] = useState(false);
+
+  const { settings } = props;
+  useEffect(() => {
+    setAutoDetectNetworks(settings.autoDetectNetworks);
+    setIpNetworks(settings.ipNetworks);
+    setWolPort(settings.wolPort);
+  }, [settings]);
 
   function onInputPortChange(e: React.ChangeEvent<HTMLInputElement>) {
     const value = parseInt(e.target.value);
-    props.onWolPortChange(value);
-  }
-
-  function saveToServer(wolPort: number, autoDetectNetworks: boolean, ipNetworks: IPNetwork[]) {
-    // TODO: Save to server
-    console.log('wolPort', wolPort);
-    console.log('autoDetectNetworks', autoDetectNetworks);
-    console.log('ipNetworks', ipNetworks);
+    setWolPort(value);
   }
 
   function onSave(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
 
-    if (props.wolPort < PORT_MIN || props.wolPort > PORT_MAX) {
+    if (wolPort < PORT_MIN || wolPort > PORT_MAX) {
       setWasValidated(true);
       return;
     }
 
-    let ipNetworks: IPNetwork[] = [];
-    if (!props.autoDetectNetworks) {
+    let ipNetworksNew: IPNetwork[] = [];
+    if (!autoDetectNetworks) {
       if (!isIpNetworksStringValid(networksString)) {
         setWasValidated(true);
         return;
       }
-      ipNetworks = stringToIpNetworks(networksString);
-      props.onIpNetworksChange(ipNetworks);
+      ipNetworksNew = stringToIpNetworks(networksString);
+      setIpNetworks(ipNetworksNew);
     }
 
     setWasValidated(false);
-    saveToServer(props.wolPort, props.autoDetectNetworks, ipNetworks);
+
+    const settingsNew: SettingsData = {
+      autoDetectNetworks: autoDetectNetworks,
+      ipNetworks: ipNetworksNew,
+      wolPort: wolPort
+    }
+    props.onSettingsChange(settingsNew);
+    save(settingsNew);
   }
 
   function onReset() {
     setWasValidated(false);
 
-    props.onAutoDetectNetworksChange(true);
-    props.onWolPortChange(WAKEONLAN_DEFAULT_PORT);
+    setAutoDetectNetworks(true);
+    setWolPort(WAKEONLAN_DEFAULT_PORT);
   }
 
   const formClassName = wasValidated ? 'was-validated' : '';
@@ -76,10 +100,10 @@ function Settings(props: SettingsProps) {
         <h6 className="mb-3 fw-bold">Host discovery</h6>
         <IPNetworkPanel
           autoDetectedNetworks={props.autoDetectedNetworks}
-          ipNetworks={props.ipNetworks}
-          onIpNetworksChange={props.onIpNetworksChange}
-          autoDetect={props.autoDetectNetworks}
-          onAutoDetectChange={props.onAutoDetectNetworksChange}
+          ipNetworks={ipNetworks}
+          onIpNetworksChange={setIpNetworks}
+          autoDetect={autoDetectNetworks}
+          onAutoDetectChange={setAutoDetectNetworks}
           networks={networksString}
           onNetworksChange={setNetworksString}
           wasValidated={wasValidated}
@@ -99,7 +123,7 @@ function Settings(props: SettingsProps) {
             className="form-control"
             id="inputPort"
             placeholder="Enter port number"
-            value={props.wolPort}
+            value={wolPort}
             onChange={onInputPortChange}
             min={PORT_MIN}
             max={PORT_MAX}

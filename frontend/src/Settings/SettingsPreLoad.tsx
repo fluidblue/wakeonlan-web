@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 
 import { IPFunctions, IPNetwork } from 'wakeonlan-utilities';
 import { apiUri } from '../API';
+import { SettingsData } from './Settings';
 
 async function fetchIpNetworks() {
   const uri = apiUri + '/ip-networks';
@@ -36,19 +37,14 @@ async function fetchSettings() {
 
 interface SettingsPreLoadProps {
   onAutoDetectedNetworksChange: React.Dispatch<React.SetStateAction<IPNetwork[]>>
-
-  onAutoDetectNetworksChange: React.Dispatch<React.SetStateAction<boolean>>
-  onIpNetworksChange: React.Dispatch<React.SetStateAction<IPNetwork[]>>
-  onWolPortChange: React.Dispatch<React.SetStateAction<number>>
+  onSettingsChange: React.Dispatch<React.SetStateAction<SettingsData>>;
 }
 
 function SettingsPreLoad(props: SettingsPreLoadProps) {
   // Execute once on component load
   const {
     onAutoDetectedNetworksChange,
-    onAutoDetectNetworksChange,
-    onIpNetworksChange,
-    onWolPortChange
+    onSettingsChange
   } = props;
   useEffect(() => {
     async function fetchData() {
@@ -56,16 +52,12 @@ function SettingsPreLoad(props: SettingsPreLoadProps) {
       onAutoDetectedNetworksChange(ipNetworks);
 
       const settings = await fetchSettings();
-      onAutoDetectNetworksChange(settings.autoDetectNetworks);
-      onIpNetworksChange(settings.ipNetworks);
-      onWolPortChange(settings.wolPort);
+      onSettingsChange(settings);
     };
     fetchData();
   }, [
     onAutoDetectedNetworksChange,
-    onAutoDetectNetworksChange,
-    onIpNetworksChange,
-    onWolPortChange
+    onSettingsChange
   ]);
 
   return <></>;

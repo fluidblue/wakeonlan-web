@@ -10,7 +10,7 @@ import {
 import Navbar from './Navbar/Navbar';
 import SavedHosts from './SavedHosts/SavedHosts';
 import Discover from './Discover/Discover';
-import Settings from './Settings/Settings';
+import Settings, { SettingsData, settingsDataDefault } from './Settings/Settings';
 import SettingsPreLoad from './Settings/SettingsPreLoad';
 import EditHost from './EditHost/EditHost';
 import NotFound from './NotFound';
@@ -19,8 +19,6 @@ import ToastContainer from './Toasts/ToastContainer';
 import ToastItem from './Toasts/ToastItem';
 
 import { Host, IPNetwork } from 'wakeonlan-utilities';
-
-export const WAKEONLAN_DEFAULT_PORT: number = 9;
 
 function App() {
   const [savedHosts, setSavedHosts] = useState<Host[]>([
@@ -35,9 +33,7 @@ function App() {
   const [discoveredHosts, setDiscoveredHosts] = useState<Host[]>([]);
 
   const [autoDetectedNetworks, setAutoDetectedNetworks] = useState<IPNetwork[]>([]);
-  const [autoDetectNetworks, setAutoDetectNetworks] = useState<boolean>(true);
-  const [ipNetworks, setIpNetworks] = useState<IPNetwork[]>([]);
-  const [wolPort, setWolPort] = useState<number>(WAKEONLAN_DEFAULT_PORT);
+  const [settings, setSettings] = useState<SettingsData>(settingsDataDefault);
 
   const [toastItems, setToastItems] = useState<React.ReactNode[]>([]);
 
@@ -61,10 +57,10 @@ function App() {
   }
 
   function getIpNetworks(): IPNetwork[] {
-    if (autoDetectNetworks) {
+    if (settings.autoDetectNetworks) {
       return autoDetectedNetworks;
     } else {
-      return ipNetworks;
+      return settings.ipNetworks;
     }
   }
 
@@ -72,9 +68,7 @@ function App() {
     <Router>
       <SettingsPreLoad
         onAutoDetectedNetworksChange={setAutoDetectedNetworks}
-        onAutoDetectNetworksChange={setAutoDetectNetworks}
-        onIpNetworksChange={setIpNetworks}
-        onWolPortChange={setWolPort}
+        onSettingsChange={setSettings}
       />
       <Navbar />
       <hr className="header-separator" />
@@ -100,12 +94,8 @@ function App() {
           <Route path="/settings">
             <Settings
               autoDetectedNetworks={autoDetectedNetworks}
-              autoDetectNetworks={autoDetectNetworks}
-              onAutoDetectNetworksChange={setAutoDetectNetworks}
-              ipNetworks={ipNetworks}
-              onIpNetworksChange={setIpNetworks}
-              wolPort={wolPort}
-              onWolPortChange={setWolPort}
+              settings={settings}
+              onSettingsChange={setSettings}
             />
           </Route>
           <Route path="/add">
