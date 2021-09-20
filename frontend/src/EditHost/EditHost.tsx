@@ -10,13 +10,18 @@ import { MACFunctions, Host } from 'wakeonlan-utilities';
 import { apiUri } from '../API';
 
 async function addHost(host: Host) {
-  const response = await fetch(apiUri + '/savedhosts', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(host)
-  });
+  let response;
+  try {
+    response = await fetch(apiUri + '/savedhosts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(host)
+    });
+  } catch (err) {
+    return false;
+  }
   if (!response.ok) {
     return false;
   }
@@ -139,13 +144,13 @@ function EditHost(props: EditHostProps) {
     onSubmitContinued();
   }
 
-  function onSubmitContinued() {
+  async function onSubmitContinued() {
     // Add (or replace) host on server
     const host: Host = {
       name: hostname,
       mac: mac
     };
-    if (!addHost(host)) {
+    if (!await addHost(host)) {
       props.onHostSaved(false);
       return;
     }
