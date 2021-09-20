@@ -38,20 +38,23 @@ function App() {
   const [toastItems, setToastItems] = useState<React.ReactNode[]>([]);
 
   function onHostWoken(hostname: string, mac: string, result: boolean) {
-    if (!result) {
-      setToastItems(toastItems.concat(
-        <ToastItem key={Date.now()}>
-          Failed to send Wake-on-LAN packet to:<br />
-          {hostname}
-        </ToastItem>
-      ));
-      return;
-    }
-
-    setToastItems(toastItems.concat(
-      <ToastItem key={Date.now()}>
+    let message = null;
+    if (result) {
+      message =
+      <>
         Wake-on-LAN packet sent to:<br />
         {hostname}
+      </>;
+    } else {
+      message =
+      <>
+        Failed to send Wake-on-LAN packet to:<br />
+        {hostname}
+      </>;
+    }
+    setToastItems(toastItems.concat(
+      <ToastItem key={Date.now()}>
+        {message}
       </ToastItem>
     ));
   }
