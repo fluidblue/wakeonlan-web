@@ -220,7 +220,7 @@ function EditHost(props: EditHostProps) {
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" className="btn btn-danger" onClick={onModalDeleteConfirm}>Delete</button>
+              <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={onModalDeleteConfirm}>Delete</button>
             </div>
           </div>
         </div>
@@ -239,7 +239,7 @@ function EditHost(props: EditHostProps) {
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">No</button>
-              <button type="button" className="btn btn-primary" onClick={onModalReplaceYesClick}>Yes</button>
+              <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={onModalReplaceYesClick}>Yes</button>
             </div>
           </div>
         </div>
