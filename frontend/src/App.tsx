@@ -83,7 +83,7 @@ function App() {
       setSavedHostsLoaded(true);
     }
     loadHosts();
-  }, [onNewToastMessage]);
+  }, [savedHostsLoaded, onNewToastMessage]);
 
   return (
     <Router>
