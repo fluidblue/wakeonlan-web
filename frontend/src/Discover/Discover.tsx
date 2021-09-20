@@ -23,7 +23,7 @@ async function fetchHostname(ip: string): Promise<string> {
     })
   });
   if (response.ok) {
-    return response.text();
+    return await response.text();
   } else {
     return ip;
   }
