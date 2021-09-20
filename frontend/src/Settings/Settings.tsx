@@ -18,7 +18,7 @@ export interface SettingsData {
 export const settingsDataDefault: SettingsData = {
 	autoDetectNetworks: true,
 	ipNetworks: [],
-	wolPort: 9
+	wolPort: WAKEONLAN_DEFAULT_PORT
 };
 
 function save(settings: SettingsData) {
