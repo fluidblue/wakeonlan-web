@@ -39,7 +39,7 @@ interface EditHostProps {
   savedHosts: Host[];
   onSavedHostsChange: React.Dispatch<React.SetStateAction<Host[]>>;
 
-  onHostSaved: (result: boolean) => void;
+  onNewToastMessage: (message: React.ReactNode) => void;
 }
 
 interface Params {
@@ -165,7 +165,12 @@ function EditHost(props: EditHostProps) {
     props.onSavedHostsChange(savedHostsNew);
 
     leavePage();
-    props.onHostSaved(true);
+    onHostSaved(true);
+  }
+
+  function onHostSaved(result: boolean) {
+    const text = result ? 'The host has been saved.' : 'The host could not be saved.';
+    props.onNewToastMessage(text);
   }
 
   function onModalReplaceYesClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
