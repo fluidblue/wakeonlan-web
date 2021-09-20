@@ -38,9 +38,9 @@ interface SettingsProps {
 function Settings(props: SettingsProps) {
   const [networksString, setNetworksString] = useState<string>('');
 
-  const [autoDetectNetworks, setAutoDetectNetworks] = useState<boolean>(true);
-  const [ipNetworks, setIpNetworks] = useState<IPNetwork[]>([]);
-  const [wolPort, setWolPort] = useState<number>(WAKEONLAN_DEFAULT_PORT);
+  const [autoDetectNetworks, setAutoDetectNetworks] = useState<boolean>(settingsDataDefault.autoDetectNetworks);
+  const [ipNetworks, setIpNetworks] = useState<IPNetwork[]>(settingsDataDefault.ipNetworks);
+  const [wolPort, setWolPort] = useState<number>(settingsDataDefault.wolPort);
 
   const [wasValidated, setWasValidated] = useState(false);
 
@@ -88,8 +88,8 @@ function Settings(props: SettingsProps) {
   function onReset() {
     setWasValidated(false);
 
-    setAutoDetectNetworks(true);
-    setWolPort(WAKEONLAN_DEFAULT_PORT);
+    setAutoDetectNetworks(settingsDataDefault.autoDetectNetworks);
+    setWolPort(settingsDataDefault.wolPort);
   }
 
   const formClassName = wasValidated ? 'was-validated' : '';
