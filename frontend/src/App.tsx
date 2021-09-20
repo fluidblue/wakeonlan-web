@@ -50,6 +50,21 @@ function App() {
       return settings.ipNetworks;
     }
   }
+  const ipNetworks = getIpNetworks();
+
+  function getOrderedHosts(hosts: Host[]) {
+    return hosts.sort((a: Host, b: Host) => {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      // Names must be equal
+      return 0;
+    });
+  }
+  const orderedSavedHosts = getOrderedHosts(savedHosts);
 
   useEffect(() => {
     async function loadHosts() {
@@ -84,7 +99,7 @@ function App() {
             <SavedHosts
               onHostToBeAddedChange={setHostToBeAdded}
               onNewToastMessage={onNewToastMessage}
-              savedHosts={savedHosts}
+              savedHosts={orderedSavedHosts}
               settings={settings}
             />
           </Route>
@@ -95,7 +110,7 @@ function App() {
               discoveredHosts={discoveredHosts}
               onScannedChange={setScanned}
               scanned={scanned}
-              ipNetworks={getIpNetworks()}
+              ipNetworks={ipNetworks}
             />
           </Route>
           <Route path="/settings">
@@ -110,7 +125,7 @@ function App() {
             <EditHost
               host={hostToBeAdded}
               add={true}
-              savedHosts={savedHosts}
+              savedHosts={orderedSavedHosts}
               onSavedHostsChange={setSavedHosts}
               onNewToastMessage={onNewToastMessage}
             />
@@ -118,7 +133,7 @@ function App() {
           <Route path="/edit/:id">
             <EditHost
               host={hostToBeAdded}
-              savedHosts={savedHosts}
+              savedHosts={orderedSavedHosts}
               onSavedHostsChange={setSavedHosts}
               onNewToastMessage={onNewToastMessage}
             />
