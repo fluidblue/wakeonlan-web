@@ -16,10 +16,10 @@ function SettingsPreLoad(props: SettingsPreLoadProps) {
   } = props;
   useEffect(() => {
     async function fetchData() {
-      const ipNetworks: IPNetwork[] = await API.fetchIpNetworks();
+      const ipNetworks: IPNetwork[] = await API.ipNetworksLoad();
       onAutoDetectedNetworksChange(ipNetworks);
 
-      const settings = await API.fetchSettings();
+      const settings = await API.settingsLoad();
       onSettingsChange(settings);
     };
     fetchData();

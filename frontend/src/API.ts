@@ -141,7 +141,7 @@ export default class API {
     return true;
   }
 
-  static async fetchIpNetworks() {
+  static async ipNetworksLoad() {
     const uri = API.apiUri + '/ip-networks';
     const response = await fetch(uri, {
       method: 'GET'
@@ -161,7 +161,7 @@ export default class API {
     return data;
   };
 
-  static async fetchSettings() {
+  static async settingsLoad() {
     const uri = API.apiUri + '/settings';
     const response = await fetch(uri, {
       method: 'GET'
