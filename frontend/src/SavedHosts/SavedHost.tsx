@@ -7,16 +7,21 @@ import { apiUri } from '../API';
 import { SettingsData } from 'wakeonlan-utilities';
 
 async function wakeonlan(mac: string, port: number): Promise<boolean> {
-  const response = await fetch(apiUri + '/wakeonlan', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      mac: mac,
-      port: port
-    })
-  });
+  let response;
+  try {
+    response = await fetch(apiUri + '/wakeonlan', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        mac: mac,
+        port: port
+      })
+    });
+  } catch (err) {
+    return false;
+  }
   if (!response.ok) {
     return false;
   }
@@ -33,7 +38,7 @@ interface SavedHostProps {
 
   settings: SettingsData;
 
-  onWoken?: (hostname: string, mac: string, result: boolean) => void;
+  onNewToastMessage: (message: React.ReactNode) => void;
 }
 
 function SavedHost(props: SavedHostProps) {
@@ -41,10 +46,26 @@ function SavedHost(props: SavedHostProps) {
 
   function handleHostItemClick(e: React.MouseEvent<HTMLLIElement, MouseEvent>) {
     wakeonlan(props.mac, props.settings.wolPort).then((result) => {
-      if (props.onWoken) {
-        props.onWoken(props.hostname, props.mac, result);
-      }
+      onHostWoken(props.hostname, props.mac, result);
     });
+  }
+
+  function onHostWoken(hostname: string, mac: string, result: boolean) {
+    let message = null;
+    if (result) {
+      message =
+      <>
+        Wake-on-LAN packet sent to:<br />
+        {hostname}
+      </>;
+    } else {
+      message =
+      <>
+        Failed to send Wake-on-LAN packet to:<br />
+        {hostname}
+      </>;
+    }
+    props.onNewToastMessage(message);
   }
 
   const editLink = '/edit/' + props.mac.replace(/:/g, '-');
