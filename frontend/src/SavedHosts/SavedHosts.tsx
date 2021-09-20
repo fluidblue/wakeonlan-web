@@ -8,7 +8,7 @@ import SavedHost from './SavedHost';
 
 interface SavedHostsProps {
   onHostToBeAddedChange: React.Dispatch<React.SetStateAction<Host | null>>;
-  onHostWoken: (hostname: string, mac: string, result: boolean) => void;
+  onNewToastMessage: (message: React.ReactNode) => void;
   savedHosts: Host[];
   settings: SettingsData;
 }
@@ -28,7 +28,7 @@ function SavedHosts(props: SavedHostsProps) {
       <SavedHost
         hostname={savedHost.name}
         mac={savedHost.mac}
-        onWoken={props.onHostWoken}
+        onNewToastMessage={props.onNewToastMessage}
         settings={props.settings}
         key={savedHost.mac}
       />

@@ -37,7 +37,7 @@ function App() {
 
   const [toastItems, setToastItems] = useState<React.ReactNode[]>([]);
 
-  function toastMessage(message: React.ReactNode) {
+  function onNewToastMessage(message: React.ReactNode) {
     setToastItems(toastItems.concat(
       <ToastItem key={Date.now()}>
         {message}
@@ -45,32 +45,14 @@ function App() {
     ));
   }
 
-  function onHostWoken(hostname: string, mac: string, result: boolean) {
-    let message = null;
-    if (result) {
-      message =
-      <>
-        Wake-on-LAN packet sent to:<br />
-        {hostname}
-      </>;
-    } else {
-      message =
-      <>
-        Failed to send Wake-on-LAN packet to:<br />
-        {hostname}
-      </>;
-    }
-    toastMessage(message);
-  }
-
   function onSettingsSaved(result: boolean) {
     const text = result ? 'The settings have been saved.' : 'Failed to save settings.';
-    toastMessage(text);
+    onNewToastMessage(text);
   }
 
   function onHostSaved(result: boolean) {
     const text = result ? 'The host has been saved.' : 'The host could not be saved.';
-    toastMessage(text);
+    onNewToastMessage(text);
   }
 
   function getIpNetworks(): IPNetwork[] {
@@ -94,7 +76,7 @@ function App() {
           <Route exact path={["/hosts", "/"]}>
             <SavedHosts
               onHostToBeAddedChange={setHostToBeAdded}
-              onHostWoken={onHostWoken}
+              onNewToastMessage={onNewToastMessage}
               savedHosts={savedHosts}
               settings={settings}
             />
