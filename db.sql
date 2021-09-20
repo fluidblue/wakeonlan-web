@@ -34,13 +34,24 @@ CREATE TABLE `Settings_IPNetworks` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
-DROP TABLE IF EXISTS `VendorMapping`;
-CREATE TABLE `VendorMapping` (
-  `mac` varchar(17) NOT NULL,
+DROP TABLE IF EXISTS `VendorMapping_IAB`;
+CREATE TABLE `VendorMapping_IAB` (
+  `mac_part1` varchar(17) NOT NULL,
+  `mac_part2_range_start` varchar(17) NOT NULL,
+  `mac_part2_range_end` varchar(17) NOT NULL,
   `organization` varchar(255) NOT NULL,
-  PRIMARY KEY (`mac`),
-  UNIQUE KEY `mac` (`mac`)
+  PRIMARY KEY (`mac_part1`),
+  KEY `mac_part2_range_start` (`mac_part2_range_start`),
+  KEY `mac_part2_range_end` (`mac_part2_range_end`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
--- 2021-09-16 19:36:18
+DROP TABLE IF EXISTS `VendorMapping_OUI`;
+CREATE TABLE `VendorMapping_OUI` (
+  `mac_part1` varchar(8) NOT NULL,
+  `organization` varchar(255) NOT NULL,
+  PRIMARY KEY (`mac_part1`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- 2021-09-20 17:35:12
