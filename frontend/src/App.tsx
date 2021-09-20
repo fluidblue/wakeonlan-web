@@ -45,11 +45,6 @@ function App() {
     ));
   }
 
-  function onSettingsSaved(result: boolean) {
-    const text = result ? 'The settings have been saved.' : 'Failed to save settings.';
-    onNewToastMessage(text);
-  }
-
   function onHostSaved(result: boolean) {
     const text = result ? 'The host has been saved.' : 'The host could not be saved.';
     onNewToastMessage(text);
@@ -96,7 +91,7 @@ function App() {
               autoDetectedNetworks={autoDetectedNetworks}
               settings={settings}
               onSettingsChange={setSettings}
-              onSettingsSaved={onSettingsSaved}
+              onNewToastMessage={onNewToastMessage}
             />
           </Route>
           <Route path="/add">

@@ -39,7 +39,7 @@ interface SettingsProps {
   settings: SettingsData;
   onSettingsChange: React.Dispatch<React.SetStateAction<SettingsData>>;
 
-  onSettingsSaved: (result: boolean) => void;
+  onNewToastMessage: (message: React.ReactNode) => void;
 }
 
 function Settings(props: SettingsProps) {
@@ -91,9 +91,14 @@ function Settings(props: SettingsProps) {
     props.onSettingsChange(settingsNew);
     async function saveSettings() {
       const result = await save(settingsNew);
-      props.onSettingsSaved(result);
+      onSettingsSaved(result);
     }
     saveSettings();
+  }
+
+  function onSettingsSaved(result: boolean) {
+    const text = result ? 'The settings have been saved.' : 'Failed to save settings.';
+    props.onNewToastMessage(text);
   }
 
   function onReset() {
