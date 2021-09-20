@@ -154,12 +154,24 @@ function EditHost(props: EditHostProps) {
     onSubmitContinued();
   }
 
-  function onModalDeleteConfirm(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  async function onModalDeleteConfirm(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    // Delete host on server
+    if (!await API.removeHost(mac)) {
+      onHostRemoved(false);
+      return;
+    }
+    
     // Remove old host and update prop
     let savedHostsNew = removeCurrentHost(props.savedHosts);
     props.onSavedHostsChange(savedHostsNew);
 
     leavePage();
+    onHostRemoved(true);
+  }
+
+  function onHostRemoved(result: boolean) {
+    const text = result ? 'The host has been removed.' : 'The host could not be removed.';
+    props.onNewToastMessage(text);
   }
 
   const showDeleteButton = !props.add;

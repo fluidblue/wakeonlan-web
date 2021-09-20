@@ -91,6 +91,31 @@ export default class API {
     return true;
   }
 
+  static async removeHost(mac: string): Promise<boolean> {
+    let response;
+    try {
+      response = await fetch(API.apiUri + '/savedhosts', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          mac: mac
+        })
+      });
+    } catch (err) {
+      return false;
+    }
+    if (!response.ok) {
+      return false;
+    }
+    const result = await response.json();
+    if (!result || result.result !== true) {
+      return false;
+    }
+    return true;
+  }
+
   static async wakeonlan(mac: string, port: number): Promise<boolean> {
     let response;
     try {
