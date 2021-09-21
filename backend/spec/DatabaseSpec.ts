@@ -57,7 +57,7 @@ describe("Database", () => {
 		expect(result).toBeDefined();
 	});
 
-	it("should get the organization of an IAB", async () => {
+	it("should get the organization from the IAB list", async () => {
 		const organization = await database.organizationMappingIABGet("00:50:C2:7D:50:01")
 		expect(organization).toBeDefined();
 		expect(organization).toEqual("DEUTA-WERKE GmbH");
