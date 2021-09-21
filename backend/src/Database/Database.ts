@@ -157,4 +157,49 @@ export default class Database {
 		}
 		return true;
 	}
+
+	async organizationMappingIABGet(mac: string): Promise<string | null> {
+		// TODO
+		return null;
+	}
+
+	async organizationMappingOUIGet(mac: string): Promise<string | null> {
+		// TODO
+		return null;
+	}
+
+	async organizationMappingInitialized(): Promise<boolean> {
+		let conn: mariadb.PoolConnection | null = null;
+		try {
+			conn = await this.pool.getConnection();
+
+			let rows = await conn.query("SELECT COUNT(*) AS `Count` FROM `OrganizationMapping_IAB`");
+			if (!rows || !rows[0] || !rows[0]["Count"] || rows[0]["Count"] === 0) {
+				return false;
+			}
+			
+			rows = await conn.query("SELECT COUNT(*) AS `Count` FROM `OrganizationMapping_OUI`");
+			if (!rows || !rows[0] || !rows[0]["Count"] || rows[0]["Count"] === 0) {
+				return false;
+			}
+		} catch (err) {
+			Log.error(err);
+			return false;
+		} finally {
+			if (conn) {
+				conn.end();
+			}
+		}
+		return true;
+	}
+
+	async organizationMappingIABUpdate(): Promise<boolean> {
+		// TODO
+		return false;
+	}
+
+	async organizationMappingOUIUpdate(): Promise<boolean> {
+		// TODO
+		return false;
+	}
 }

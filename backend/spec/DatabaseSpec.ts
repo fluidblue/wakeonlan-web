@@ -51,4 +51,9 @@ describe("Database", () => {
 		result = await database.savedHostsDelete("00:11:22:33:44:55");
 		expect(result).toBeTrue();
 	});
+
+	it("should check if the organization mapping is initialized", async () => {
+		const result = await database.organizationMappingInitialized();
+		expect(result).toBeDefined();
+	});
 });
