@@ -1,60 +1,27 @@
 # wakeonlan-web
 
-wakeonlan-web.
+wakeonlan-web is a free GUI for waking up hosts using [Wake-on-Lan (WoL)](https://en.wikipedia.org/wiki/Wake-on-LAN).
+
+It works on both mobile and desktop devices.
 
 
-## Installation using Docker Compose
+## Screenshots
 
-1. In the root directory of this repository, create a file `database_password.txt` and save a new password for the database in it.
-
-2. Then, still in the root directory of the repository, execute the following commands:
-```
-docker-compose build
-docker-compose up -d
-```
-
-3. After starting up, you can navigate with your browser to http://localhost:8000
+See the [screenshots](docs/Screenshots.md) page.
 
 
-## Development installation
+## Installation
 
-1. In the root directory of this repository, create a file `database_password.txt` and save a new password for the database in it.
+There are two types of installations available:
+The [standard installation](docs/Installation.md) and the [development installation](docs/Development.md).
+If you just want to use wakeonlan-web, the standard installation is sufficient.
 
-2. Install MariaDB locally (or on a VM).
-
-3. Go through steps for both frontend and backend.
-
-### Frontend
-
-**Installation**
-
-    cd frontend
-    yarn install
-    yarn start
-
-**Test**
-
-    cd frontend
-    yarn test
+It is recommended to host wakeonlan-web on a low-power network device such as a Raspberry Pi.
 
 
-### Backend
+## License
 
-**Installation**
+Copyright (C) 2021 Max Geissler
 
-    cd backend
-    npm install
-
-    # Update DATABASE_HOST to match your configuration. If you installed MariaDB locally, enter 127.0.0.1 as host.
-    nano development_start.sh
-
-    ./development_start.sh
-
-**Test**
-
-    cd backend
-
-    # Update DATABASE_HOST to match your configuration. If you installed MariaDB locally, enter 127.0.0.1 as host.
-    nano development_test.sh
-
-    ./development_test.sh
+This program is free software, licensed under the GNU General Public License (GPL) v3.0 or later.
+Please see the [License](LICENSE.md) for further information.
