@@ -27,7 +27,7 @@ DROP TABLE IF EXISTS `OrganizationMapping_OUI`;
 CREATE TABLE `OrganizationMapping_OUI` (
   `mac_part1` varchar(8) NOT NULL,
   `organization` varchar(255) NOT NULL,
-  PRIMARY KEY (`mac_part1`)
+  KEY `mac_part1` (`mac_part1`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -54,4 +54,4 @@ CREATE TABLE `Settings_IPNetworks` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
--- 2021-09-21 11:46:50
+-- 2021-09-21 12:05:42
