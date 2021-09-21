@@ -189,8 +189,28 @@ export default class Database {
 	}
 
 	async organizationMappingOUIGet(mac: string): Promise<string | null> {
-		// TODO
-		return null;
+		mac = mac.replace(/:/g, "-");
+		const mac_part1 = mac.substr(0, 8);
+
+		let conn: mariadb.PoolConnection | null = null;
+		try {
+			conn = await this.pool.getConnection();
+
+			let rows = await conn.query("SELECT `organization` " +
+				"FROM `OrganizationMapping_OUI` " +
+				"WHERE `mac_part1` = ?", [mac_part1]);
+			if (!rows || rows.length === 0) {
+				return null;
+			}
+			return rows[0]["organization"];
+		} catch (err) {
+			Log.error(err);
+			return null;
+		} finally {
+			if (conn) {
+				conn.end();
+			}
+		}
 	}
 
 	async organizationMappingInitialized(): Promise<boolean> {
