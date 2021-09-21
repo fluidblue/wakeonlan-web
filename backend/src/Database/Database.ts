@@ -3,6 +3,7 @@ import fs from "fs";
 
 import { Host, SettingsData, settingsDataDefault } from "wakeonlan-utilities";
 import Log from "../Log/Log";
+import { IABEntry, OUIEntry } from "../OrganizationMapping/OrganizationMapping";
 
 export default class Database {
 	private pool: mariadb.Pool;
@@ -238,12 +239,14 @@ export default class Database {
 		return true;
 	}
 
-	async organizationMappingIABUpdate(): Promise<boolean> {
+	async organizationMappingIABUpdate(items: IABEntry[]): Promise<boolean> {
 		// TODO
+		console.log(items);
+
 		return false;
 	}
 
-	async organizationMappingOUIUpdate(): Promise<boolean> {
+	async organizationMappingOUIUpdate(items: OUIEntry[]): Promise<boolean> {
 		// TODO
 		return false;
 	}
