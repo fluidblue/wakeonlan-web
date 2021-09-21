@@ -35,6 +35,34 @@ export default class API {
     }
   }
 
+  static async fetchOrganizationName(mac: string): Promise<string> {
+    const response = await fetch(API.apiUri + '/device-name/vendor-name', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        mac: mac
+      })
+    });
+    if (response.ok) {
+      return await response.text();
+    } else {
+      return mac;
+    }
+  }
+
+  static async fetchName(ip: string, mac: string) {
+    let name = await this.fetchHostname(ip);
+    if (!name || name === ip) {
+      name = await this.fetchOrganizationName(mac);
+      if (!name || name === mac) {
+        name = ip;
+      }
+    }
+    return name;
+  }
+
   static async hostDiscovery(ipNetwork: IPNetwork): Promise<Host[]> {
     const response = await fetch(API.apiUri + '/host-discovery/arp-scan', {
       method: 'POST',
@@ -60,7 +88,7 @@ export default class API {
       const hostMacIp: HostMacIP = resultObject;
   
       const host: Host = {
-        name: await API.fetchHostname(hostMacIp.ip),
+        name: await API.fetchName(hostMacIp.ip, hostMacIp.mac),
         mac: hostMacIp.mac
       };
       data.push(host);
