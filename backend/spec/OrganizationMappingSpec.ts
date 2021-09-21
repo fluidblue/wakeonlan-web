@@ -3,7 +3,7 @@ import "jasmine";
 import Database from "../src/Database/Database";
 import OrganizationMapping from "../src/OrganizationMapping/OrganizationMapping"
 
-const timeout: number = 60; // in seconds
+const timeout: number = 120; // in seconds
 
 describe("OrganizationMapping", () => {
 	let originalTimeout: number;
