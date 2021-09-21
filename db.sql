@@ -11,6 +11,26 @@ DROP DATABASE IF EXISTS `wakeonlan-web`;
 CREATE DATABASE `wakeonlan-web` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 USE `wakeonlan-web`;
 
+DROP TABLE IF EXISTS `OrganizationMapping_IAB`;
+CREATE TABLE `OrganizationMapping_IAB` (
+  `mac_part1` varchar(17) NOT NULL,
+  `mac_part2_range_start` varchar(17) NOT NULL,
+  `mac_part2_range_end` varchar(17) NOT NULL,
+  `organization` varchar(255) NOT NULL,
+  KEY `mac_part2_range_start` (`mac_part2_range_start`),
+  KEY `mac_part2_range_end` (`mac_part2_range_end`),
+  KEY `mac_part1` (`mac_part1`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+DROP TABLE IF EXISTS `OrganizationMapping_OUI`;
+CREATE TABLE `OrganizationMapping_OUI` (
+  `mac_part1` varchar(8) NOT NULL,
+  `organization` varchar(255) NOT NULL,
+  PRIMARY KEY (`mac_part1`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
 DROP TABLE IF EXISTS `SavedHosts`;
 CREATE TABLE `SavedHosts` (
   `mac` varchar(17) NOT NULL,
@@ -34,24 +54,4 @@ CREATE TABLE `Settings_IPNetworks` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
-DROP TABLE IF EXISTS `VendorMapping_IAB`;
-CREATE TABLE `VendorMapping_IAB` (
-  `mac_part1` varchar(17) NOT NULL,
-  `mac_part2_range_start` varchar(17) NOT NULL,
-  `mac_part2_range_end` varchar(17) NOT NULL,
-  `organization` varchar(255) NOT NULL,
-  PRIMARY KEY (`mac_part1`),
-  KEY `mac_part2_range_start` (`mac_part2_range_start`),
-  KEY `mac_part2_range_end` (`mac_part2_range_end`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-DROP TABLE IF EXISTS `VendorMapping_OUI`;
-CREATE TABLE `VendorMapping_OUI` (
-  `mac_part1` varchar(8) NOT NULL,
-  `organization` varchar(255) NOT NULL,
-  PRIMARY KEY (`mac_part1`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
--- 2021-09-20 17:35:12
+-- 2021-09-21 11:46:50
