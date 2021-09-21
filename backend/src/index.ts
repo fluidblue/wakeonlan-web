@@ -34,6 +34,7 @@ import { IPNetworks } from "./IPNetworks/IPNetworks";
 
 import Database from "./Database/Database";
 import Log from "./Log/Log";
+import OrganizationMapping from "./OrganizationMapping/OrganizationMapping";
 
 const app = express();
 
@@ -49,6 +50,9 @@ const indexRewrites = [
 
 // Connect to database
 const database: Database = new Database();
+
+// Instantiate organization mapping service
+const organizationMapping: OrganizationMapping = new OrganizationMapping(database);
 
 // Parse application/json and application/x-www-form-urlencoded in POST requests.
 app.use(express.json());
@@ -119,9 +123,20 @@ app.post("/api/device-name/host-name", wrap(async (req, res, next) => {
 
 app.post("/api/device-name/vendor-name", wrap(async (req, res, next) => {
 	const mac = req.body["mac"];
+	if (!MACFunctions.isValidMac(mac)) {
+		// Invalid input
+		// Send 400: Bad Request
+		res.sendStatus(400);
+		return;
+	}
 
-	// Send 501: Not Implemented
-	res.sendStatus(501);
+	let organization = await organizationMapping.getOrganizationName(mac);
+	if (!organization) {
+		organization = mac;
+	}
+
+	res.set("Content-Type", "text/plain; charset=utf-8");
+	res.send(organization);
 }));
 
 async function hostDiscovery(method: HostDiscovery, req: Request, res: Response, next: NextFunction) {
