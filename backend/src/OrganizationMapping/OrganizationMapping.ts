@@ -86,8 +86,28 @@ export default class OrganizationMapping {
 	}
 
 	async updateOUIList(): Promise<boolean> {
-		// TODO
-		return false;
+		const response = await fetch(URI_OUI);
+		if (!response) {
+			return false;
+		}
+		const text = await response.text();
+		if (!text) {
+			return false;
+		}
+
+		const ouiMapping: OUIEntry[] = [];
+		const iterable = text.matchAll(OrganizationMapping.RE_OUI);
+		for (const entry of iterable) {
+			ouiMapping.push({
+				organization: entry[2],
+				mac_part1: entry[1]
+			});
+		}
+		if (ouiMapping.length === 0) {
+			return false;
+		}
+
+		return await this.database.organizationMappingOUIUpdate(ouiMapping);
 	}
 
 	async isDBInitialized(): Promise<boolean> {

@@ -272,7 +272,34 @@ export default class Database {
 	}
 
 	async organizationMappingOUIUpdate(items: OUIEntry[]): Promise<boolean> {
-		// TODO
-		return false;
+		let conn: mariadb.PoolConnection | null = null;
+		try {
+			conn = await this.pool.getConnection();
+
+			let res = await conn.query("DELETE FROM `OrganizationMapping_OUI`");
+			if (res.warningStatus) {
+				return false;
+			}
+
+			for (const item of items) {
+				res = await conn.query(
+					"INSERT INTO `OrganizationMapping_OUI` " +
+					"(`mac_part1`, `organization`)" +
+					"VALUES (?, ?);",
+					[item.mac_part1, item.organization]
+				);
+				if (!res || res.affectedRows < 1) {
+					return false;
+				}
+			}
+		} catch (err) {
+			Log.error(err);
+			return false;
+		} finally {
+			if (conn) {
+				conn.end();
+			}
+		}
+		return true;
 	}
 }
