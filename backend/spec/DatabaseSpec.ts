@@ -56,4 +56,10 @@ describe("Database", () => {
 		const result = await database.organizationMappingInitialized();
 		expect(result).toBeDefined();
 	});
+
+	it("should get the organization of an IAB", async () => {
+		const organization = await database.organizationMappingIABGet("00:50:C2:7D:50:01")
+		expect(organization).toBeDefined();
+		expect(organization).toEqual("DEUTA-WERKE GmbH");
+	});
 });
