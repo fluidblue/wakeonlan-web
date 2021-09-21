@@ -240,10 +240,35 @@ export default class Database {
 	}
 
 	async organizationMappingIABUpdate(items: IABEntry[]): Promise<boolean> {
-		// TODO
-		console.log(items);
+		let conn: mariadb.PoolConnection | null = null;
+		try {
+			conn = await this.pool.getConnection();
 
-		return false;
+			let res = await conn.query("DELETE FROM `OrganizationMapping_IAB`");
+			if (res.warningStatus) {
+				return false;
+			}
+
+			for (const item of items) {
+				res = await conn.query(
+					"INSERT INTO `OrganizationMapping_IAB` " +
+					"(`mac_part1`, `mac_part2_range_start`, `mac_part2_range_end`, `organization`)" +
+					"VALUES (?, ?, ?, ?);",
+					[item.mac_part1, item.mac_part2_range_start, item.mac_part2_range_end, item.organization]
+				);
+				if (!res || res.affectedRows < 1) {
+					return false;
+				}
+			}
+		} catch (err) {
+			Log.error(err);
+			return false;
+		} finally {
+			if (conn) {
+				conn.end();
+			}
+		}
+		return true;
 	}
 
 	async organizationMappingOUIUpdate(items: OUIEntry[]): Promise<boolean> {

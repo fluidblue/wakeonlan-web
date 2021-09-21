@@ -54,6 +54,10 @@ export default class OrganizationMapping {
 		init();
 	}
 
+	private iabRangeConvert(range: string): string {
+		return range.substr(0, 2) + "-" + range.substr(2, 2) + "-" + range.substr(4, 2);
+	}
+
 	async updateIABList(): Promise<boolean> {
 		const response = await fetch(URI_IAB);
 		if (!response) {
@@ -70,15 +74,15 @@ export default class OrganizationMapping {
 			iabMapping.push({
 				organization: entry[2].trim(),
 				mac_part1: entry[1],
-				mac_part2_range_start: entry[3],
-				mac_part2_range_end: entry[4]
+				mac_part2_range_start: this.iabRangeConvert(entry[3]),
+				mac_part2_range_end: this.iabRangeConvert(entry[4])
 			});
 		}
 		if (iabMapping.length === 0) {
 			return false;
 		}
 
-		return await this.database.organizationMappingIABUpdate(iabMapping)
+		return await this.database.organizationMappingIABUpdate(iabMapping);
 	}
 
 	async updateOUIList(): Promise<boolean> {
