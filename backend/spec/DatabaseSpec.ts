@@ -57,13 +57,13 @@ describe("Database", () => {
 		expect(result).toBeDefined();
 	});
 
-	it("should get the organization from the IAB list", async () => {
+	it("should get an organization from the IAB list", async () => {
 		const organization = await database.organizationMappingIABGet("00:50:C2:7D:50:01")
 		expect(organization).toBeDefined();
 		expect(organization).toEqual("DEUTA-WERKE GmbH");
 	});
 
-	it("should get the organization from the OUI list", async () => {
+	it("should get an organization from the OUI list", async () => {
 		const organization = await database.organizationMappingOUIGet("00:22:72:00:00:01")
 		expect(organization).toBeDefined();
 		expect(organization).toEqual("American Micro-Fuel Device Corp.");
