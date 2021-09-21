@@ -1,5 +1,4 @@
 import fetch from "node-fetch";
-import fs from "fs";
 
 import Database from "../Database/Database";
 
