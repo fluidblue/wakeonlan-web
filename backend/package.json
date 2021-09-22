@@ -1,13 +1,27 @@
 {
   "name": "wakeonlan-web",
-  "version": "0.1.2",
-  "description": "wakeonlan-web",
+  "version": "0.9.5",
+  "description": "Free GUI for waking up hosts using Wake-on-Lan (WoL)",
   "scripts": {
     "start": "npx ts-node src/index.ts",
-    "test": "ts-node node_modules/jasmine/bin/jasmine"
+    "test": "ts-node node_modules/jasmine/bin/jasmine",
+    "prepublishOnly": "./scripts/prepublish.sh"
   },
   "author": "fluidblue",
   "license": "GPL-3.0-or-later",
+  "repository": {
+		"type": "git",
+		"url": "https://github.com/fluidblue/wakeonlan-web"
+	},
+  "keywords": [
+    "wake-on-lan",
+    "wake on lan",
+    "wake_on_lan",
+    "wakeonlan",
+    "wol",
+    "wake",
+    "automation"
+  ],
   "devDependencies": {
     "@tsconfig/node14": "^1.0.1",
     "@types/cors": "^2.8.12",
