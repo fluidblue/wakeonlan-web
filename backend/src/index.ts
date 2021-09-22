@@ -38,7 +38,7 @@ import OrganizationMapping from "./OrganizationMapping/OrganizationMapping";
 
 const app = express();
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 9000;
 const httpdocs = "httpdocs";
 const indexRewrites = [
 	"/hosts",

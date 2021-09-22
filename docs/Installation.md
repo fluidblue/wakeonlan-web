@@ -14,7 +14,7 @@ docker-compose build
 docker-compose up -d
 ```
 
-5. After starting up, you can navigate with your browser to http://localhost:8000
+5. After starting up, you can navigate with your browser to http://localhost:9000
 
 Please note that only Linux hosts (e.g. Ubuntu, Debian, Raspbian, etc.) are supported. This is because [host networking](https://docs.docker.com/network/host/) is used.
 If you want to run wakeonlan-web on macOS or Windows, you need to run it inside a VM.
