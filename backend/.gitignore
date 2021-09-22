@@ -1,5 +1,5 @@
 node_modules
+build
 docs
-src/httpdocs
 LICENSE.md
 README.md

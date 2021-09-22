@@ -1,12 +1,13 @@
 {
   "name": "wakeonlan-web",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Free GUI for waking up hosts using Wake-on-Lan (WoL)",
   "scripts": {
     "start": "npx ts-node src/index.ts",
     "test": "ts-node node_modules/jasmine/bin/jasmine",
     "prepublishOnly": "./scripts/prepublish.sh"
   },
+  "bin": "./build/index.js",
   "author": "fluidblue",
   "license": "GPL-3.0-or-later",
   "repository": {
