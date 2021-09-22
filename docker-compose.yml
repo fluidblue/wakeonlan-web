@@ -8,6 +8,7 @@ services:
             dockerfile: Dockerfile
         init: true
         environment:
+            PORT: "8000"
             DATABASE_HOST: "127.0.0.1"
             DATABASE_DB: "${DATABASE_DB}"
             DATABASE_USER: "${DATABASE_USER}"
