@@ -40,7 +40,6 @@ function Discover(props: DiscoverProps) {
   }
 
   async function hostDiscovery(ipNetworks: IPNetwork[]): Promise<Host[]> {
-    console.log("Scan will start.", ipNetworks); // TODO: Remove
     let hosts: Host[] = [];
 
     const hostDiscoveryPromises: Promise<Host[]>[] = [];
@@ -69,12 +68,6 @@ function Discover(props: DiscoverProps) {
   // Start scanning when the activity is entered.
   useEffect(() => {
     let subscribed = true;
-
-    console.log("effect:", {
-      scanned: scanned,
-      settingsLoaded: settingsLoaded,
-      ipNetworks: ipNetworks
-    });
 
     async function fetchData() {
       if (scanned || !settingsLoaded) {
