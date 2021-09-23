@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { IPNetwork, SettingsData } from 'wakeonlan-utilities';
 import API from '../API';
@@ -10,42 +10,23 @@ interface SettingsPreLoadProps {
   onNewToastMessage: (message: React.ReactNode) => void;
 }
 
-function SettingsPreLoad(props: SettingsPreLoadProps) {
-  const [settingsLoadExecuted, setSettingsLoadExecuted] = useState<boolean>(false);
+class SettingsPreLoad extends React.Component<SettingsPreLoadProps> {
+  async componentDidMount() {
+    try {
+      const ipNetworks: IPNetwork[] = await API.ipNetworksLoad();
+      const settings = await API.settingsLoad();
 
-  // Execute once on component load
-  const {
-    onAutoDetectedNetworksChange,
-    onSettingsChange,
-    onNewToastMessage
-  } = props;
-  useEffect(() => {
-    async function fetchData() {
-      if (settingsLoadExecuted) {
-        return;
-      }
-      setSettingsLoadExecuted(true);
+      this.props.onAutoDetectedNetworksChange(ipNetworks);
+      this.props.onSettingsChange(settings);
+    } catch (err) {
+      this.props.onNewToastMessage('Failed to load settings.');
+      console.error(err);
+    }
+  }
 
-      try {
-        const ipNetworks: IPNetwork[] = await API.ipNetworksLoad();
-        const settings = await API.settingsLoad();
-
-        onAutoDetectedNetworksChange(ipNetworks);
-        onSettingsChange(settings);
-      } catch (err) {
-        onNewToastMessage('Failed to load settings.');
-        console.error(err);
-      }
-    };
-    fetchData();
-  }, [
-    onAutoDetectedNetworksChange,
-    onSettingsChange,
-    onNewToastMessage,
-    settingsLoadExecuted
-  ]);
-
-  return <></>;
+  render() {
+    return <></>;
+  }
 }
 
 export default SettingsPreLoad;
