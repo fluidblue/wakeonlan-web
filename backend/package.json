@@ -1,6 +1,6 @@
 {
   "name": "wakeonlan-web",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Free GUI for waking up hosts using Wake-on-LAN (WoL)",
   "scripts": {
     "start": "npx ts-node src/index.ts",
