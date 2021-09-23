@@ -37,11 +37,13 @@ function App() {
   const [toastItems, setToastItems] = useState<React.ReactNode[]>([]);
 
   const onNewToastMessage = useCallback((message: React.ReactNode) => {
-    setToastItems(toastItems.concat(
+    const newMessage = (
       <ToastItem key={Date.now()}>
         {message}
       </ToastItem>
-    ));
+    );
+    const toastItemsNew = [...toastItems, newMessage];
+    setToastItems(toastItemsNew);
   }, [toastItems]);
 
   function getIpNetworks(): IPNetwork[] {
