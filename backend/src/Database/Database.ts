@@ -12,10 +12,21 @@ export default class Database {
 		this.pool = mariadb.createPool({
 			host: process.env.DATABASE_HOST,
 			user: process.env.DATABASE_USER,
-			password: fs.readFileSync(process.env.DATABASE_PASSWORD_FILE!, "utf8"),
+			password: this.readPassword(),
 			database: process.env.DATABASE_DB,
 			connectionLimit: 5
 		});
+	}
+
+	readPassword(): string {
+		let password = fs.readFileSync(process.env.DATABASE_PASSWORD_FILE!, "utf8");
+
+		// Remove trailing newlines.
+		// Some editors (e.g. nano, vim, ...) append newlines to files,
+		// even if the user did not enter them.
+		password = password.split("\r\n")[0].split("\n")[0];
+
+		return password;
 	}
 
 	async settingsGet(): Promise<SettingsData> {
