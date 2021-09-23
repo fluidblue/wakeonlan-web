@@ -27,11 +27,11 @@ function SettingsPreLoad(props: SettingsPreLoadProps) {
       setFirstTry(false);
 
       try {
-        const ipNetworks: IPNetwork[] = await API.ipNetworksLoad();
-        onAutoDetectedNetworksChange(ipNetworks);
-
         const settings = await API.settingsLoad();
+        const ipNetworks: IPNetwork[] = await API.ipNetworksLoad();
+
         onSettingsChange(settings);
+        onAutoDetectedNetworksChange(ipNetworks);
       } catch (err) {
         onNewToastMessage('Failed to load settings.');
         console.error(err);

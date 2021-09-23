@@ -92,8 +92,8 @@ function App() {
   }, [savedHostsLoaded, onNewToastMessage]);
 
   function onSettingsChange(settings: SetStateAction<SettingsData>) {
-    setSettingsLoaded(true);
     setSettings(settings);
+    setSettingsLoaded(true);
   }
 
   return (
