@@ -42,8 +42,9 @@ function App() {
         {message}
       </ToastItem>
     );
-    const toastItemsNew = [...toastItems, newMessage];
-    setToastItems(toastItemsNew);
+    setToastItems((prevToastItems) => {
+      return [...prevToastItems, newMessage];
+    });
   }, [toastItems]);
 
   function getIpNetworks(): IPNetwork[] {
