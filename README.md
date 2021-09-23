@@ -1,6 +1,6 @@
 # wakeonlan-web
 
-wakeonlan-web is a free GUI for waking up hosts using [Wake-on-Lan (WoL)](https://en.wikipedia.org/wiki/Wake-on-LAN).
+wakeonlan-web is a free GUI for waking up hosts using [Wake-on-LAN (WoL)](https://en.wikipedia.org/wiki/Wake-on-LAN).
 
 It works on both mobile and desktop devices.
 
