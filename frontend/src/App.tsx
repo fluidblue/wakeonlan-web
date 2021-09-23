@@ -23,7 +23,7 @@ import API from './API';
 
 function App() {
   const [savedHosts, setSavedHosts] = useState<Host[]>([]);
-  const [savedHostsLoadExecuted, setSavedHostsLoaded] = useState<boolean>(false);
+  const [savedHostsLoadExecuted, setSavedHostsLoadExecuted] = useState<boolean>(false);
 
   const [hostToBeAdded, setHostToBeAdded] = useState<Host | null>(null);
 
@@ -87,7 +87,7 @@ function App() {
       }
 
       setSavedHosts(hosts);
-      setSavedHostsLoaded(true);
+      setSavedHostsLoadExecuted(true);
 
       if (error) {
         onNewToastMessage('Failed to load saved hosts.');
