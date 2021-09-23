@@ -11,7 +11,7 @@ interface SettingsPreLoadProps {
 }
 
 function SettingsPreLoad(props: SettingsPreLoadProps) {
-  const [firstTry, setFirstTry] = useState<boolean>(true);
+  const [settingsLoadExecuted, setSettingsLoadExecuted] = useState<boolean>(false);
 
   // Execute once on component load
   const {
@@ -20,29 +20,41 @@ function SettingsPreLoad(props: SettingsPreLoadProps) {
     onNewToastMessage
   } = props;
   useEffect(() => {
+    let subscribed = true;
+
     async function fetchData() {
-      if (!firstTry) {
+      if (settingsLoadExecuted) {
         return;
       }
-      setFirstTry(false);
+      setSettingsLoadExecuted(true);
 
       try {
         const ipNetworks: IPNetwork[] = await API.ipNetworksLoad();
         const settings = await API.settingsLoad();
-        
+        if (!subscribed) {
+          return;
+        }
+
         onAutoDetectedNetworksChange(ipNetworks);
         onSettingsChange(settings);
       } catch (err) {
+        if (!subscribed) {
+          return;
+        }
         onNewToastMessage('Failed to load settings.');
         console.error(err);
       }
     };
     fetchData();
+
+    return () => {
+      subscribed = false;
+    };
   }, [
     onAutoDetectedNetworksChange,
     onSettingsChange,
     onNewToastMessage,
-    firstTry
+    settingsLoadExecuted
   ]);
 
   return <></>;

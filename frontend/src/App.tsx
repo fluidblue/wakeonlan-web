@@ -23,7 +23,7 @@ import API from './API';
 
 function App() {
   const [savedHosts, setSavedHosts] = useState<Host[]>([]);
-  const [savedHostsLoaded, setSavedHostsLoaded] = useState<boolean>(false);
+  const [savedHostsLoadExecuted, setSavedHostsLoaded] = useState<boolean>(false);
 
   const [hostToBeAdded, setHostToBeAdded] = useState<Host | null>(null);
 
@@ -68,8 +68,10 @@ function App() {
   const orderedSavedHosts = getOrderedHosts(savedHosts);
 
   useEffect(() => {
+    let subscribed = true;
+
     async function loadHosts() {
-      if (savedHostsLoaded) {
+      if (savedHostsLoadExecuted) {
         return;
       }
 
@@ -80,6 +82,10 @@ function App() {
       } catch (err) {
         error = err as Error;
       }
+      if (!subscribed) {
+        return;
+      }
+
       setSavedHosts(hosts);
       setSavedHostsLoaded(true);
 
@@ -89,7 +95,11 @@ function App() {
       }
     }
     loadHosts();
-  }, [savedHostsLoaded, onNewToastMessage]);
+
+    return () => {
+      subscribed = false;
+    };
+  }, [savedHostsLoadExecuted, onNewToastMessage]);
 
   function onSettingsChange(settings: SetStateAction<SettingsData>) {
     setSettings(settings);
