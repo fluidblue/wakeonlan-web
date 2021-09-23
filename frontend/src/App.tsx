@@ -45,7 +45,7 @@ function App() {
     setToastItems((prevToastItems) => {
       return [...prevToastItems, newMessage];
     });
-  }, [toastItems]);
+  }, []);
 
   function getIpNetworks(): IPNetwork[] {
     if (settings.autoDetectNetworks) {
