@@ -9,6 +9,7 @@ import { ipNetworksToString } from '../IPUtilities';
 
 interface DiscoverProps {
   onHostToBeAddedChange: React.Dispatch<React.SetStateAction<Host | null>>;
+  onNewToastMessage: (message: React.ReactNode) => void;
 
   onDiscoveredHostsChange: React.Dispatch<React.SetStateAction<Host[]>>;
   discoveredHosts: Host[];
@@ -17,6 +18,7 @@ interface DiscoverProps {
   scanned: boolean;
 
   ipNetworks: IPNetwork[];
+  settingsLoaded: boolean;
 }
 
 function Discover(props: DiscoverProps) {
@@ -38,40 +40,51 @@ function Discover(props: DiscoverProps) {
   }
 
   // Destructure props for useEffect
-  const { scanned, ipNetworks, onDiscoveredHostsChange, onScannedChange } = props;
+  const { scanned, settingsLoaded, ipNetworks, onDiscoveredHostsChange, onScannedChange, onNewToastMessage } = props;
 
   // Start scanning when the activity is entered.
   useEffect(() => {
     async function fetchData() {
-      if (scanned || ipNetworks.length === 0) {
+      if (scanned || !settingsLoaded) {
         return;
       }
       onDiscoveredHostsChange([]);
       setScanning(true);
 
-      const hostDiscoveryPromises: Promise<Host[]>[] = [];
-      for (const ipNetwork of ipNetworks) {
-        const hostDiscoveryPromise = API.hostDiscovery(ipNetwork);
-        hostDiscoveryPromises.push(hostDiscoveryPromise);
-      }
-      const hostDiscoveryResults: Host[][] = await Promise.all(hostDiscoveryPromises);
-      let hosts: Host[] = hostDiscoveryResults.reduce((previousValue, currentValue) => {
-        return previousValue.concat(currentValue);
-      }, []);
+      let hosts: Host[] = [];
+      let error: Error | null = null;
+      try {
+        const hostDiscoveryPromises: Promise<Host[]>[] = [];
+        for (const ipNetwork of ipNetworks) {
+          const hostDiscoveryPromise = API.hostDiscovery(ipNetwork);
+          hostDiscoveryPromises.push(hostDiscoveryPromise);
+        }
+        const hostDiscoveryResults: Host[][] = await Promise.all(hostDiscoveryPromises);
+        hosts = hostDiscoveryResults.reduce((previousValue, currentValue) => {
+          return previousValue.concat(currentValue);
+        }, []);
 
-      // Filter out duplicates
-      hosts = hosts.filter((host, index) => {
-        return index === hosts.findIndex((item) => {
-          return item.name === host.name && item.mac === host.mac;
+        // Filter out duplicates
+        hosts = hosts.filter((host, index) => {
+          return index === hosts.findIndex((item) => {
+            return item.name === host.name && item.mac === host.mac;
+          });
         });
-      });
+      } catch (err) {
+        error = err as Error;
+      }
 
       setScanning(false);
       onScannedChange(true);
       onDiscoveredHostsChange(hosts);
+
+      if (error) {
+        onNewToastMessage('Host discovery failed. See console for details.');
+        console.error('Error during host discovery:', error);
+      }
     }
     fetchData();
-  }, [scanned, ipNetworks, onDiscoveredHostsChange, onScannedChange]);
+  }, [scanned, settingsLoaded, ipNetworks, onDiscoveredHostsChange, onScannedChange, onNewToastMessage]);
 
   let spinner = null;
   if (scanning) {

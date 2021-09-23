@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { SetStateAction, useCallback, useEffect, useState } from 'react';
 import './App.css';
 
 import {
@@ -32,6 +32,7 @@ function App() {
 
   const [autoDetectedNetworks, setAutoDetectedNetworks] = useState<IPNetwork[]>([]);
   const [settings, setSettings] = useState<SettingsData>(settingsDataDefault);
+  const [settingsLoaded, setSettingsLoaded] = useState<boolean>(false);
 
   const [toastItems, setToastItems] = useState<React.ReactNode[]>([]);
 
@@ -72,24 +73,35 @@ function App() {
         return;
       }
 
-      let hosts;
+      let hosts: Host[] = [];
+      let error: Error | null = null;
       try {
         hosts = await API.savedHostsLoad();
       } catch (err) {
-        onNewToastMessage('Failed to load saved hosts.');
-        return;
+        error = err as Error;
       }
       setSavedHosts(hosts);
       setSavedHostsLoaded(true);
+
+      if (error) {
+        onNewToastMessage('Failed to load saved hosts.');
+        console.error(error);
+      }
     }
     loadHosts();
   }, [savedHostsLoaded, onNewToastMessage]);
+
+  function onSettingsChange(settings: SetStateAction<SettingsData>) {
+    setSettingsLoaded(true);
+    setSettings(settings);
+  }
 
   return (
     <Router>
       <SettingsPreLoad
         onAutoDetectedNetworksChange={setAutoDetectedNetworks}
-        onSettingsChange={setSettings}
+        onSettingsChange={onSettingsChange}
+        onNewToastMessage={onNewToastMessage}
       />
       <Navbar />
       <hr className="header-separator" />
@@ -111,13 +123,15 @@ function App() {
               onScannedChange={setScanned}
               scanned={scanned}
               ipNetworks={ipNetworks}
+              onNewToastMessage={onNewToastMessage}
+              settingsLoaded={settingsLoaded}
             />
           </Route>
           <Route path="/settings">
             <Settings
               autoDetectedNetworks={autoDetectedNetworks}
               settings={settings}
-              onSettingsChange={setSettings}
+              onSettingsChange={onSettingsChange}
               onNewToastMessage={onNewToastMessage}
             />
           </Route>
