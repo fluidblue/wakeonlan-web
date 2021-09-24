@@ -1,16 +1,19 @@
-# Frontend
-cd ../frontend
-rm -r build
-yarn build
-rm -r ../backend/build/httpdocs
-cp -R build ../backend/build/httpdocs
-cd ../backend
+#!/bin/bash
 
-# Docs
-rm *.md
-cp ../*.md .
-rm -r ./docs
-cp -R ../docs ./docs
+SCRIPT_DIR=${0%/*}
+
+# Clean
+source "$SCRIPT_DIR/clean.sh"
 
 # Backend
 tsc
+
+# Frontend
+cd ../frontend
+yarn build
+cd ../backend
+cp -R ../frontend/build ./build/httpdocs
+
+# Docs
+cp ../*.md .
+cp -R ../docs ./docs

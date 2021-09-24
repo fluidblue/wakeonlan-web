@@ -3,9 +3,10 @@
   "version": "1.0.7",
   "description": "Free GUI for waking up hosts using Wake-on-LAN (WoL)",
   "scripts": {
-    "start": "npx ts-node src/index.ts",
-    "test": "ts-node node_modules/jasmine/bin/jasmine",
-    "prepublishOnly": "./scripts/prepublish.sh"
+    "start": "./scripts/development_start.sh",
+    "test": "./scripts/development_test.sh",
+    "prepublishOnly": "./scripts/prepublish.sh",
+    "postpack": "./scripts/clean.sh"
   },
   "bin": "./build/index.js",
   "author": "fluidblue",
