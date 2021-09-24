@@ -1,6 +1,6 @@
 {
   "name": "wakeonlan-web",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Free GUI for waking up hosts using Wake-on-LAN (WoL)",
   "scripts": {
     "start": "./scripts/development_start.sh",
