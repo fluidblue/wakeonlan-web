@@ -25,21 +25,18 @@ If you just want to use wakeonlan-web, you can [install it using Docker](Install
 
 ### Backend
 
+Update DATABASE_HOST in the file `backend/scripts/development_env.sh`.
+For example, if you installed MariaDB locally, enter 127.0.0.1 as host.
+
+    nano backend/scripts/development_env.sh
+
 **Installation**
 
     cd backend
     npm install
-
-    # Update DATABASE_HOST to match your configuration. If you installed MariaDB locally, enter 127.0.0.1 as host.
-    nano development_start.sh
-
-    ./development_start.sh
+    npm start
 
 **Test**
 
     cd backend
-
-    # Update DATABASE_HOST to match your configuration. If you installed MariaDB locally, enter 127.0.0.1 as host.
-    nano development_test.sh
-
-    ./development_test.sh
+    npm test
