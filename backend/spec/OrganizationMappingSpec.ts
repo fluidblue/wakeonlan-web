@@ -3,7 +3,7 @@ import "jasmine";
 import Database from "../src/Database/Database";
 import OrganizationMapping from "../src/OrganizationMapping/OrganizationMapping"
 
-const timeout: number = 120; // in seconds
+const timeout: number = 600; // in seconds
 
 describe("OrganizationMapping", () => {
 	let originalTimeout: number;
@@ -22,8 +22,7 @@ describe("OrganizationMapping", () => {
 	});
 
 	it("should update the IAB and OUI list", async () => {
-		await organizationMapping.updateIABList();
-		await organizationMapping.updateOUIList();
+		await organizationMapping.updateDB();
 		const initialized = await organizationMapping.isDBInitialized();
 		expect(initialized).toBeTrue();
 	});

@@ -42,22 +42,18 @@ export default class OrganizationMapping {
 
 	constructor(database: Database) {
 		this.database = database;
+	}
 
-		const that = this;
-		async function init() {
-			if (!await that.isDBInitialized()) {
-				await that.updateIABList();
-				await that.updateOUIList();
-			}
-		}
-		init();
+	async updateDB() {
+		await this.updateIABList();
+		await this.updateOUIList();
 	}
 
 	private iabRangeConvert(range: string): string {
 		return range.substr(0, 2) + "-" + range.substr(2, 2) + "-" + range.substr(4, 2);
 	}
 
-	async updateIABList(): Promise<boolean> {
+	private async updateIABList(): Promise<boolean> {
 		const response = await fetch(URI_IAB);
 		if (!response) {
 			return false;
@@ -84,7 +80,7 @@ export default class OrganizationMapping {
 		return await this.database.organizationMappingIABUpdate(iabMapping);
 	}
 
-	async updateOUIList(): Promise<boolean> {
+	private async updateOUIList(): Promise<boolean> {
 		const response = await fetch(URI_OUI);
 		if (!response) {
 			return false;
