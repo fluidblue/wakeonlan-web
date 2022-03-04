@@ -7,6 +7,7 @@ services:
             context: .
             dockerfile: Dockerfile
         init: true
+        restart: always
         environment:
             PORT: "9000"
             DATABASE_HOST: "127.0.0.1"
@@ -24,6 +25,7 @@ services:
 
     mariadb:
         image: mariadb:10.6
+        restart: always
         environment:
             MARIADB_RANDOM_ROOT_PASSWORD: "yes"
             MARIADB_DATABASE: "${DATABASE_DB}"
