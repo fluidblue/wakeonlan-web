@@ -199,7 +199,7 @@ export default class API {
       throw new Error('Could not fetch ' + uri + ' (HTTP ' + response.status + ')');
     }
     const res = await response.json();
-    if (!res || res.result !== true) {
+    if (!res || res.result !== true) {
       return false;
     }
     return true;
