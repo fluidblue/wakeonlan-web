@@ -7,7 +7,9 @@ If you just want to use wakeonlan-web, you can [install it using Docker](Install
 
 2. Install MariaDB locally (or on a VM).
 
-3. Go through steps for both frontend and backend.
+3. Install `arp-scan` (e.g. `apt-get install arp-scan` on Linux or `brew install arp-scan` on macOS).
+
+4. Go through steps for both frontend and backend.
 
 ### Frontend
 
