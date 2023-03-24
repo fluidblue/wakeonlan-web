@@ -42,3 +42,9 @@ For example, if you installed MariaDB locally, enter 127.0.0.1 as host.
 
     cd backend
     npm test
+
+
+### Publish new version
+
+* Edit `backend/package.json`: Update version
+* Go into backend directory and run `npm publish`
